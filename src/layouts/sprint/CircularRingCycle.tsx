@@ -2,6 +2,13 @@ import React, { useRef, useEffect } from "react";
 
 const AI_BG = "#1E1B4B";
 
+// Canvas geometry — module-level constants (not reactive), so the draw
+// effect's dependency array stays exhaustive with just [entered].
+const SIZE = 480;
+const cx = SIZE / 2;
+const cy = SIZE / 2;
+const R = 185;
+
 interface CycleNode {
   icon: string;
   label: string;
@@ -16,8 +23,6 @@ interface CircularRingCycleProps {
 export function CircularRingCycle({ entered, nodes }: CircularRingCycleProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const progressRef = useRef<number>(0);
-  const SIZE = 480;
-  const cx = SIZE / 2, cy = SIZE / 2, R = 185;
 
   // Requirements (index 0) at 9 o'clock (left)
   const nodePositions = nodes.map((n, i) => {

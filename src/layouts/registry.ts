@@ -18,9 +18,9 @@ import type { ComponentType } from 'react';
  * Individual layouts may accept additional props via the slide object.
  */
 export interface LayoutProps {
-  slide: Record<string, any>;
+  slide: Record<string, unknown>;
   themeId: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 /**

@@ -29,12 +29,15 @@ export default tseslint.config(
     plugins: { "react-hooks": reactHooks },
     rules: {
       ...reactHooks.configs.recommended.rules,
-      // Style/strictness rules kept as warnings so the gate fails only on real
-      // problems while the codebase tightens incrementally.
-      "@typescript-eslint/no-explicit-any": "warn",
+      // Hard gates: the codebase is clean for these, so regressions must fail CI.
+      // `no-explicit-any` keeps the "strict mode" headline honest; `exhaustive-deps`
+      // guards effect correctness.
+      "@typescript-eslint/no-explicit-any": "error",
+      "react-hooks/exhaustive-deps": "error",
+      // Remaining style/strictness rules stay warnings while the codebase tightens
+      // incrementally — they don't block the gate yet.
       "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
       "@typescript-eslint/no-unused-expressions": "warn",
-      "react-hooks/exhaustive-deps": "warn",
       // react-hooks v7 advisory rules (ported from the monolith): each is a
       // behavioural refactor (error boundaries, ref patterns). Surface as
       // warnings now; rules-of-hooks stays an error.

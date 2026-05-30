@@ -35,18 +35,18 @@ export interface Slide {
     icon?: string;
     before?: string;
     after?: string;
-    [key: string]: any;
+    [key: string]: unknown;
   }>;
 
   talkingPoints?: string[];
   results?: Array<{ label: string; value: string | number }>;
   steps?: Array<{ label: string; description?: string; type?: string }>;
-  details?: Record<string, any>;
+  details?: Record<string, unknown>;
 
   // ── Lists / grids ──
-  items?: Array<Record<string, any>>;
+  items?: Array<Record<string, unknown>>;
   badges?: Array<{ icon?: string; label: string; value: string | number }>;
-  rows?: Array<Record<string, any>>;
+  rows?: Array<Record<string, unknown>>;
 
   // ── Persona / process ──
   lanes?: Array<{
