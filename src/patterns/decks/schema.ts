@@ -1,10 +1,13 @@
 /**
- * Zod schemas for runtime validation of deck manifests.
- * Mirrors the TypeScript types in ./types.ts but enforces at runtime.
+ * Zod schemas for runtime validation of deck content.
+ *
+ * Wired into the app via content-registry.ts:
+ *   - validateContentPack(id, raw)            — soft-validates each content.json (warns, never throws)
+ *   - validateLayoutsExist(manifest, registry) — asserts every slide layout is registered
  *
  * Usage:
- *   import { validateDeckManifest } from '../patterns/decks/schema';
- *   const deck = validateDeckManifest(rawData); // throws on invalid
+ *   import { validateContentPack } from '../patterns/decks/schema';
+ *   validateContentPack("my-deck", rawJson);
  */
 
 import { z } from 'zod';
@@ -73,53 +76,7 @@ const SlideSchema = z.object({
   heroImg: z.string().optional(),
 }).passthrough(); // Allow deck-specific extra fields
 
-/* ── SprintNode schema ─────────────────────────────────────── */
-
-const SprintNodeSchema = z.object({
-  id: z.string().min(1),
-  label: z.string().min(1),
-  x: z.number(),
-  y: z.number(),
-  color: z.string().optional(),
-});
-
-/* ── DeckManifest schema ───────────────────────────────────── */
-
-const DeckManifestSchema = z.object({
-  themeId: z.string().min(1),
-  slides: z.array(SlideSchema).min(1),
-
-  title: z.string().optional(),
-  description: z.string().optional(),
-  author: z.string().optional(),
-  created: z.string().optional(),
-  updated: z.string().optional(),
-  version: z.string().optional(),
-
-  sprintNodes: z.array(SprintNodeSchema).optional(),
-  HERO_IMGS: z.record(z.string(), z.string()).optional(),
-  layoutFamily: z.string().optional(),
-});
-
 /* ── Validation functions ──────────────────────────────────── */
-
-/**
- * Validate a raw object against the DeckManifest schema.
- * Returns typed manifest on success; throws with detailed errors on failure.
- */
-export function validateDeckManifest(data: unknown): DeckManifest {
-  const result = DeckManifestSchema.safeParse(data);
-
-  if (!result.success) {
-    const errors = result.error.flatten();
-    console.error('[DeckManifest] Validation failed:', errors);
-    throw new Error(
-      `Invalid deck manifest:\n${JSON.stringify(errors, null, 2)}`,
-    );
-  }
-
-  return result.data as DeckManifest;
-}
 
 /**
  * Validate that all slides reference registered layouts.
@@ -180,5 +137,3 @@ export function validateContentPack(id: string, data: unknown): void {
     console.warn(`[ContentPack "${id}"] Validation warnings:`, errors);
   }
 }
-
-export { DeckManifestSchema, SlideSchema, SprintNodeSchema };
