@@ -2,10 +2,15 @@
 
 React 19 + Vite 5 presentation platform with 8 registered content decks, 34 registered layouts, 15 themes, and 4 style modes. Includes Storybook for visual testing and an export pipeline for HTML, images, and PDF.
 
+## Live Demo
+
+**[tafreeman.github.io/architecture-deck-system](https://tafreeman.github.io/architecture-deck-system/)** — the production Vite build, deployed from `main` via GitHub Actions ([`.github/workflows/deploy-pages.yml`](.github/workflows/deploy-pages.yml)).
+
+> First-time setup: enable **Settings → Pages → Source = "GitHub Actions"**, then push to `main`.
+
 ## Quick Start
 
 ```bash
-cd presentation
 npm install
 
 npm run dev          # Dev server on :5173
@@ -108,7 +113,7 @@ See [CLAUDE.md](CLAUDE.md) for AI assistant context including gotchas and build 
 - Rollup does NOT auto-resolve `.js` → `.ts` — update import paths when renaming
 - Tokens are `.ts` with exported interfaces — import with `.ts` extension
 - All components are `.tsx`, stories remain `.jsx`
-- No vitest — visual testing only via Storybook
+- Unit tests run on Vitest (`npm test`); Storybook (`npm run storybook`) is for visual/interaction review
 - `@storybook/addon-actions` not installed — use `console.log` shim instead
 - `stat-cards-manifest` is a registered layout ID (auto-routed by LayoutRenderer when slide has manifest fields) — do not register a new layout with this ID
 - Layout components receive `topic` prop (not `slide`) — this is the LayoutRenderer's forwarding alias

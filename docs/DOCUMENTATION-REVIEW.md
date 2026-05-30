@@ -18,11 +18,11 @@
 | How-to: add content deck | Missing | High |
 | Known issues / tech debt | Undocumented | Critical |
 | Storybook autodocs | Setup correct; story count outdated | Low |
-| `mergeDeckContent` cascade algorithm | Undocumented externally | Medium |
-| Transcription `as any` intent | Undocumented | Medium |
-| `Particles type="future"` bug | Undocumented | Critical |
+| `mergeDeckContent` cascade algorithm | Documented (Section 5) + unit-tested | Medium |
+| Transcription `as any` casts | ✅ Resolved (DEBT-001) — 0 `any`, unit-tested | — |
+| `Particles type="future"` bug | ✅ Resolved (BUG-001) — valid variant | — |
 | `border` on Theme interface | Missing field | Medium |
-| Zod / `validateDeckManifest` usage | Undocumented | Low |
+| Zod / `validateDeckManifest` usage | ✅ Resolved (DEBT-002) — wired + dead code removed | — |
 
 ---
 
@@ -704,48 +704,41 @@ Match counts are exposed in `MergedDeck.matchStats` for UI diagnostics.
 
 ### CRITICAL
 
-#### BUG-001: `Particles type="future"` — 5 layouts silently broken
+#### BUG-001: `Particles type="future"` — RESOLVED
 
-**Severity:** Critical (visual regression; Particles renders wrong variant)
-**Affected files:**
+**Status:** ✅ Resolved. `"future"` is now a first-class `Particles` variant.
+**Affected files (callers, now valid):**
 - `src/layouts/engineering/ArchitectureSlide.tsx:42`
 - `src/layouts/engineering/TechStackTimeline.tsx:43`
 - `src/layouts/base/ProcessLanesLayout.tsx:62`
 - `src/layouts/base/TwoColLayout.tsx:56`
 - `src/layouts/base/HStripLayout.tsx:50`
 
-**Description:** The `Particles` component accepts a `type` prop that controls the particle animation variant. Five layouts pass `type="future"`, but the Particles component does not expose a `"future"` variant in its type definition. The component silently falls back to default behaviour rather than throwing. These layouts should use the correct variant string for the intended animation.
-
-**Resolution needed:** Audit `Particles` component accepted `type` values; correct each caller to the intended variant.
+**Resolution:** `Particles` (`src/components/animations/Particles.tsx`) now exposes `"future"` in its `type` union (`type?: "hurdles" | "human" | "sprint" | "future"`, line 57) and implements the variant end-to-end: a 45-particle "slow rising starfield" with a fade-in/hold/fade-out lifecycle (init at lines 86–101, animation branch at lines 134–156). All five callers pass a valid, type-checked variant — `tsc --noEmit` (with `no-explicit-any` at `error`) passes clean, so the silent-fallback regression no longer exists.
 
 ---
 
 ### HIGH
 
-#### DEBT-001: Transcription layer — 200+ `as any` casts
+#### DEBT-001: Transcription layer — `as any` casts — RESOLVED
 
-**Severity:** High (type safety gap; refactoring hazard)
+**Status:** ✅ Resolved. `src/transcription.ts` now contains **zero** `any`.
 **File:** `src/transcription.ts`
 
-**Description:** Every transcription function uses `as any[]` casts when accessing layout-specific fields (e.g. `(topic.cards as any[])`, `(topic.steps as any[])`). This is a known intentional shortcut from the original extraction: the `Topic` type is `Record<string, unknown> & { layout: string }`, which does not encode layout-specific field shapes.
-
-**Intent:** The `as any` casts are safe because the transcription functions only run on slides whose `topic.layout` matches the case. The slide objects are typed at the content layer (`content-types.ts`), but the discriminated union is not propagated through to the transcription layer.
-
-**Resolution path:** Create a `TranscriptionInput` discriminated union mirroring `LayoutContentMap` (already defined in `content-types.ts`), use it in `transcribeTopic`, and remove the `as any` casts. Estimated effort: high.
+**Resolution:** Introduced a `SlideItem` shape (optional fields for every key the transcription functions read, plus an index signature) and an `arr<T>(v: unknown): T[]` helper that coerces an `unknown` field to a typed array. Every `(topic.X as any[])` cast and `(c: any)` callback param was replaced with `arr(topic.X).map((c) => …)`, with `typeof` narrowing for the string-or-object item cases. The public API (`Topic` type, `transcribeTopic` signature, the layout-set consts) is unchanged, and behavior is pinned by `src/transcription.test.ts`. `@typescript-eslint/no-explicit-any` is now an **error** (see `eslint.config.js`), so regressions fail CI.
 
 ---
 
-#### DEBT-002: Zod declared as runtime dependency but not called at runtime
+#### DEBT-002: Zod usage — RESOLVED
 
-**Severity:** High (dead weight in production bundle)
-**File:** `package.json` (runtime `dependencies`), `src/patterns/decks/schema.ts`
+**Status:** ✅ Resolved. Zod is now wired into the runtime, and the dead code path was removed.
+**File:** `src/patterns/decks/schema.ts`, `src/content/content-registry.ts`
 
-**Description:** `zod@^4.3.6` is in `dependencies` (not `devDependencies`). The schema file at `src/patterns/decks/schema.ts` exports `validateDeckManifest()` and `validateLayoutsExist()`, but neither function is imported by the application entry point or any deck loader. The schemas are unused at runtime.
+**Resolution (a blend of Options B and C):**
+- **Wired (Option B):** `content-registry.ts` calls `validateContentPack(id, raw)` for every one of the 8 content packs at registration time (soft validation — logs warnings, never throws), and `validateLayoutsExist(manifest, registry)` inside `buildDeckFromContent` to catch unregistered layout IDs at runtime. Zod earns its place in `dependencies`.
+- **Removed (Option C):** the genuinely-dead pieces are gone — `validateDeckManifest()`, `DeckManifestSchema`, `SprintNodeSchema`, and the unused barrel (`src/patterns/decks/index.ts`) and `defaults.ts` were deleted. They validated a `DeckManifest` shape the app never constructs (it uses `DeckContent` + `DeckStructure`).
 
-**Resolution:**
-- Option A: Move Zod to `devDependencies` and use it only in a build-time validation script.
-- Option B: Wire `validateDeckManifest` into deck loading in `content-registry.ts` to add runtime safety (increases bundle size by ~14 kB gzipped).
-- Option C: Delete the schema file if no validation is planned.
+`src/patterns/decks/` now contains only `schema.ts` (live validators + `ContentPackDataSchema`) and `types.ts` (the `DeckManifest` type still consumed by `validateLayoutsExist`).
 
 ---
 
@@ -773,14 +766,11 @@ Match counts are exposed in `MergedDeck.matchStats` for UI diagnostics.
 
 ---
 
-#### DEBT-005: React version inconsistency
+#### DEBT-005: React version inconsistency — RESOLVED
 
-**Severity:** Medium (documentation inaccuracy)
-**Files:** `README.md` ("React 18"), `CLAUDE.md` ("React 19"), `package.json` (`react: ^18.2.0`)
+**Status:** ✅ Resolved. Docs and `package.json` now agree on React 19.
 
-**Description:** The README says React 18, CLAUDE.md says React 19, and `package.json` pins to `^18.2.0`. The actual runtime version is React 18. CLAUDE.md is incorrect.
-
-**Resolution:** Align to "React 18.2" across all docs. Update `package.json` if React 19 migration is intended.
+**Resolution:** `package.json` declares `react`/`react-dom` `^19.2.5`; `README.md` and `CLAUDE.md` both state "React 19". The "No vitest" claim in both docs was also corrected — Vitest runs unit tests (`npm test`) and is a required CI step.
 
 ---
 
