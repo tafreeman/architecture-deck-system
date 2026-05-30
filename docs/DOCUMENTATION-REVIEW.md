@@ -1,7 +1,7 @@
 # Documentation Review — Presentation System
 
 > Generated: 2026-04-13
-> Scope: `C:\Users\tandf\source\present\`
+> Scope: repository root
 
 ---
 

@@ -43,7 +43,7 @@
       "cards": [
         { "title": "Prompt Standardization", "challenge": "Developers used ad-hoc, inconsistent prompts \u2014 variable quality and constant refactoring.", "fix": "Established versioned prompt templates with embedded architecture context and coding standards." },
         { "title": "Process Realignment", "challenge": "Traditional review workflows didn\u2019t account for AI-generated code patterns and volume.", "fix": "Introduced AI-specific gated review checklists \u2014 convention adherence, test validation on every PR." },
-        { "title": "Governance Clearance", "challenge": "Federal context required legal and policy approval before any AI-assisted code could reach production.", "fix": "Proactively engaged internal risk, internal legal, and client legal to establish approval frameworks." },
+        { "title": "Governance Clearance", "challenge": "Enterprise, regulated context required legal and policy approval before any AI-assisted code could reach production.", "fix": "Proactively engaged internal risk, internal legal, and client legal to establish approval frameworks." },
         { "title": "Team Enablement", "challenge": "Team had varying levels of comfort and fluency with AI-assisted development tooling.", "fix": "Internal hackathon built hands-on proficiency with tools and guardrails before delivery began." }
       ],
       "callout": "Every hurdle became a guardrail. The friction we overcame early is the governance that keeps us fast now."

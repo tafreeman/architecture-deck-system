@@ -6,7 +6,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(__dirname, "..");
 const distDir = path.join(projectRoot, "dist");
 const outputDir = path.join(projectRoot, "single-file");
-const outputFile = path.join(outputDir, "genai-advocacy-hub.html");
+const outputFile = path.join(outputDir, "architecture-deck-system.html");
 
 const FONT_CSS_URL =
   "https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Barlow:wght@400;500;600&family=Chakra+Petch:wght@500;600;700&family=DM+Sans:ital,wght@0,400;0,500;0,700&family=DM+Serif+Display&family=JetBrains+Mono:wght@500;700;800&family=Karla:wght@400;500;600;700&family=Nunito+Sans:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&family=Playfair+Display:wght@600;700;800&family=Source+Sans+3:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap";

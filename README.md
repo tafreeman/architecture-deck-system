@@ -1,6 +1,6 @@
 # Presentation System
 
-React 18.2 + Vite 5 presentation platform with 8 registered content decks, 34 registered layouts, 15 themes, and 4 style modes. Includes Storybook for visual testing and an export pipeline for HTML, images, and PDF.
+React 19 + Vite 5 presentation platform with 8 registered content decks, 34 registered layouts, 15 themes, and 4 style modes. Includes Storybook for visual testing and an export pipeline for HTML, images, and PDF.
 
 ## Quick Start
 
@@ -113,7 +113,10 @@ See [CLAUDE.md](CLAUDE.md) for AI assistant context including gotchas and build 
 - `stat-cards-manifest` is a registered layout ID (auto-routed by LayoutRenderer when slide has manifest fields) — do not register a new layout with this ID
 - Layout components receive `topic` prop (not `slide`) — this is the LayoutRenderer's forwarding alias
 
-## Related
+## Built with AI assistance
 
-- [Deck Generator](../decks-generated/README.md) — YAML-to-PPTX builder using the same design tokens
-- [Root README](../README.md) — Monorepo overview
+This presentation platform was built with AI-assisted development (LLM coding assistants) under human review. All sample deck content uses generic, illustrative examples — no client, employer, or engagement-identifying material.
+
+## License
+
+MIT — see [LICENSE](LICENSE).

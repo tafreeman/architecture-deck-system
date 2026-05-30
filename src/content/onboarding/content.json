@@ -45,14 +45,14 @@
       "headline": "Approved Tools & Boundaries",
       "approved": [
         { "icon": "\u2705", "title": "GitHub Copilot", "desc": "Primary dev tool and general-use AI for experienced users. Autocomplete, inline chat, planning mode, agent mode, sub-agents — all in VS Code." },
-        { "icon": "\u2705", "title": "Sidekick", "desc": "General-purpose AI assistant across all roles. Custom Skills development and integrations for team-specific workflows." },
-        { "icon": "\u2705", "title": "M365 Copilot", "desc": "Full Office suite — Word (doc drafting), PowerPoint (decks), Excel (data analysis), Designer (visuals), Outlook, Teams." },
+        { "icon": "\u2705", "title": "Enterprise AI Assistant", "desc": "General-purpose AI assistant across all roles. Custom Skills development and integrations for team-specific workflows." },
+        { "icon": "\u2705", "title": "Office Productivity AI", "desc": "Full Office suite — Word (doc drafting), PowerPoint (decks), Excel (data analysis), Designer (visuals), Outlook, Teams." },
         { "icon": "\u2705", "title": "VS Code", "desc": "Primary IDE for AI-assisted workflows. Planning mode, agent mode, sub-agent orchestration, MCP server integration." },
         { "icon": "\u2705", "title": "Visual Studio", "desc": ".NET / Razor Pages development. Copilot available but agent/planning mode features differ from VS Code — know the differences." }
       ],
       "forbidden": [
         { "icon": "\uD83D\uDEAB", "title": "Loading CUI/FOUO Data", "desc": "Never input Controlled Unclassified Information into any AI tool — cloud-hosted or local. Full stop." },
-        { "icon": "\uD83D\uDEAB", "title": "PII in Prompts", "desc": "No real names, SSNs, case numbers, beneficiary data, or any personally identifiable information in any AI context." },
+        { "icon": "\uD83D\uDEAB", "title": "PII in Prompts", "desc": "No real names, SSNs, record numbers, account data, or any personally identifiable information in any AI context." },
         { "icon": "\uD83D\uDEAB", "title": "Production Credentials", "desc": "Never paste API keys, tokens, passwords, connection strings, or secrets into AI tools. Use placeholders." },
         { "icon": "\uD83D\uDEAB", "title": "Unapproved Tools", "desc": "No personal free-tier AI tools for work tasks. No browser extensions that send code to unknown endpoints." },
         { "icon": "\uD83D\uDEAB", "title": "Blind Copy-Paste", "desc": "Never paste AI output into production without reading, understanding, and testing it first. You own it." }
@@ -69,7 +69,7 @@
       "steps": [
         { "num": "01", "title": "Ticket Requirements", "type": "human", "body": "Start with a fully fleshed out ticket. Acceptance criteria must be specific, testable, and include edge cases. Include data models, API contracts, and UI mockups where applicable.", "tip": "If the ticket isn't complete, push it back. Incomplete tickets produce incomplete AI output." },
         { "num": "02", "title": "Planning Mode", "type": "ai", "body": "Use VS Code Copilot planning mode to develop a detailed implementation plan. Feed it ticket requirements, architecture docs, coding standards, and relevant codebase context.", "tip": "Have it probe for edge cases, integration risks, and missing requirements. The plan is the product — code gen is just execution." },
-        { "num": "03", "title": "Sub-Agent Execution", "type": "ai", "body": "Break the plan into granular tasks. Use multiple models and specialized personas: a code generator, a test writer, a reviewer. Each sub-agent operates on a well-scoped piece of the plan.", "tip": "Match model to task strength. Use Sidekick Skills and MCP servers to encode team conventions." },
+        { "num": "03", "title": "Sub-Agent Execution", "type": "ai", "body": "Break the plan into granular tasks. Use multiple models and specialized personas: a code generator, a test writer, a reviewer. Each sub-agent operates on a well-scoped piece of the plan.", "tip": "Match model to task strength. Use the assistant's Skills and MCP servers to encode team conventions." },
         { "num": "04", "title": "Unit Test Generation", "type": "ai", "body": "Generate unit tests alongside implementation. Cover happy paths, edge cases, error handling, and boundary conditions.", "tip": "Pattern: 'Write unit tests for [function]. Cover: happy path, null input, boundary values, error states. Use [framework]. Mock [dependencies].'" },
         { "num": "05", "title": "Integration & E2E Tests", "type": "ai", "body": "Generate Playwright tests for critical user flows on Razor Pages front-end. Validate selectors against actual UI. Include in GitLab CI/CD pipeline.", "tip": "Have AI read the Razor Page code first. Devs can also use Playwright to investigate how defects present to end users." },
         { "num": "06", "title": "Multi-Angle Code Review", "type": "human", "body": "Run AI-assisted code reviews from multiple perspectives before the human MR review: correctness, security/vulnerability, performance, and adversarial/antagonistic review.", "tip": "Adversarial prompt: 'You are a hostile code reviewer. Find every way this could fail, leak data, or be exploited. Be ruthless.'" },
@@ -86,7 +86,7 @@
       "pillars": [
         { "icon": "\uD83E\uDDE0", "title": "Context Engineering", "items": ["Curate what the model sees — architecture docs, coding standards, data models, relevant code", "Use system prompts and project-level instructions to steer output", "Manage context window budget — prioritize signal over noise", "Build reusable context packs per project area"] },
         { "icon": "\u270D\uFE0F", "title": "Prompt Engineering", "items": ["Standardized prompt templates for recurring tasks", "Version-control prompts alongside code — they are engineering artifacts", "Use structured output formats (XML, JSON schemas)", "Iterate prompts like code: test, measure, refine"] },
-        { "icon": "\uD83D\uDD27", "title": "Tool & Skill Dev", "items": ["Build MCP servers for structured access to internal services", "Create custom Sidekick Skills encoding team conventions", "Develop reusable tool chains — composable capabilities", "Evaluate tools: Copilot for code gen, Sidekick for reasoning, M365 Copilot for docs"] }
+        { "icon": "\uD83D\uDD27", "title": "Tool & Skill Dev", "items": ["Build MCP servers for structured access to internal services", "Create custom assistant Skills encoding team conventions", "Develop reusable tool chains — composable capabilities", "Evaluate tools: Copilot for code gen, reasoning assistants for analysis, office AI for docs"] }
       ],
       "results": [
         { "val": "ADR", "label": "Architecture Decision Records" },
@@ -108,7 +108,7 @@
         { "stat": "E2E", "statLabel": "Playwright", "title": "Learning Playwright with AI", "body": "Use AI as a tutor: paste a Razor Page component and ask it to explain how to write a Playwright test. Start simple, then build to form interactions and visual regression." },
         { "stat": "CI/CD", "statLabel": "Pipeline", "title": "Tests in the Pipeline", "body": "AI-generated Playwright tests go into the CI/CD pipeline. Every automated test is one less manual regression cycle. Focus on critical happy paths first." },
         { "stat": "Manual+", "statLabel": "Augmented", "title": "Augmenting Manual Testing", "body": "Use AI to generate test case matrices from acceptance criteria, identify edge cases, and draft defect reports with reproduction steps." },
-        { "stat": "RTM", "statLabel": "Traceability", "title": "Test Coverage Mapping", "body": "AI maps test cases back to requirements for traceability. Feed it your AC and test suite — it identifies coverage gaps faster than manual review." }
+        { "stat": "Trace", "statLabel": "Traceability", "title": "Test Coverage Mapping", "body": "AI maps test cases back to requirements for traceability. Feed it your AC and test suite — it identifies coverage gaps faster than manual review." }
       ],
       "callout": "QA doesn't need to become engineering. But QA that speaks the language of automation multiplies the whole team's velocity."
     },
@@ -116,18 +116,18 @@
       "role": "people",
       "sourceLayout": "checklist",
       "title": "Functional Team",
-      "subtitle": "RTM, use cases, roadmaps, and documentation — AI's role and limits.",
+      "subtitle": "Requirements traceability, use cases, roadmaps, and documentation — AI's role and limits.",
       "headline": "Functional Team AI Use Cases",
       "approved": [
-        { "icon": "\u2705", "title": "RTM Development", "desc": "Draft RTMs from user stories and test cases. M365 Copilot in Excel for structured data, Sidekick for narrative. Human validation mandatory." },
-        { "icon": "\u2705", "title": "Use Case Documentation", "desc": "Generate use case templates and exception flows. M365 Copilot in Word for drafting. You own the content." },
-        { "icon": "\u2705", "title": "Product Roadmap Drafting", "desc": "Synthesize backlog and sprint outcomes into roadmap narratives. M365 Copilot in PowerPoint for presentations." },
+        { "icon": "\u2705", "title": "Traceability Matrix Development", "desc": "Draft requirements-to-test traceability from user stories and test cases. office AI in spreadsheets for structured data, the AI assistant for narrative. Human validation mandatory." },
+        { "icon": "\u2705", "title": "Use Case Documentation", "desc": "Generate use case templates and exception flows. office AI for documents for drafting. You own the content." },
+        { "icon": "\u2705", "title": "Product Roadmap Drafting", "desc": "Synthesize backlog and sprint outcomes into roadmap narratives. office AI for presentations for presentations." },
         { "icon": "\u2705", "title": "Meeting Summaries", "desc": "Structure notes into summaries, decisions, and action items. Approved tools only — never upload recordings with CUI." },
         { "icon": "\u2705", "title": "Process Documentation", "desc": "SOPs, workflow diagrams, onboarding guides — AI drafts, humans refine. Version control all documentation." }
       ],
       "forbidden": [
         { "icon": "\uD83D\uDEAB", "title": "Loading CUI Documents", "desc": "Never upload or paste CUI-marked documents, FOUO data, or controlled technical information into any AI tool." },
-        { "icon": "\uD83D\uDEAB", "title": "Client Data in Prompts", "desc": "No beneficiary names, case data, claim numbers, or client-specific PII. Use sanitized examples." },
+        { "icon": "\uD83D\uDEAB", "title": "Client Data in Prompts", "desc": "No customer names, case data, account numbers, or client-specific PII. Use sanitized examples." },
         { "icon": "\uD83D\uDEAB", "title": "Deliverable Without Review", "desc": "AI-drafted deliverables must be reviewed for accuracy and compliance before sharing with the client." },
         { "icon": "\uD83D\uDEAB", "title": "Replacing Human Analysis", "desc": "AI summarizes and structures — it doesn't analyze policy implications or assess risk. That's your job." }
       ],
@@ -143,7 +143,7 @@
       "categories": [
         { "title": "\uD83D\uDEA8 Never Input to AI", "color": "#EF4444", "items": [
           { "label": "CUI / FOUO", "desc": "Controlled Unclassified Information — strictly prohibited from any AI tool." },
-          { "label": "PII", "desc": "Names, SSNs, dates of birth, addresses, case numbers, beneficiary data." },
+          { "label": "PII", "desc": "Names, SSNs, dates of birth, addresses, record numbers, account data." },
           { "label": "Credentials & Secrets", "desc": "API keys, tokens, passwords, connection strings, certificates, private keys." },
           { "label": "Production Data", "desc": "Real database contents, production logs with user data, client system exports." }
         ]},

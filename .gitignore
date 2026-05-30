@@ -23,3 +23,8 @@ Thumbs.db
 .env.*
 !.env.example
 .vs/
+
+# Local AI / assistant config (not part of the published project)
+.claude/
+CLAUDE.md
+.mcp.json
