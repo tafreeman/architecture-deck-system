@@ -1,5 +1,5 @@
 import React from "react";
-import { ThemeContext, ChromeContext } from "../src/components/context/index.js";
+import { ThemeContext, ChromeContext } from "../src/components/context/index.ts";
 import { THEMES } from "../src/tokens/themes.ts";
 import { STYLE_MODES, STYLE_MODES_BY_ID } from "../src/tokens/style-modes.ts";
 
