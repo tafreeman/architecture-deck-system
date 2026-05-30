@@ -8,6 +8,7 @@
 
 import { useState, useRef, useCallback } from "react";
 import type { Theme } from "../../tokens/themes.ts";
+import type { StyleMode } from "../../tokens/style-modes.ts";
 
 interface TopicShape {
   id: string;
@@ -21,11 +22,6 @@ interface TopicShape {
   colorGlow?: string;
 }
 
-interface ChromeShape {
-  cardRadius: number | string;
-  [key: string]: unknown;
-}
-
 interface NavigateOrigin {
   x: number;
   y: number;
@@ -34,7 +30,7 @@ interface NavigateOrigin {
 interface OptionalDeckLinkProps {
   topic: TopicShape;
   theme: Theme;
-  chrome: ChromeShape;
+  chrome: StyleMode;
   onNavigate: (topicId: string, origin: NavigateOrigin) => void;
 }
 

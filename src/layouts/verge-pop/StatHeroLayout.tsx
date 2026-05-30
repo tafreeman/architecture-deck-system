@@ -35,12 +35,12 @@ export function StatHeroLayout({ topic, onBack }: LayoutProps) {
     <div style={{ position: "relative", minHeight: "100vh", background: T.bg, overflow: "hidden" }}>
       <div style={{ position: "relative", zIndex: 2, maxWidth: 1180, margin: "0 auto", padding: "48px" }}>
         <BackBtn onClick={onBack} />
-        {topic.question && (
+        {topic.question ? (
           <div style={{ float: "right", maxWidth: 320, background: T.text, borderRadius: C.cardRadius, padding: "14px 18px", marginLeft: 24, marginBottom: 16 }}>
             <span style={{ fontFamily: T.fontDisplay, fontSize: 20, fontWeight: 700, color: T.bg }}>Q: </span>
-            <span style={{ fontFamily: T.fontBody, fontSize: 13, color: T.bg, lineHeight: 1.5 }}>{topic.question as string}</span>
+            <span style={{ fontFamily: T.fontBody, fontSize: 13, color: T.bg, lineHeight: 1.5 }}>{String(topic.question)}</span>
           </div>
-        )}
+        ) : null}
         <h1 style={{ fontFamily: T.fontDisplay, fontSize: 48, fontWeight: C.headingWeight, color: T.text, margin: "0 0 16px", lineHeight: 1.1, maxWidth: 680, opacity: e ? 1 : 0, transform: e ? "translateY(0)" : "translateY(20px)", transition: "all 0.6s ease" }}>
           {topic.title}
         </h1>

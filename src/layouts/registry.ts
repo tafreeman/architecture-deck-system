@@ -23,7 +23,15 @@ export interface LayoutProps {
   [key: string]: any;
 }
 
-export type LayoutComponent = ComponentType<LayoutProps>;
+/**
+ * Registry component type. Layout families each declare their own props shape
+ * (some receive `topic`, some `slide`, plus family-specific fields), so the
+ * registry stores them behind a permissive component type and the renderer
+ * supplies the correct props at each call site. The documented base contract a
+ * layout can rely on is {@link LayoutProps}.
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- heterogeneous plugin registry
+export type LayoutComponent = ComponentType<any>;
 
 /**
  * Feature manifest — declares what ControlPanel sections a layout supports.
@@ -48,7 +56,7 @@ export const DEFAULT_FEATURES: Readonly<LayoutFeatures> = Object.freeze({
   background: false,
 });
 
-class LayoutRegistry {
+export class LayoutRegistry {
   private registry = new Map<string, LayoutComponent>();
   private features = new Map<string, LayoutFeatures>();
 

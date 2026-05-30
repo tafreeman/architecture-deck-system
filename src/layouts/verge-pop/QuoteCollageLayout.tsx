@@ -61,13 +61,13 @@ export function QuoteCollageLayout({ topic, onBack }: LayoutProps) {
             </div>
           ))}
         </div>
-        {topic.centerLabel && (
+        {topic.centerLabel ? (
           <div style={{ textAlign: "center", margin: "20px 0 24px" }}>
             <span style={{ fontFamily: T.fontDisplay, fontSize: 13, fontWeight: 700, color: T.text, letterSpacing: 3, textTransform: "uppercase", background: T.bgCard, padding: "10px 20px", borderRadius: C.cardRadius, border: `${C.cardBorderWidth}px solid ${T.text}` }}>
-              {topic.centerLabel as string}
+              {String(topic.centerLabel)}
             </span>
           </div>
-        )}
+        ) : null}
         <div style={{ background: T.bgCard, borderRadius: C.cardRadius, padding: "18px 22px", borderLeft: `${C.accentBarHeight}px solid ${topic.color}`, maxWidth: 700 }}>
           <p style={{ fontFamily: T.fontDisplay, fontSize: 18, color: T.text, margin: 0, fontWeight: 600 }}>{topic.callout}</p>
         </div>

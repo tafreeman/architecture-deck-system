@@ -34,6 +34,13 @@ interface Topic {
   [key: string]: unknown;
 }
 
+interface Card {
+  stat?: string;
+  statLabel?: string;
+  title?: string;
+  body?: string;
+}
+
 interface LayoutProps {
   topic: Topic;
   onBack: () => void;
@@ -58,15 +65,15 @@ export function InfoCardsLayout({ topic, onBack }: LayoutProps) {
               <p style={{ fontSize: 14, color: T.textMuted, lineHeight: 1.65, margin: 0 }}>{topic.banner}</p>
             </div>
           )}
-          {(topic.cards || []).map((c, i) => (
+          {(topic.cards as Card[] || []).map((c: Card, i) => (
             <div key={i} style={{ background: T.bgCard, borderRadius: C.cardRadius, padding: viewport.isPhone ? "18px 18px" : "22px 26px", marginBottom: 14, display: "flex", flexDirection: viewport.isPhone ? "column" : "row", alignItems: viewport.isPhone ? "stretch" : "flex-start", gap: viewport.isPhone ? 12 : 20, borderLeft: `${C.accentBarHeight}px solid ${T.accent}`, opacity: entered ? 1 : 0, transform: entered ? "none" : "translateY(16px)", transition: `all 0.5s ${0.2 + i * 0.1}s cubic-bezier(0.22,1,0.36,1)` }}>
               <div style={{ flexShrink: 0, textAlign: "center", minWidth: 60 }}>
-                {c.stat && <div style={{ fontFamily: T.fontDisplay, fontSize: 26, fontWeight: C.headingWeight, color: T.accent, lineHeight: 1 }}>{c.stat as string}</div>}
-                {c.statLabel && <div style={{ fontSize: 9, color: T.textDim, textTransform: "uppercase", letterSpacing: 1, marginTop: 3 }}>{c.statLabel as string}</div>}
+                {c.stat && <div style={{ fontFamily: T.fontDisplay, fontSize: 26, fontWeight: C.headingWeight, color: T.accent, lineHeight: 1 }}>{c.stat}</div>}
+                {c.statLabel && <div style={{ fontSize: 9, color: T.textDim, textTransform: "uppercase", letterSpacing: 1, marginTop: 3 }}>{c.statLabel}</div>}
               </div>
               <div>
-                <h3 style={{ fontFamily: T.fontDisplay, fontSize: 16, fontWeight: C.headingWeight, color: T.text, margin: "0 0 6px" }}>{c.title as string}</h3>
-                <p style={{ fontSize: viewport.isPhone ? 12.5 : 13.5, color: T.textMuted, lineHeight: 1.6, margin: 0 }}>{c.body as string}</p>
+                <h3 style={{ fontFamily: T.fontDisplay, fontSize: 16, fontWeight: C.headingWeight, color: T.text, margin: "0 0 6px" }}>{c.title}</h3>
+                <p style={{ fontSize: viewport.isPhone ? 12.5 : 13.5, color: T.textMuted, lineHeight: 1.6, margin: 0 }}>{c.body}</p>
               </div>
             </div>
           ))}

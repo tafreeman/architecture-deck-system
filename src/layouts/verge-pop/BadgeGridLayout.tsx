@@ -38,12 +38,12 @@ export function BadgeGridLayout({ topic, onBack }: LayoutProps) {
         <h1 style={{ fontFamily: T.fontDisplay, fontSize: 42, fontWeight: C.headingWeight, color: T.text, margin: "0 0 16px", lineHeight: 1.1 }}>
           {topic.title}
         </h1>
-        {topic.question && (
+        {topic.question ? (
           <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: T.text, borderRadius: C.cardRadius, padding: "10px 16px", marginBottom: 24 }}>
             <span style={{ fontFamily: T.fontDisplay, fontSize: 16, fontWeight: 700, color: T.bg }}>Q:</span>
-            <span style={{ fontFamily: T.fontBody, fontSize: 13, color: T.bg }}>{topic.question as string}</span>
+            <span style={{ fontFamily: T.fontBody, fontSize: 13, color: T.bg }}>{String(topic.question)}</span>
           </div>
-        )}
+        ) : null}
         <div style={{ display: "grid", gridTemplateColumns: `repeat(${Math.min((topic.badges as unknown[] || []).length, 5)}, 1fr)`, gap: 10, marginBottom: 24 }}>
           {(topic.badges as Array<{ bgColor?: string; icon: string; name: string; value: string }> || []).map((badge, idx) => {
             const dark = badge.bgColor === "#000000";

@@ -51,15 +51,17 @@ interface ParticlesProps {
    * - human: gentle sine/cosine drift with connecting lines (30 particles)
    * - sprint: orbital around centre (40 particles)
    * - future: slow rising starfield with fade lifecycle (45 particles)
+   *
+   * Optional; defaults to "human" when a call site omits it.
    */
-  type: "hurdles" | "human" | "sprint" | "future";
+  type?: "hurdles" | "human" | "sprint" | "future";
   /** Whether the animation is running */
   active: boolean;
 }
 
 /* ── component ── */
 
-function Particles({ color, type, active }: ParticlesProps) {
+function Particles({ color, type = "human", active }: ParticlesProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const pRef = useRef<Particle[]>([]);
   const animRef = useRef<number | null>(null);

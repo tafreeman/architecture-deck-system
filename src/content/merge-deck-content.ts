@@ -76,7 +76,7 @@ export interface SlideStructure {
   readonly id: string;
   readonly order: number;
   readonly layout: string;
-  readonly role?: SlideRole;
+  readonly role?: string;
   readonly label?: string;
   readonly num?: string;
   readonly optional?: boolean;
@@ -89,7 +89,7 @@ export interface SlideStructure {
 interface SprintNode {
   readonly abbr: string;
   readonly label: string;
-  readonly type: string;
+  readonly type?: string;
   readonly t?: number;
 }
 
@@ -167,7 +167,7 @@ export function mergeDeckContent(
         const roleMatch = contentEntries.find(
           ([id, slide]) =>
             !usedContentIds.has(id) &&
-            (slide as Record<string, unknown>).role === skeleton.role,
+            (slide as unknown as Record<string, unknown>).role === skeleton.role,
         );
         if (roleMatch) {
           usedContentIds.add(roleMatch[0]);
@@ -182,7 +182,7 @@ export function mergeDeckContent(
         const layoutMatch = contentEntries.find(
           ([id, slide]) => {
             if (usedContentIds.has(id)) return false;
-            const srcLayout = (slide as Record<string, unknown>).sourceLayout as string | undefined;
+            const srcLayout = (slide as unknown as Record<string, unknown>).sourceLayout as string | undefined;
             if (!srcLayout) return false;
             return getCompatGroup(srcLayout) === structGroup;
           },

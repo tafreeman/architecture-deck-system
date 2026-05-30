@@ -23,6 +23,8 @@ export interface Theme {
   readonly danger: string;
   readonly warning: string;
   readonly surfaceElevated: string;
+  /** Optional explicit border colour; call sites fall back when undefined. */
+  readonly border?: string;
   readonly fontsUrl?: string;
 }
 

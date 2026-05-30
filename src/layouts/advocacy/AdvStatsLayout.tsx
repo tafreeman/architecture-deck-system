@@ -61,7 +61,7 @@ export function AdvStatsLayout({ topic, onBack }: LayoutProps) {
             </p>
           )}
 
-          {topic.thesis && (
+          {(topic.thesis as string) && (
             <div style={{ background: T.accent + "0C", border: `1px solid ${T.accent}22`, borderLeft: `${C.accentBarHeight}px solid ${T.accent}`, borderRadius: `0 ${C.innerRadius}px ${C.innerRadius}px 0`, padding: "14px 20px", marginBottom: 24 }}>
               <p style={{ fontSize: 14, color: T.textMuted, lineHeight: 1.65, margin: 0 }}>{topic.thesis as string}</p>
             </div>

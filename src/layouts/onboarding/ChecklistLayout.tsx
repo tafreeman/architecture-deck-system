@@ -74,17 +74,17 @@ export function ChecklistLayout({ topic, onBack }: LayoutProps) {
         <div style={{ display: "grid", gridTemplateColumns: viewport.isCompact ? "1fr" : "1fr 1fr", gap: viewport.cardGap }}>
           <div>
             <div style={{ fontSize: 10, fontFamily: T.fontDisplay, fontWeight: C.headingWeight, color: T.success, letterSpacing: 2.5, textTransform: "uppercase", marginBottom: 12 }}>Approved</div>
-            {((topic.approved as ChecklistItem[]) || []).map((item, i) => <Item key={i} item={item} delay={0.15 + i * 0.06} />)}
-            {topic.awareness && (
+            {((topic.approved as ChecklistItem[] | undefined) || []).map((item: ChecklistItem, i) => <Item key={i} item={item} delay={0.15 + i * 0.06} />)}
+            {(topic.awareness as ChecklistItem[] | undefined) && (
               <>
                 <div style={{ fontSize: 10, fontFamily: T.fontDisplay, fontWeight: C.headingWeight, color: T.warning, letterSpacing: 2.5, textTransform: "uppercase", marginTop: 16, marginBottom: 12 }}>Awareness Only</div>
-                {(topic.awareness as ChecklistItem[]).map((item, i) => <Item key={`a${i}`} item={item} delay={0.5 + i * 0.06} />)}
+                {(topic.awareness as ChecklistItem[] | undefined)?.map((item: ChecklistItem, i) => <Item key={`a${i}`} item={item} delay={0.5 + i * 0.06} />)}
               </>
             )}
           </div>
           <div>
             <div style={{ fontSize: 10, fontFamily: T.fontDisplay, fontWeight: C.headingWeight, color: T.danger, letterSpacing: 2.5, textTransform: "uppercase", marginBottom: 12 }}>Prohibited</div>
-            {((topic.forbidden as ChecklistItem[]) || []).map((item, i) => <Item key={i} item={item} delay={0.2 + i * 0.06} />)}
+            {((topic.forbidden as ChecklistItem[] | undefined) || []).map((item: ChecklistItem, i) => <Item key={i} item={item} delay={0.2 + i * 0.06} />)}
           </div>
         </div>
         <div style={{ marginTop: 28, padding: "18px 22px", borderLeft: `${C.accentBarHeight}px solid ${T.accent}`, background: T.bgCard, borderRadius: `0 ${C.innerRadius}px ${C.innerRadius}px 0` }}>

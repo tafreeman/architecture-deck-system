@@ -34,6 +34,13 @@ interface Topic {
   heroPoints?: string[];
   talkingPoints?: string[];
   cards?: Record<string, unknown>[];
+  kicker?: string;
+  heroTitle?: string;
+  thesis?: string;
+  leadershipPoints?: string[];
+  results?: Record<string, unknown>[];
+  enablement?: string;
+  enablementTitle?: string;
   [key: string]: unknown;
 }
 
@@ -105,7 +112,7 @@ function ManifestStatCardsLayout({ topic, onBack }: LayoutProps) {
           <div style={{ background: `linear-gradient(180deg, ${T.bgCard}, ${T.bgDeep})`, borderRadius: C.cardRadius, padding: viewport.isPhone ? "16px 16px" : "18px 20px", border: `${C.cardBorderWidth}px solid ${topic.color}24`, opacity: entered ? 1 : 0, transition: "opacity 0.6s 0.1s ease" }}>
             <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: 2.5, color: topic.colorLight, fontFamily: T.fontDisplay, marginBottom: 8 }}>Leadership Points</div>
             <div style={{ display: "grid", gap: 10 }}>
-              {((topic.leadershipPoints as string[]) || []).map((point, index) => (
+              {((topic.leadershipPoints as string[]) || []).map((point: string, index: number) => (
                 <div key={`${point}-${index}`} style={{ display: "grid", gridTemplateColumns: "24px 1fr", gap: 10, alignItems: "start" }}>
                   <div style={{ width: 22, height: 22, borderRadius: "50%", background: `${topic.color}18`, color: topic.colorLight, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700 }}>{index + 1}</div>
                   <p style={{ fontSize: 13, color: T.textMuted, lineHeight: 1.55, margin: 0 }}>{point}</p>
@@ -116,16 +123,16 @@ function ManifestStatCardsLayout({ topic, onBack }: LayoutProps) {
         </div>
 
         <div style={{ display: "grid", gridTemplateColumns: viewport.isPhone ? "1fr" : viewport.isCompact ? "1fr 1fr" : "repeat(3, minmax(0, 1fr))", gap: 14, marginBottom: 18 }}>
-          {(topic.cards ?? []).map((card, index) => (
-            <div key={`${card.title as string}-${index}`} style={{ background: T.bgCard, borderRadius: C.cardRadius, padding: viewport.isPhone ? "16px 16px" : "18px 20px", borderTop: `${C.accentBarHeight}px solid ${topic.color}`, opacity: entered ? 1 : 0, transform: entered ? "translateY(0)" : "translateY(18px)", transition: `all 0.45s ${0.12 + index * 0.08}s ease` }}>
+          {(topic.cards ?? []).map((card: Record<string, unknown>, index: number) => (
+            <div key={`${(card.title as string) || index}-${index}`} style={{ background: T.bgCard, borderRadius: C.cardRadius, padding: viewport.isPhone ? "16px 16px" : "18px 20px", borderTop: `${C.accentBarHeight}px solid ${topic.color}`, opacity: entered ? 1 : 0, transform: entered ? "translateY(0)" : "translateY(18px)", transition: `all 0.45s ${0.12 + index * 0.08}s ease` }}>
               <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: 2.2, color: topic.colorLight, fontFamily: T.fontDisplay, marginBottom: 8 }}>{(card.step as string) || (card.marker as string) || `0${index + 1}`}</div>
               <h3 style={{ fontFamily: T.fontDisplay, fontSize: viewport.isPhone ? 18 : 21, color: T.text, margin: "0 0 8px", lineHeight: 1.15 }}>{card.title as string}</h3>
-              {(card.eyebrow || card.statLabel) && <div style={{ fontSize: 11, color: T.textDim, textTransform: "uppercase", letterSpacing: 1.6, marginBottom: 8 }}>{(card.eyebrow as string) || (card.statLabel as string)}</div>}
-              {card.highlight && <p style={{ fontSize: 14, color: T.text, lineHeight: 1.6, margin: "0 0 10px", fontWeight: 600 }}>{card.highlight as string}</p>}
-              {card.body && <p style={{ fontSize: 13.5, color: T.textMuted, lineHeight: 1.6, margin: card.highlight ? "0" : "0 0 10px" }}>{card.body as string}</p>}
+              {((card.eyebrow as string) || (card.statLabel as string)) && <div style={{ fontSize: 11, color: T.textDim, textTransform: "uppercase", letterSpacing: 1.6, marginBottom: 8 }}>{String((card.eyebrow as string) || (card.statLabel as string))}</div>}
+              {(card.highlight as string) && <p style={{ fontSize: 14, color: T.text, lineHeight: 1.6, margin: "0 0 10px", fontWeight: 600 }}>{String(card.highlight)}</p>}
+              {(card.body as string) && <p style={{ fontSize: 13.5, color: T.textMuted, lineHeight: 1.6, margin: (card.highlight as string) ? "0" : "0 0 10px" }}>{String(card.body)}</p>}
               {Array.isArray(card.details) && (card.details as unknown[]).length > 0 && (
                 <div style={{ display: "grid", gap: 8, marginTop: 10 }}>
-                  {(card.details as string[]).map((detail, detailIndex) => (
+                  {(card.details as string[]).map((detail: string, detailIndex: number) => (
                     <div key={`${detail}-${detailIndex}`} style={{ paddingTop: 8, borderTop: `1px solid ${topic.color}14`, fontSize: 13, color: T.textMuted, lineHeight: 1.55 }}>{detail}</div>
                   ))}
                 </div>
@@ -136,11 +143,11 @@ function ManifestStatCardsLayout({ topic, onBack }: LayoutProps) {
 
         {((topic.results as unknown[])?.length ?? 0) > 0 && (
           <div style={{ display: "grid", gridTemplateColumns: viewport.isPhone ? "1fr 1fr" : `repeat(${Math.min((topic.results as unknown[]).length, 4)}, minmax(0, 1fr))`, gap: 12, marginBottom: 18 }}>
-            {(topic.results as Record<string, unknown>[]).map((result, index) => (
-              <div key={`${result.label as string}-${index}`} style={{ background: `linear-gradient(180deg, ${T.bgCard}, ${T.bgDeep})`, borderRadius: C.innerRadius, padding: viewport.isPhone ? "14px 14px" : "16px 18px", border: `${C.cardBorderWidth}px solid ${topic.color}18` }}>
+            {(topic.results as Record<string, unknown>[]).map((result: Record<string, unknown>, index: number) => (
+              <div key={`${(result.label as string) || index}-${index}`} style={{ background: `linear-gradient(180deg, ${T.bgCard}, ${T.bgDeep})`, borderRadius: C.innerRadius, padding: viewport.isPhone ? "14px 14px" : "16px 18px", border: `${C.cardBorderWidth}px solid ${topic.color}18` }}>
                 <div style={{ fontFamily: T.fontDisplay, fontSize: 30, color: topic.colorLight, marginBottom: 4 }}>{result.value as string}</div>
                 <div style={{ fontSize: 11, color: T.textDim, textTransform: "uppercase", letterSpacing: 1.5, marginBottom: result.detail ? 8 : 0 }}>{result.label as string}</div>
-                {result.detail && <p style={{ fontSize: 12.5, color: T.textMuted, lineHeight: 1.5, margin: 0 }}>{result.detail as string}</p>}
+                {(result.detail as string) && <p style={{ fontSize: 12.5, color: T.textMuted, lineHeight: 1.5, margin: 0 }}>{String(result.detail)}</p>}
               </div>
             ))}
           </div>

@@ -56,7 +56,7 @@ export function AdvPlatformLayout({ topic, onBack }: LayoutProps) {
         <div style={{ opacity: entered ? 1 : 0, transform: entered ? "none" : "translateY(28px)", transition: "all 0.8s cubic-bezier(0.22,1,0.36,1)" }}>
 
           {/* Header */}
-          {topic.eyebrow && (
+          {(topic.eyebrow as string) && (
             <div style={{ fontSize: 10, textTransform: "uppercase", letterSpacing: 2, color: T.accent, marginBottom: 10 }}>
               {topic.eyebrow as string}
             </div>

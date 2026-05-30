@@ -43,11 +43,11 @@ export function DataTableLayout({ topic, onBack }: LayoutProps) {
           {topic.title}
         </h1>
         <div style={{ background: T.bgCard, borderRadius: C.cardRadius, overflow: "hidden", border: `${C.cardBorderWidth}px solid rgba(0,0,0,0.1)`, marginBottom: 24, opacity: e ? 1 : 0, transition: "opacity 0.6s 0.1s ease" }}>
-          {topic.tableTitle && (
+          {topic.tableTitle ? (
             <div style={{ background: T.success || "#00CC66", padding: "12px 20px" }}>
-              <span style={{ fontFamily: T.fontDisplay, fontSize: 15, fontWeight: 700, color: "#000", textTransform: "uppercase", letterSpacing: 2 }}>{topic.tableTitle as string}</span>
+              <span style={{ fontFamily: T.fontDisplay, fontSize: 15, fontWeight: 700, color: "#000", textTransform: "uppercase", letterSpacing: 2 }}>{String(topic.tableTitle)}</span>
             </div>
-          )}
+          ) : null}
           <table style={{ width: "100%", borderCollapse: "collapse" }}>
             <thead>
               <tr>

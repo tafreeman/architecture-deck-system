@@ -176,8 +176,8 @@ export function buildDeckFromContent(
   validateLayoutsExist(
     {
       themeId: structureEntry.id,
-      slides: structureEntry.structure.contentSlides as Array<{ id: string; layout: string }>,
-    },
+      slides: structureEntry.structure.contentSlides,
+    } as unknown as Parameters<typeof validateLayoutsExist>[0],
     layoutRegistry,
   );
 

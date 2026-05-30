@@ -52,7 +52,7 @@ export function AdvOverviewLayout({ topic, onBack }: LayoutProps) {
 
             {/* LEFT column */}
             <div>
-              {topic.eyebrow && (
+              {(topic.eyebrow as string) && (
                 <div style={{ fontSize: 10, textTransform: "uppercase", letterSpacing: 2, color: T.accent, marginBottom: 10 }}>
                   {topic.eyebrow as string}
                 </div>
@@ -76,7 +76,7 @@ export function AdvOverviewLayout({ topic, onBack }: LayoutProps) {
                 </div>
               )}
 
-              {topic.summary && (
+              {(topic.summary as string) && (
                 <p style={{ fontSize: 13.5, color: T.textMuted, lineHeight: 1.6, marginTop: 18, marginBottom: 0 }}>
                   {topic.summary as string}
                 </p>

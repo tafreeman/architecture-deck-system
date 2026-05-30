@@ -27,6 +27,11 @@ import * as engineering from "./content/engineering/deck.js";
 import { THEMES, THEMES_BY_ID } from "./tokens/themes.ts";
 import { resolveTopicColors, resolveIntroStatColors } from "./tokens/palette.ts";
 import { STYLE_MODES, STYLE_MODES_BY_ID } from "./tokens/style-modes.ts";
+import type { StyleModeId } from "./tokens/style-modes.ts";
+
+/** Dynamic deck-content object (deck JSON is schema-light by design). */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- dynamic deck content
+type DeckContent = Record<string, any>;
 
 // ── Design-system context (extracted) ─────────────────────────────────────
 import { ThemeContext, ChromeContext } from "./components/context/index.ts";
@@ -59,7 +64,7 @@ import {
 
 // Current deck data now lives in ./content/current/ (structure.js + content.json)
 
-const LAYOUT_ICONS = {
+const LAYOUT_ICONS: Record<string, string> = {
   "two-col": "◌",
   "stat-cards": "◉",
   "before-after": "⬡",
@@ -90,7 +95,7 @@ const LAYOUT_ICONS = {
   "eng-roadmap": "🗺️",
 };
 
-const SPRINT_NODE_ICONS = {
+const SPRINT_NODE_ICONS: Record<string, string> = {
   RQ: "📋",
   UI: "🖥️",
   AD: "🤖",
@@ -125,19 +130,19 @@ function getInitialDeckKey() {
   return param || "onboarding";
 }
 
-function padTopicNumber(index) {
+function padTopicNumber(index: number) {
   return String(index + 1).padStart(2, "0");
 }
 
-function normalizeSprintNodes(nodes) {
-  return (nodes || []).map((node) => ({
+function normalizeSprintNodes(nodes: DeckContent[]) {
+  return (nodes || []).map((node: DeckContent) => ({
     ...node,
     icon: node.icon || SPRINT_NODE_ICONS[node.abbr] || "•",
   }));
 }
 
-function normalizeDeckTopics(slides) {
-  return (slides || []).map((slide, index) => ({
+function normalizeDeckTopics(slides: DeckContent[]) {
+  return (slides || []).map((slide: DeckContent, index: number) => ({
     ...slide,
     num: slide.num || padTopicNumber(index),
     icon: slide.icon || LAYOUT_ICONS[slide.layout] || "•",
@@ -152,7 +157,7 @@ function normalizeDeckTopics(slides) {
   }));
 }
 
-function createDeckPreset(config) {
+function createDeckPreset(config: DeckContent) {
   return {
     ...config,
     topics: normalizeDeckTopics(config.topics),
@@ -405,8 +410,8 @@ const HERO_IMAGE_DEFAULT = new URL(
 export default function App() {
   const viewport = usePresentationViewport();
   const [deckKey, setDeckKey] = useState(getInitialDeckKey);
-  const [contentKey, setContentKey] = useState(null); // null = use deck's default content
-  const baseDeck = DECKS[deckKey] || CURRENT_DECK;
+  const [contentKey, setContentKey] = useState<string | null>(null); // null = use deck's default content
+  const baseDeck = (DECKS as Record<string, DeckContent>)[deckKey] || CURRENT_DECK;
 
   // Compute effective deck: if content is swapped, rebuild from structure + content
   const deck = useMemo(() => {
@@ -437,17 +442,22 @@ export default function App() {
   const [themeManual, setThemeManual] = useState(false);
   const [renderFamily, setRenderFamily] = useState("native");
   const [styleModeId, setStyleModeId] = useState("default");
-  const chrome = STYLE_MODES_BY_ID[styleModeId];
+  const chrome = STYLE_MODES_BY_ID[styleModeId as StyleModeId];
   const [animOptions, setAnimOptions] = useState({ intro: false, comet: false });
   const [heroImage, setHeroImage] = useState(HERO_IMAGE_DEFAULT);
   const [heroImageEnabled, setHeroImageEnabled] = useState(true);
   const [slideViewMode, setSlideViewMode] = useState("native");
-  const [layoutOverrides, setLayoutOverrides] = useState({}); // { slideId: layoutId }
+  const [layoutOverrides, setLayoutOverrides] = useState<Record<string, string>>({}); // { slideId: layoutId }
   const [introDone, setIntroDone] = useState(true);
-  const [active, setActive] = useState(null);
+  const [active, setActive] = useState<string | null>(null);
   const [transitioning, setTransitioning] = useState(false);
-  const [hovered, setHovered] = useState(null);
-  const [comet, setComet] = useState({ active: false, from: null, color: null, targetId: null });
+  const [hovered, setHovered] = useState<string | null>(null);
+  const [comet, setComet] = useState<{
+    active: boolean;
+    from: { x: number; y: number } | null;
+    color: string | null;
+    targetId: string | null;
+  }>({ active: false, from: null, color: null, targetId: null });
 
   // Gate intro animation — skip when disabled, re-queue when enabled
   useEffect(() => {
@@ -459,7 +469,9 @@ export default function App() {
   const deckTopics = useMemo(() => {
     const colorResolved = theme ? resolveTopicColors(deck.topics, theme) : deck.topics;
     if (renderFamily === "native") return colorResolved;
-    return colorResolved.map(t => transcribeTopic(t, renderFamily));
+    return colorResolved.map((t: DeckContent) =>
+      transcribeTopic(t as Parameters<typeof transcribeTopic>[0], renderFamily),
+    );
   }, [deck.topics, theme, renderFamily]);
 
   const introStats = useMemo(() =>
@@ -468,7 +480,7 @@ export default function App() {
   );
 
   // Reset state when switching decks
-  const switchDeck = (key) => {
+  const switchDeck = (key: string) => {
     setDeckKey(key);
     setContentKey(null); // reset to deck's default content
     setLayoutOverrides({}); // reset all per-slide layout overrides
@@ -476,7 +488,7 @@ export default function App() {
     setSlideViewMode("native");
     setIntroDone(!animOptions.intro);
     if (!themeManual) {
-      const nextDeck = DECKS[key] || CURRENT_DECK;
+      const nextDeck = (DECKS as Record<string, DeckContent>)[key] || CURRENT_DECK;
       const suggested = THEMES_BY_ID[nextDeck.themeId];
       if (suggested) setTheme(suggested);
     }
@@ -488,8 +500,8 @@ export default function App() {
     if (suggested) setTheme(suggested);
   };
 
-  const handleSelect = (id, pos) => {
-    const topic = deckTopics.find((t) => t.id === id);
+  const handleSelect = (id: string, pos: { x: number; y: number }) => {
+    const topic = deckTopics.find((t: DeckContent) => t.id === id);
     setSlideViewMode("native");
     if (!animOptions.comet) {
       setActive(id);
@@ -506,7 +518,7 @@ export default function App() {
     setTransitioning(false);
   }, []);
   const handleBack = () => { setSlideViewMode("native"); setTransitioning(true); setTimeout(() => { setActive(null); setTransitioning(false); }, 350); };
-  const activeTopic = deckTopics.find((t) => t.id === active);
+  const activeTopic = deckTopics.find((t: DeckContent) => t.id === active);
 
   // Per-slide one-pager toggle: transcribe active topic when in onepager mode
   const effectiveTopic = useMemo(() => {
@@ -523,7 +535,7 @@ export default function App() {
     : null;
   const activeLayoutIndex = activeSlideLayout ? allLayouts.indexOf(activeSlideLayout) : -1;
 
-  const cycleLayout = useCallback((dir) => {
+  const cycleLayout = useCallback((dir: number) => {
     if (!activeTopic) return;
     const currentIdx = allLayouts.indexOf(
       layoutOverrides[activeTopic.id] ?? activeTopic.layout
@@ -555,7 +567,7 @@ export default function App() {
     <ChromeContext.Provider value={chrome}>
     <div style={{ fontFamily: T.fontBody, minHeight: "100dvh", background: T.bg, opacity: (transitioning && !comet.active) ? 0 : 1, transition: "opacity 0.35s ease", overflowY: viewport.overlayScroll }}>
       <link href={T.fontsUrl} rel="stylesheet" />
-      <CometTransition from={comet.from} color={comet.color} active={comet.active} onDone={handleCometDone} />
+      <CometTransition from={comet.from ?? undefined} color={comet.color ?? undefined} active={comet.active} onDone={handleCometDone} />
       {!introDone && animOptions.intro && <ThematicIntro deck={introDeck} onComplete={() => setIntroDone(true)} />}
       {!active && introDone && (
         <div style={{ position: "relative", minHeight: "100dvh", display: "flex", flexDirection: "column", justifyContent: "center", padding: `${viewport.pagePaddingTop}px ${viewport.pagePaddingX}px ${viewport.pagePaddingBottom}px`, opacity: comet.active ? 0 : 1, transition: "opacity 0.4s ease" }}>
@@ -572,7 +584,7 @@ export default function App() {
               <p style={{ fontSize: viewport.bodySize, color: T.textDim, margin: 0, maxWidth: viewport.isPhone ? "100%" : 600 }}>{deck.tagline}</p>
             </div>
             <div style={{ display: "grid", gridTemplateColumns: viewport.isPhone ? "1fr" : viewport.isCompact ? "1fr 1fr" : "repeat(4, minmax(0, 1fr))", gap: viewport.cardGap }}>
-              {deckTopics.map((t) => (
+              {deckTopics.map((t: DeckContent) => (
                 <LandingTile
                   key={t.id}
                   title={t.title}
@@ -589,10 +601,10 @@ export default function App() {
               ))}
             </div>
             {/* Optional one-pager links */}
-            {deckTopics.filter(t => t.optional).map(t => (
+            {deckTopics.filter((t: DeckContent) => t.optional).map((t: DeckContent) => (
               <OptionalDeckLink
                 key={`opt-${t.id}`}
-                topic={t}
+                topic={t as unknown as React.ComponentProps<typeof OptionalDeckLink>["topic"]}
                 theme={T}
                 chrome={chrome}
                 onNavigate={(id, pos) => handleSelect(id, pos)}
@@ -601,7 +613,7 @@ export default function App() {
             {/* ── Footer: stats ── */}
             <div style={{ marginTop: viewport.isPhone ? 24 : 32, paddingTop: 20, borderTop: `1px solid ${T.border || "rgba(255,255,255,0.06)"}` }}>
               <div style={{ display: "grid", gridTemplateColumns: viewport.isPhone ? "1fr 1fr" : "repeat(3, minmax(0, max-content))", gap: viewport.isPhone ? 12 : 36 }}>
-                {deck.stats.map((s) => (
+                {deck.stats.map((s: DeckContent) => (
                   <div key={`${s.lbl}-${s.val}`}><div style={{ fontFamily: T.fontDisplay, fontSize: 22, fontWeight: 700, color: T.accent }}>{s.val}</div><div style={{ fontSize: 10, color: T.textDim, textTransform: "uppercase", letterSpacing: 0.8 }}>{s.lbl}</div></div>
                 ))}
               </div>
@@ -690,16 +702,16 @@ export default function App() {
       )}
       {/* Floating design control panel */}
       <ControlPanel
-        decks={DECKS}
+        decks={DECKS as unknown as React.ComponentProps<typeof ControlPanel>["decks"]}
         deckKey={deckKey}
         onDeckChange={switchDeck}
-        themes={THEMES}
+        themes={[...THEMES]}
         theme={T}
         onThemeChange={(t) => { setThemeManual(true); setTheme(t); }}
         onThemeReset={resetToDeckTheme}
         themeManual={themeManual}
         deckThemeId={deck.themeId}
-        styleModes={STYLE_MODES}
+        styleModes={[...STYLE_MODES]}
         styleModeId={styleModeId}
         onStyleModeChange={setStyleModeId}
         renderFamily={renderFamily}

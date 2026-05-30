@@ -49,7 +49,7 @@ export function AdvdFutureLayout({ topic, onBack }: LayoutProps) {
         <div style={{ opacity: entered ? 1 : 0, transform: entered ? "none" : "translateY(24px)", transition: "all 0.5s cubic-bezier(0.22,1,0.36,1)" }}>
 
           {/* Pull-quote */}
-          {topic.pullQuote && (
+          {(topic.pullQuote as string) && (
             <div style={{ textAlign: "center", marginBottom: 20 }}>
               <span style={{ fontSize: 140, lineHeight: 0.6, color: `${T.accent}15`, fontFamily: T.fontDisplay, userSelect: "none" }}>&ldquo;</span>
               <p style={{ fontSize: 16, color: T.text, lineHeight: 1.45, maxWidth: 600, margin: "-40px auto 0", fontWeight: 600, fontFamily: T.fontDisplay }}>
