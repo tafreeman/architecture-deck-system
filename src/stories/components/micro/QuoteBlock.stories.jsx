@@ -16,7 +16,7 @@ export default {
 export const Default = {
   args: {
     text: "AI accelerates delivery. Humans govern quality. That separation of concerns is what made this project succeed.",
-    author: "Tech Lead, Deloitte Delivery Team",
+    author: "Tech Lead, Delivery Team",
     variant: "left-accent",
   },
   render: (args) => (
@@ -70,7 +70,7 @@ export const AllVariants = {
     <div style={{ display: "flex", flexDirection: "column", gap: 24, maxWidth: 560 }}>
       <QuoteBlock
         text="AI accelerates delivery. Humans govern quality."
-        author="Tech Lead, Deloitte Delivery Team"
+        author="Tech Lead, Delivery Team"
         variant="left-accent"
       />
       <QuoteBlock
