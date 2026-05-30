@@ -102,7 +102,6 @@ function StatCard({
   stat,
   statLabel,
   body,
-  expandable = false,
   color,
   size = "md",
 }: StatCardProps): React.ReactElement {

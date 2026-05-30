@@ -61,7 +61,6 @@ function LandingTile({
   icon,
   num,
   color,
-  colorLight,
   colorGlow,
   onClick,
   hovered,

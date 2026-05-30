@@ -50,7 +50,7 @@ export function Figure8Cycle({ entered, nodes }: Figure8CycleProps) {
 
       // Draw figure-8 path
       ctx!.beginPath();
-      for (let i = 0; i <= 300; i++) { const p = fig8Pos(i / 300); i === 0 ? ctx!.moveTo(p.x, p.y) : ctx!.lineTo(p.x, p.y); }
+      for (let i = 0; i <= 300; i++) { const p = fig8Pos(i / 300); if (i === 0) ctx!.moveTo(p.x, p.y); else ctx!.lineTo(p.x, p.y); }
       ctx!.closePath(); ctx!.strokeStyle = "rgba(139,92,246,0.1)"; ctx!.lineWidth = 2.5; ctx!.stroke();
 
       // Animated comet

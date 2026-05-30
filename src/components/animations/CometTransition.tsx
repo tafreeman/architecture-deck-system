@@ -26,7 +26,7 @@ interface CometTransitionProps {
 
 function CometTransition({ from, color, active, onDone }: CometTransitionProps) {
   const onDoneRef = useRef(onDone);
-  onDoneRef.current = onDone;
+  useEffect(() => { onDoneRef.current = onDone; });
   const [phase, setPhase] = useState<CometPhase>("idle");
 
   useEffect(() => {

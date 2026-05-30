@@ -39,12 +39,13 @@ function resolveLayoutKey(layout: string, topic: Record<string, unknown>): strin
  * Falls back to an error panel if the layout is unknown.
  */
 export function LayoutRenderer({ layout, slide, themeId, ...rest }: LayoutRendererProps) {
-  try {
-    const resolvedKey = resolveLayoutKey(layout, slide);
-    const Component = layoutRegistry.get(resolvedKey);
-    // Pass `topic` to match the extracted component prop API (monolith pattern).
-    return <Component topic={slide} themeId={themeId} {...rest} />;
-  } catch (error) {
+  const resolvedKey = resolveLayoutKey(layout, slide);
+
+  // Explicit existence check rather than try/catch around render: a try/catch
+  // in a component body is not a real error boundary (it cannot catch a child's
+  // render errors), and registry.get() only throws for unknown layouts — which
+  // we detect directly here.
+  if (!layoutRegistry.has(resolvedKey)) {
     return (
       <div
         style={{
@@ -58,10 +59,15 @@ export function LayoutRenderer({ layout, slide, themeId, ...rest }: LayoutRender
         }}
       >
         <strong>Layout Error: &quot;{layout}&quot;</strong>
-        <p style={{ marginTop: 8, opacity: 0.8 }}>{(error as Error).message}</p>
+        <p style={{ marginTop: 8, opacity: 0.8 }}>Unknown layout: &quot;{resolvedKey}&quot;</p>
       </div>
     );
   }
+
+  const Component = layoutRegistry.get(resolvedKey);
+  // Pass `topic` to match the extracted component prop API (monolith pattern).
+  // eslint-disable-next-line react-hooks/static-components -- dynamic dispatch: registry.get returns a stable, module-level component registered once at startup, not a component created during render
+  return <Component topic={slide} themeId={themeId} {...rest} />;
 }
 
 export default LayoutRenderer;

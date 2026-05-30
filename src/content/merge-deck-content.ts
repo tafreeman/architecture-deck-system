@@ -151,7 +151,7 @@ export function mergeDeckContent(
   };
 
   const mergedContentSlides: MergedSlide[] = structure.contentSlides.map(
-    (skeleton, index) => {
+    (skeleton) => {
       // 1. Exact ID match
       const idMatch = content.slides[skeleton.id]
         ?? fallback?.slides[skeleton.id]

@@ -511,7 +511,7 @@ export default function App() {
     setComet({ active: true, from: pos, color: topic.color, targetId: id });
   };
   const cometRef = useRef(comet);
-  cometRef.current = comet;
+  useEffect(() => { cometRef.current = comet; });
   const handleCometDone = useCallback(() => {
     setActive(cometRef.current.targetId);
     setComet({ active: false, from: null, color: null, targetId: null });

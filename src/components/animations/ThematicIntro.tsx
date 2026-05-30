@@ -66,7 +66,7 @@ const DEFAULT_INTRO_STATS: IntroStat[] = [
 function ThematicIntro({ deck, onComplete }: ThematicIntroProps) {
   const [phase, setPhase] = useState(0);
   const onCompleteRef = useRef(onComplete);
-  onCompleteRef.current = onComplete;
+  useEffect(() => { onCompleteRef.current = onComplete; });
   const introStats = deck?.introStats || DEFAULT_INTRO_STATS;
 
   useEffect(() => {
@@ -80,8 +80,10 @@ function ThematicIntro({ deck, onComplete }: ThematicIntroProps) {
     return () => timers.forEach(clearTimeout);
   }, []);
 
-  // Generate static star positions once
-  const starsRef = useRef<StarData[]>(Array.from({ length: 50 }, () => ({
+  // Generate static star/streak positions once via lazy initial state — they
+  // never change, so they can be read directly during render (a ref would be
+  // the wrong tool: reading ref.current during render is unsafe).
+  const [stars] = useState<StarData[]>(() => Array.from({ length: 50 }, () => ({
     x: 50 + (getRandomUnit() - 0.5) * 80,
     y: 50 + (getRandomUnit() - 0.5) * 80,
     s: getRandomUnit() * 2 + 1,
@@ -89,7 +91,7 @@ function ThematicIntro({ deck, onComplete }: ThematicIntroProps) {
     hue: 190 + getRandomUnit() * 40,
     lightness: 70 + getRandomUnit() * 20,
   })));
-  const streaksRef = useRef<StreakData[]>(Array.from({ length: 12 }, () => ({
+  const [streaks] = useState<StreakData[]>(() => Array.from({ length: 12 }, () => ({
     left: 15 + getRandomUnit() * 70,
     alpha: 0.1 + getRandomUnit() * 0.15,
     duration: 0.8 + getRandomUnit() * 0.6,
@@ -129,7 +131,7 @@ function ThematicIntro({ deck, onComplete }: ThematicIntroProps) {
       `}</style>
 
       {/* Warp stars */}
-      {starsRef.current.map((star, i) => (
+      {stars.map((star, i) => (
         <div key={i} style={{
           position: "absolute",
           left: `${star.x}%`, top: `${star.y}%`,
@@ -142,7 +144,7 @@ function ThematicIntro({ deck, onComplete }: ThematicIntroProps) {
       ))}
 
       {/* Speed streaks */}
-      {phase >= 1 && streaksRef.current.map((streak, i) => (
+      {phase >= 1 && streaks.map((streak, i) => (
         <div key={`s${i}`} style={{
           position: "absolute",
           left: `${streak.left}%`,

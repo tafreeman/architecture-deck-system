@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useTheme } from "../../components/hooks/useTheme.ts";
-import { useChrome } from "../../components/hooks/useChrome.ts";
 import BackBtn from "../../components/navigation/BackBtn.tsx";
 
 interface Topic {
@@ -22,7 +21,6 @@ interface LayoutProps {
 
 export function HbProcessLayout({ topic, onBack }: LayoutProps) {
   const T = useTheme();
-  const C = useChrome();
   const [entered, setEntered] = useState(false);
   useEffect(() => { const t = setTimeout(() => setEntered(true), 60); return () => clearTimeout(t); }, []);
   const steps = topic.steps as Array<{ num: string; title: string; body: string }> || [];
