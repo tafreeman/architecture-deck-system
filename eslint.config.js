@@ -29,24 +29,24 @@ export default tseslint.config(
     plugins: { "react-hooks": reactHooks },
     rules: {
       ...reactHooks.configs.recommended.rules,
-      // Hard gates: the codebase is clean for these, so regressions must fail CI.
-      // `no-explicit-any` keeps the "strict mode" headline honest; `exhaustive-deps`
-      // guards effect correctness.
-      "@typescript-eslint/no-explicit-any": "error",
-      "react-hooks/exhaustive-deps": "error",
-      // Remaining style/strictness rules stay warnings while the codebase tightens
-      // incrementally — they don't block the gate yet.
-      "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
-      "@typescript-eslint/no-unused-expressions": "warn",
-      // react-hooks v7 advisory rules (ported from the monolith): each is a
-      // behavioural refactor (error boundaries, ref patterns). Surface as
-      // warnings now; rules-of-hooks stays an error.
-      "react-hooks/refs": "warn",
+      // ── Hard gates (error) ───────────────────────────────────────────────
+      // The codebase is clean for each of these, so any regression fails CI.
+      "@typescript-eslint/no-explicit-any": "error",        // keeps the "strict mode" headline honest
+      "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
+      "@typescript-eslint/no-unused-expressions": "error",  // catches accidental no-op statements
+      "react-hooks/exhaustive-deps": "error",               // effect dependency correctness
+      "react-hooks/refs": "error",                          // no ref reads/writes during render
+      "react-hooks/error-boundaries": "error",              // no try/catch-as-error-boundary in render
+      "react-hooks/static-components": "error",             // no components created during render
+      "react-hooks/purity": "error",                        // render must be side-effect free
+      "react-hooks/immutability": "error",                  // never mutate props/state (matches our coding standards)
+      // ── Advisory (warn) by design ────────────────────────────────────────
+      // set-state-in-effect stays a warning: this animation-heavy app has a few
+      // legitimate "reset animation state when a dependency changes" effects
+      // (intro re-queue in App.v14, comet phase reset in CometTransition) that
+      // the rule flags but that are correct as written. Promoting would force
+      // event-handler/key refactors of working transition code for marginal gain.
       "react-hooks/set-state-in-effect": "warn",
-      "react-hooks/error-boundaries": "warn",
-      "react-hooks/static-components": "warn",
-      "react-hooks/purity": "warn",
-      "react-hooks/immutability": "warn",
     },
   },
 );
