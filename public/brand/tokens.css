@@ -189,7 +189,7 @@
   --shadow-glow: 0 1px 2px rgba(26,26,46,0.08), 0 0 0 3px var(--accent-glow);
 }
 
-/* ============ Semantic element styles ============ */
+/* ============ Page canvas (global — intentional) ============ */
 html { background: var(--bg); color: var(--fg-1); }
 body {
   font-family: var(--font-body);
@@ -201,7 +201,10 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-h1, .h1 {
+/* ============ Pre-mount shell element styles ============ */
+/* Scoped to #ember-shell so design-system element defaults do not leak
+   into the React app mounted in #root (it owns its own theming). */
+#ember-shell h1, #ember-shell .h1 {
   font-family: var(--font-display);
   font-size: var(--fs-hero);
   font-weight: var(--fw-bold);
@@ -209,7 +212,7 @@ h1, .h1 {
   line-height: var(--lh-snug);
   color: var(--fg-1);
 }
-h2, .h2 {
+#ember-shell h2, #ember-shell .h2 {
   font-family: var(--font-display);
   font-size: var(--fs-title);
   font-weight: var(--fw-bold);
@@ -217,14 +220,14 @@ h2, .h2 {
   line-height: var(--lh-snug);
   color: var(--fg-1);
 }
-h3, .h3 {
+#ember-shell h3, #ember-shell .h3 {
   font-family: var(--font-display);
   font-size: var(--fs-section);
   font-weight: var(--fw-bold);
   line-height: var(--lh-heading);
   color: var(--fg-1);
 }
-h4, .h4 {
+#ember-shell h4, #ember-shell .h4 {
   font-family: var(--font-display);
   font-size: var(--fs-card);
   font-weight: var(--fw-semi);
@@ -232,13 +235,13 @@ h4, .h4 {
   color: var(--fg-1);
 }
 
-p {
+#ember-shell p {
   font-size: var(--fs-body);
   line-height: var(--lh-body);
   color: var(--fg-1);
 }
 
-.eyebrow {
+#ember-shell .eyebrow {
   font-size: var(--fs-eyebrow);
   font-weight: var(--fw-bold);
   letter-spacing: var(--tracking-eyebrow);
@@ -246,7 +249,7 @@ p {
   color: var(--accent);
 }
 
-.caption {
+#ember-shell .caption {
   font-size: var(--fs-caption);
   font-weight: var(--fw-medium);
   letter-spacing: 0.5px;
@@ -254,16 +257,16 @@ p {
   color: var(--fg-2);
 }
 
-code, pre, .mono {
+#ember-shell code, #ember-shell pre, #ember-shell .mono {
   font-family: var(--font-mono);
   font-size: 0.9em;
   font-feature-settings: "ss01", "ss02";
 }
 
-a {
+#ember-shell a {
   color: var(--accent);
   text-decoration: none;
   border-bottom: 1px solid transparent;
   transition: color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
 }
-a:hover { color: var(--accent-hover); border-bottom-color: currentColor; }
+#ember-shell a:hover { color: var(--accent-hover); border-bottom-color: currentColor; }
