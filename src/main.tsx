@@ -15,14 +15,19 @@ function LoadingScreen() {
 }
 
 const root = ReactDOM.createRoot(document.getElementById('root')!);
+
+function ShellHider() {
+  React.useEffect(() => {
+    document.body.classList.add('app-ready');
+  }, []);
+  return null;
+}
+
 root.render(
   <React.StrictMode>
+    <ShellHider />
     <Suspense fallback={<LoadingScreen />}>
       <App />
     </Suspense>
   </React.StrictMode>
 );
-// Signal to the pre-mount shell that React has taken over.
-// Uses a React-driven class rather than a MutationObserver so browser
-// extensions injecting nodes into #root cannot trigger a false positive.
-document.body.classList.add('app-ready');
