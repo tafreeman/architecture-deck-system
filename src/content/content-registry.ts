@@ -17,8 +17,6 @@ import currentContent from "./current/content.json";
 import genaiContent from "./genai-advocacy/content.json";
 import engineeringContent from "./engineering/content.json";
 import onboardingContent from "./onboarding/content.json";
-import atelierSageContent from "./atelier-sage/content.json";
-import signalCobaltContent from "./signal-cobalt/content.json";
 import vergePopContent from "./verge-pop/content.json";
 import studioContent from "./studio/content.json";
 
@@ -27,8 +25,6 @@ import { structure as currentStructure } from "./current/structure.js";
 import { structure as genaiStructure } from "./genai-advocacy/structure.js";
 import { structure as engineeringStructure } from "./engineering/structure.js";
 import { structure as onboardingStructure } from "./onboarding/structure.js";
-import { structure as atelierSageStructure } from "./atelier-sage/structure.js";
-import { structure as signalCobaltStructure } from "./signal-cobalt/structure.js";
 import { structure as vergePopStructure } from "./verge-pop/structure.js";
 import { structure as studioStructure } from "./studio/structure.js";
 
@@ -71,8 +67,6 @@ export const CONTENT_PACKS: Record<string, ContentPack> = {
   genai:          makeContentPack("genai",           "GenAI Case Study",    genaiContent),
   engineering:    makeContentPack("engineering",     "Engineering",         engineeringContent),
   onboarding:     makeContentPack("onboarding",      "Onboarding",          onboardingContent),
-  "atelier-sage": makeContentPack("atelier-sage",    "Atelier Sage",        atelierSageContent),
-  "signal-cobalt":makeContentPack("signal-cobalt",   "Signal Cobalt",       signalCobaltContent),
   "verge-pop":    makeContentPack("verge-pop",       "Verge Pop",           vergePopContent),
   studio:         makeContentPack("studio",          "Studio Handbook",     studioContent),
 };
@@ -101,18 +95,6 @@ export const DECK_STRUCTURES: Record<string, DeckStructureEntry> = {
     structure: onboardingStructure,
     defaultContentId: "onboarding",
     slideIds: onboardingStructure.contentSlides.map((s: { id: string }) => s.id),
-  },
-  "atelier-sage": {
-    id: "atelier-sage",
-    structure: atelierSageStructure,
-    defaultContentId: "atelier-sage",
-    slideIds: atelierSageStructure.contentSlides.map((s: { id: string }) => s.id),
-  },
-  "signal-cobalt": {
-    id: "signal-cobalt",
-    structure: signalCobaltStructure,
-    defaultContentId: "signal-cobalt",
-    slideIds: signalCobaltStructure.contentSlides.map((s: { id: string }) => s.id),
   },
   "verge-pop": {
     id: "verge-pop",

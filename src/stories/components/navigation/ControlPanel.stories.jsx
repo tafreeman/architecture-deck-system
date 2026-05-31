@@ -48,13 +48,6 @@ const MOCK_DECKS = {
     titleAccent: "Pop",
     topics: [],
   },
-  "atelier-sage": {
-    id: "atelier-sage",
-    themeId: "atelier-sage",
-    title: "Atelier",
-    titleAccent: "Sage",
-    topics: [],
-  },
 };
 
 function ControlPanelHarness({
@@ -166,7 +159,7 @@ export const LightTheme = {
   render: () => (
     <ControlPanelHarness
       initialThemeId="paper-ink"
-      initialDeckKey="atelier-sage"
+      initialDeckKey="studio"
     />
   ),
 };
