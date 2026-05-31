@@ -285,7 +285,7 @@
   <div id="root"></div>
 
   <!-- Ember/Console branded entry — shown before React hydrates, then hidden -->
-  <div id="ember-shell" aria-hidden="true">
+  <div id="ember-shell">
     <header class="ember-topbar">
       <span class="ember-icon">&#128218;</span>
       <span class="ember-wordmark">Architecture Deck System</span>
@@ -368,19 +368,5 @@
   </div>
 
   <script type="module" src="/src/main.tsx"></script>
-  <!-- Hide ember landing shell once React mounts -->
-  <script>
-    (function() {
-      var root = document.getElementById('root');
-      if (!root) return;
-      var observer = new MutationObserver(function() {
-        if (root.firstChild) {
-          document.body.classList.add('app-ready');
-          observer.disconnect();
-        }
-      });
-      observer.observe(root, { childList: true });
-    })();
-  </script>
 </body>
 </html>
