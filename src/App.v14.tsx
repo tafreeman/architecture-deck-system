@@ -16,7 +16,6 @@ import React, { useState, useEffect, useMemo, useCallback, useRef } from "react"
 // ── Content imports ────────────────────────────────────────────────────────
 import * as current from "./content/current/deck.js";
 import { themeId as genaiThemeId, contentSlides as genaiContentSlides, sprintNodes as genaiSprintNodes } from "./content/genai-advocacy/deck.js";
-import { atelierSage, signalCobalt } from "./content/reference-decks/index.js";
 import * as vergePop from "./content/verge-pop/deck.js";
 import * as onboarding from "./content/onboarding/deck.js";
 import * as onboardingOp from "./content/onboarding-op/deck.js";
@@ -199,58 +198,6 @@ const GENAI_MANIFEST_DECK = createDeckPreset({
   sprintNodes: genaiSprintNodes,
 });
 
-const ATELIER_SAGE_DECK = createDeckPreset({
-  id: "atelier-sage",
-  themeId: atelierSage.themeId,
-  brandLine: "Reference Study",
-  title: "Atelier",
-  titleAccent: "Sage",
-  tagline: "Editorial pacing, paper surfaces, and restrained process language.",
-  introBrandLine: "Reference Study",
-  introTitle: "Atelier Sage",
-  introSubtitle: "Editorial process deck inspired by deck.gallery",
-  introStats: [
-    { val: "Soft", lbl: "Palette", color: "#557868" },
-    { val: "4", lbl: "Sample Slides", color: "#D7AA58" },
-    { val: "1", lbl: "Theme", color: "#C87052" },
-    { val: "Calm", lbl: "Tone", color: "#7F9A8C" },
-  ],
-  stats: [
-    { val: "Sage", lbl: "Primary Accent" },
-    { val: "Warm", lbl: "Paper Surface" },
-    { val: "Serif", lbl: "Display Tone" },
-    { val: "4", lbl: "Sample Slides" },
-  ],
-  topics: atelierSage.contentSlides,
-  sprintNodes: atelierSage.sprintNodes,
-});
-
-const SIGNAL_COBALT_DECK = createDeckPreset({
-  id: "signal-cobalt",
-  themeId: signalCobalt.themeId,
-  brandLine: "Reference Study",
-  title: "Signal",
-  titleAccent: "Cobalt",
-  tagline: "Swiss-modern rhythm with cobalt interruption slides and orange utility accents.",
-  introBrandLine: "Reference Study",
-  introTitle: "Signal Cobalt",
-  introSubtitle: "Systems deck inspired by deck.gallery",
-  introStats: [
-    { val: "Grid", lbl: "Discipline", color: "#1328FF" },
-    { val: "5", lbl: "Sample Slides", color: "#FF6A13" },
-    { val: "B/W", lbl: "Foundation", color: "#121212" },
-    { val: "Sharp", lbl: "Tone", color: "#5063FF" },
-  ],
-  stats: [
-    { val: "Cobalt", lbl: "Primary Accent" },
-    { val: "Orange", lbl: "Utility Signal" },
-    { val: "Swiss", lbl: "Composition" },
-    { val: "5", lbl: "Sample Slides" },
-  ],
-  topics: signalCobalt.contentSlides,
-  sprintNodes: signalCobalt.sprintNodes,
-});
-
 const VERGE_POP_DECK = createDeckPreset({
   id: "verge-pop",
   themeId: vergePop.themeId,
@@ -384,8 +331,6 @@ const ENGINEERING_DECK = createDeckPreset({
 const DECKS = {
   current: CURRENT_DECK,
   genai: GENAI_MANIFEST_DECK,
-  "atelier-sage": ATELIER_SAGE_DECK,
-  "signal-cobalt": SIGNAL_COBALT_DECK,
   "verge-pop": VERGE_POP_DECK,
   onboarding: ONBOARDING_DECK,
   "onboarding-op": ONBOARDING_OP_DECK,
