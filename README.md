@@ -6,7 +6,7 @@ React 19 + Vite 5 presentation platform with 6 registered content decks, 34 regi
 
 **[tafreeman.github.io/architecture-deck-system](https://tafreeman.github.io/architecture-deck-system/)** — the production Vite build, deployed from `main` via GitHub Actions ([`.github/workflows/deploy-pages.yml`](.github/workflows/deploy-pages.yml)).
 
-> First-time setup: enable **Settings → Pages → Source = "GitHub Actions"**, then push to `main`.
+> Pages builds and deploys automatically from `main` via GitHub Actions.
 
 ## Quick Start
 

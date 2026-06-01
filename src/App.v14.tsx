@@ -15,7 +15,7 @@ import React, { useState, useEffect, useMemo, useCallback, useRef } from "react"
 
 // ── Content imports ────────────────────────────────────────────────────────
 import * as current from "./content/current/deck.js";
-import { themeId as genaiThemeId, contentSlides as genaiContentSlides, sprintNodes as genaiSprintNodes, deckMeta as genaiDeckMeta } from "./content/genai-advocacy/deck.js";
+import { themeId as genaiThemeId, contentSlides as genaiContentSlides, sprintNodes as genaiSprintNodes } from "./content/genai-advocacy/deck.js";
 import * as vergePop from "./content/verge-pop/deck.js";
 import * as onboarding from "./content/onboarding/deck.js";
 import * as onboardingOp from "./content/onboarding-op/deck.js";

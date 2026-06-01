@@ -14,8 +14,18 @@ function LoadingScreen() {
   );
 }
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
+const root = ReactDOM.createRoot(document.getElementById('root')!);
+
+function ShellHider() {
+  React.useEffect(() => {
+    document.body.classList.add('app-ready');
+  }, []);
+  return null;
+}
+
+root.render(
   <React.StrictMode>
+    <ShellHider />
     <Suspense fallback={<LoadingScreen />}>
       <App />
     </Suspense>
