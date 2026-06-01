@@ -64,7 +64,7 @@ function makeContentPack(
 
 export const CONTENT_PACKS: Record<string, ContentPack> = {
   current:        makeContentPack("current",        "Current (Advocacy)",  currentContent),
-  genai:          makeContentPack("genai",           "GenAI Case Study",    genaiContent),
+  genai:          makeContentPack("genai",           "AI Fluency Guidebook",    genaiContent),
   engineering:    makeContentPack("engineering",     "Engineering",         engineeringContent),
   onboarding:     makeContentPack("onboarding",      "Onboarding",          onboardingContent),
   "verge-pop":    makeContentPack("verge-pop",       "Verge Pop",           vergePopContent),

@@ -1,6 +1,6 @@
 # Presentation System
 
-React 19 + Vite 5 presentation platform with 8 registered content decks, 34 registered layouts, 15 themes, and 4 style modes. Includes Storybook for visual testing and an export pipeline for HTML, images, and PDF.
+React 19 + Vite 5 presentation platform with 6 registered content decks, 34 registered layouts, 15 themes, and 4 style modes. Includes Storybook for visual testing and an export pipeline for HTML, images, and PDF.
 
 ## Live Demo
 
