@@ -796,6 +796,20 @@ Match counts are exposed in `MergedDeck.matchStats` for UI diagnostics.
 
 ---
 
+#### KNOWN-001: Leaked local Windows path in git history
+
+**Severity:** Low (cosmetic — no secret exposed)
+
+**Commit:** d76e418 (`feat: restyle Pages to ember/console design system`)
+
+**Location:** Commit message body only (not in code or tracked files)
+
+**Detail:** The commit message body references `C:/Users/tandf/source/tafreeman/tokens.css` as the canonical source of `public/brand/tokens.css`. This is a local machine path. It is not in any tracked file, only in git history, so it poses no operational risk. Rewriting history on a public repo would disrupt forks and CI; the recommendation is to leave it and note it here.
+
+**Action required:** None. Close as acknowledged.
+
+---
+
 ## Section 7 — Storybook Documentation Assessment
 
 The Storybook setup (`autodocs: true` in `.storybook/main.ts`, `ThemeContext` + `ChromeContext` decorator in `preview.jsx`) is correctly configured. However, the following gaps exist:
