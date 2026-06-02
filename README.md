@@ -74,8 +74,6 @@ Layouts self-register at startup via side-effect imports. `register-all.ts` is i
 | `genai` | GenAI Case Study | (see structure.js) |
 | `engineering` | Engineering | (see structure.js) |
 | `onboarding` | Onboarding | (see structure.js) |
-| `atelier-sage` | Atelier Sage | atelier-sage |
-| `signal-cobalt` | Signal Cobalt | signal-cobalt |
 | `verge-pop` | Verge Pop | verge-orange |
 | `studio` | Studio Handbook | studio-craft |
 

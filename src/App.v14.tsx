@@ -343,10 +343,7 @@ const DECKS = {
 // ═════════════════════════════════════════════════════════════════════
 // Extracted to ./transcription.ts — imported above.
 
-const HERO_IMAGE_DEFAULT = new URL(
-  "./content/img/capabilities-deck-from-studio-freight (Large).png",
-  import.meta.url,
-).href;
+const HERO_IMAGE_DEFAULT = "";
 
 // ═════════════════════════════════════════════════════════════════════
 // APP
