@@ -8,6 +8,12 @@ React 19 + Vite 5 presentation platform with 6 registered content decks, 34 regi
 
 > Pages builds and deploys automatically from `main` via GitHub Actions.
 
+## Preview
+
+![Onboarding Guidebook deck — midnight-teal theme, info-cards layout](docs/screenshots/slide-preview.png)
+
+*Onboarding Guidebook deck — midnight-teal theme, info-cards layout. Open the DESIGN panel to switch decks, themes, and style modes at runtime.*
+
 ## Quick Start
 
 ```bash
