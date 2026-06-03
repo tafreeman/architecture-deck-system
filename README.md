@@ -2,13 +2,11 @@
 
 React 19 + Vite 5 presentation platform with 6 registered content decks, 34 registered layouts, 15 themes, and 4 style modes. Includes Storybook for visual testing and an export pipeline for HTML, images, and PDF.
 
-## Live Demo
+## Landing Page
 
-**[tafreeman.github.io/architecture-deck-system](https://tafreeman.github.io/architecture-deck-system/)** — the production Vite build, deployed from `main` via GitHub Actions ([`.github/workflows/deploy-pages.yml`](.github/workflows/deploy-pages.yml)).
+**[tafreeman.github.io/architecture-deck-system](https://tafreeman.github.io/architecture-deck-system/)** — static landing page (ember/console design system), deployed from [`docs/`](docs/) via GitHub Actions ([`.github/workflows/deploy-pages.yml`](.github/workflows/deploy-pages.yml)). The interactive deck viewer is not deployed — run it locally with `npm run dev`.
 
-> Pages builds and deploys automatically from `main` via GitHub Actions.
-
-## Preview
+## Preview (local deck viewer)
 
 ![Onboarding Guidebook deck — midnight-teal theme, info-cards layout](docs/screenshots/slide-preview.png)
 

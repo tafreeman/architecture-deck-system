@@ -1,13 +1,18 @@
 name: Deploy to GitHub Pages
 
-# Publishes the production Vite build (the live presentation engine) to
-# GitHub Pages. To activate: repo Settings → Pages → Source = "GitHub Actions".
-# Until Pages is enabled, this workflow is inert (the deploy step will no-op/fail
-# only on the deploy job, never blocking CI in ci.yml).
+# Publishes the static landing page (docs/) to GitHub Pages. The React deck
+# viewer is NOT deployed — it runs locally via `npm run dev`. The landing
+# page mirrors the pattern used by sibling portfolio repos
+# (e.g. agentic-systems-lab, executionkit).
+#
+# To activate: repo Settings → Pages → Source = "GitHub Actions".
 
 on:
   push:
     branches: [main]
+    paths:
+      - 'docs/**'
+      - '.github/workflows/deploy-pages.yml'
   workflow_dispatch:
 
 # Least-privilege token scoped for Pages deployment.
@@ -29,25 +34,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: '20'
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build (Vite)
-        run: npm run build
-
       - name: Configure Pages
         uses: actions/configure-pages@v6
 
-      - name: Upload artifact
+      - name: Upload static landing page artifact
         uses: actions/upload-pages-artifact@v5
         with:
-          path: dist
+          path: docs
 
   deploy:
     name: Deploy
