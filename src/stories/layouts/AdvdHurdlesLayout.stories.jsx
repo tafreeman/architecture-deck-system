@@ -31,7 +31,7 @@ const mockTopic = {
       labels: ["Documentation", "Architecture"],
       challenge:
         "A 40,000-line monorepo with five packages and no canonical entry-point guide left new engineers unsure where to begin reading.",
-      fix: "CLAUDE.md and ARCHITECTURE.md provide a structured tour. Each package has a one-paragraph purpose statement and a pointer to the canonical example for its core concern.",
+      fix: "Architecture docs provide a structured tour. Each package has a one-paragraph purpose statement and a pointer to the canonical example for its core concern.",
     },
     {
       title: "Ambiguous First-Ticket Scope",

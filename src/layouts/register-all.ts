@@ -1,7 +1,8 @@
 /**
  * register-all.ts — import this once at app startup to register all layout families.
  *
- * Each sub-module calls layoutRegistry.register(...) as a side effect.
+ * Each sub-module calls layoutRegistry.register(...) or registerBatch(...) as
+ * a side effect.
  * Import order does not matter — registry uses a Map internally.
  *
  * Registered layout IDs after import:
@@ -11,8 +12,12 @@
  *   Onboarding: info-cards, checklist, workflow, pillars, catalog, op-brief, op-flow
  *   Handbook:   hb-chapter, hb-practices, hb-process, hb-manifesto, hb-index
  *   Engineering: eng-architecture, eng-code-flow, eng-tech-stack, eng-roadmap
+ *   Advocacy:   adv-overview, adv-stats, adv-hurdles, adv-future, adv-platform
+ *   Advocacy Dense: advd-overview, advd-stats, advd-hurdles, advd-future, advd-platform
  *
- * Usage in main.jsx or App entry:
+ * Total registered runtime layout IDs: 39.
+ *
+ * Usage in main.tsx or App entry:
  *   import "../layouts/register-all.ts";
  */
 

@@ -40,6 +40,9 @@ jobs:
       - name: Test (Vitest)
         run: npm test
 
+      - name: Verify layout registry count
+        run: npm run verify:layouts
+
       - name: Build (Vite)
         run: npm run build
 

@@ -24,7 +24,7 @@ const mockTopic = {
       type: "ai",
       title: "Context-Enriched Prompt Assembly",
       body: "Architecture docs, coding standards, and the relevant module's existing patterns are injected into the prompt before any generation request is made.",
-      tip: "Always include the CLAUDE.md and the target module's __init__.py in the context window for best results.",
+      tip: "Always include architecture docs and the target module's __init__.py in the context window for best results.",
     },
     {
       num: "02",

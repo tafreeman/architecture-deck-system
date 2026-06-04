@@ -1,7 +1,7 @@
 /**
  * register.js — self-registration of base layouts into the global registry.
  *
- * Import this module once at app startup (e.g. in main.jsx) to make all
+ * Import this module once at app startup (e.g. in main.tsx) to make all
  * base-family layouts available via layoutRegistry.get("two-col"), etc.
  */
 

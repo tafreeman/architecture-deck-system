@@ -9,6 +9,7 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
+    "verify:layouts": "node scripts/verify-layout-count.mjs",
     "build": "vite build",
     "build:single": "vite build --mode single-file && node scripts/build-single-file.mjs",
     "export:html": "npm run build:single",

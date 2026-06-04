@@ -74,7 +74,7 @@ const mockTopic = {
       steps: [
         "Run automated setup script",
         "Complete compliance training",
-        "Read CLAUDE.md and ARCHITECTURE.md",
+        "Read architecture docs",
         "Pick first ticket from curated backlog",
         "Submit first pull request",
         "Complete day-90 retrospective",

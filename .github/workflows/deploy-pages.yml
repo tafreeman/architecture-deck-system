@@ -1,9 +1,8 @@
 name: Deploy to GitHub Pages
 
-# Publishes the static landing page (docs/) to GitHub Pages. The React deck
-# viewer is NOT deployed — it runs locally via `npm run dev`. The landing
-# page mirrors the pattern used by sibling portfolio repos
-# (e.g. agentic-systems-lab, executionkit).
+# Publishes the static landing page (docs/) plus a built React deck viewer
+# under /demo/. The landing page mirrors the pattern used by sibling portfolio
+# repos while the demo gives reviewers a one-click product surface.
 #
 # To activate: repo Settings → Pages → Source = "GitHub Actions".
 
@@ -12,6 +11,12 @@ on:
     branches: [main]
     paths:
       - 'docs/**'
+      - 'src/**'
+      - 'scripts/**'
+      - 'index.html'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'vite.config.js'
       - '.github/workflows/deploy-pages.yml'
   workflow_dispatch:
 
@@ -37,10 +42,28 @@ jobs:
       - name: Configure Pages
         uses: actions/configure-pages@v6
 
-      - name: Upload static landing page artifact
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build demo viewer
+        run: npm run build
+
+      - name: Assemble Pages artifact
+        run: |
+          mkdir -p pages-site/demo
+          cp -R docs/. pages-site/
+          cp -R dist/. pages-site/demo/
+
+      - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v5
         with:
-          path: docs
+          path: pages-site
 
   deploy:
     name: Deploy

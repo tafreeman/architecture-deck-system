@@ -7,7 +7,7 @@
  *   import content from "./alternative-content.json";
  *
  * All original exports are preserved for backward compatibility with
- * App.v14.jsx, Storybook stories, and export scripts.
+ * App.v14.tsx, Storybook stories, and export scripts.
  */
 
 import { mergeDeckContent } from "../merge-deck-content.ts";

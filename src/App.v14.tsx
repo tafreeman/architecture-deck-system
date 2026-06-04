@@ -41,7 +41,7 @@ import { CometTransition, ThematicIntro } from "./components/animations/index.ts
 import { LandingTile } from "./components/cards/index.ts";
 import { ControlPanel, OptionalDeckLink } from "./components/navigation/index.ts";
 
-// ── Layout registry: side-effect import registers all 34 layouts ───────────
+// ── Layout registry: side-effect import registers all 39 layouts ───────────
 import "./layouts/register-all.ts";
 import { layoutRegistry } from "./layouts/registry.ts";
 import { LayoutRenderer } from "./layouts/LayoutRenderer.tsx";
@@ -313,14 +313,14 @@ const ENGINEERING_DECK = createDeckPreset({
   introTitle: "Platform Architecture",
   introSubtitle: "From monolith to modular design system",
   introStats: [
-    { val: "26", lbl: "Layouts", color: "#60A5FA" },
-    { val: "6", lbl: "Families", color: "#34D399" },
+    { val: "39", lbl: "Layouts", color: "#60A5FA" },
+    { val: "8", lbl: "Families", color: "#34D399" },
     { val: "768", lbl: "Lines", color: "#A78BFA" },
     { val: "~1s", lbl: "Build", color: "#F59E0B" },
   ],
   stats: [
-    { val: "26", lbl: "Registered Layouts" },
-    { val: "6", lbl: "Layout Families" },
+    { val: "39", lbl: "Registered Layouts" },
+    { val: "8", lbl: "Layout Families" },
     { val: "4", lbl: "Architecture Layers" },
     { val: "7", lbl: "Migration Phases" },
   ],

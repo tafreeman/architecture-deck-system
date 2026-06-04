@@ -2,7 +2,7 @@
  * Current (Advocacy) Deck — Structure (layout skeleton).
  * Text content lives in the companion `content.json`.
  *
- * This is the original advocacy deck that was previously inline in App.v14.jsx.
+ * This is the original advocacy deck that was previously inline in App.v14.tsx.
  */
 
 export const structure = {

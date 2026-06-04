@@ -1,6 +1,7 @@
 # Documentation Review — Presentation System
 
 > Generated: 2026-04-13
+> Refreshed: 2026-06-04 for public portfolio accuracy
 > Scope: repository root
 
 ---
@@ -9,15 +10,15 @@
 
 | Area | Status | Severity |
 |------|--------|----------|
-| README accuracy | Partially inaccurate | High |
-| Architecture diagram | Missing | High |
-| Data flow diagram | Missing | High |
+| README accuracy | Resolved in current README | — |
+| Architecture diagram | Present in this review | — |
+| Data flow diagram | Present in current README | — |
 | Key interface docs | Partial (good in-source) | Medium |
 | How-to: add layout family | Missing | High |
 | How-to: add theme | Missing | Medium |
 | How-to: add content deck | Missing | High |
 | Known issues / tech debt | Undocumented | Critical |
-| Storybook autodocs | Setup correct; story count outdated | Low |
+| Storybook autodocs | Setup correct; no hardcoded README story count | — |
 | `mergeDeckContent` cascade algorithm | Documented (Section 5) + unit-tested | Medium |
 | Transcription `as any` casts | ✅ Resolved (DEBT-001) — 0 `any`, unit-tested | — |
 | `Particles type="future"` bug | ✅ Resolved (BUG-001) — valid variant | — |
@@ -32,14 +33,14 @@
 
 | Item | README says | Actual |
 |------|-------------|--------|
-| React version | "React 18" | `package.json` declares `react: ^18.2.0`; CLAUDE.md says "React 19" — inconsistency |
-| Entry file extension | `App.v14.jsx` | File is `App.v14.tsx` (TypeScript) |
+| React version | Resolved | `package.json` and README both declare React 19 |
+| Entry file extension | Resolved | README references `src/App.v14.tsx` |
 | Layout ID list in `register-all.ts` | Lists "process-cycle" under Sprint | Correct, but Sprint family also contains `CircularRingCycle` and `Figure8Cycle` sub-components — not independent layouts |
 | `stat-cards-manifest` | Not mentioned | Is a distinct registered layout ID resolved automatically by `LayoutRenderer` |
-| Storybook story count | "60 stories" | Likely stale; needs manual recount |
-| Content packs | "6 content decks + 4 reference/legacy" | `content-registry.ts` registers 8 content packs: `current`, `genai`, `engineering`, `onboarding`, `atelier-sage`, `signal-cobalt`, `verge-pop`, `studio` |
-| `main.jsx` | Referenced as the app version switcher | File is `main.tsx` (TypeScript) |
-| Zod dependency | Not mentioned | `zod@^4.3.6` in `dependencies`; Zod schemas exist at `src/patterns/decks/schema.ts` but are **not called at runtime** — declared unused |
+| Storybook story count | Resolved | README does not hardcode a story count; CI builds Storybook |
+| Content packs | Accurate | `content-registry.ts` registers 6 migrated content packs: `current`, `genai`, `engineering`, `onboarding`, `verge-pop`, `studio` |
+| `main.jsx` | Resolved | Entry file is `main.tsx` and README does not reference `main.jsx` |
+| Zod dependency | Resolved | Zod soft validation is called by `content-registry.ts` at registration/build time |
 
 ---
 
@@ -57,7 +58,7 @@ Paste this into `README.md` replacing the current Architecture section:
 | Layer | File(s) | Responsibility |
 |-------|---------|---------------|
 | **Shell** | `src/App.v14.tsx` | Deck factory, state, context providers, side-panel |
-| **Layout Registry** | `src/layouts/registry.ts` | O(1) Map-based plugin system; 34 IDs across 8 families |
+| **Layout Registry** | `src/layouts/registry.ts` | O(1) Map-based plugin system; 39 IDs across 8 families |
 | **Layout Renderer** | `src/layouts/LayoutRenderer.tsx` | Resolves layout string → component; stat-cards multi-variant routing |
 | **Transcription** | `src/transcription.ts` | Cross-family content normalisation (e.g. `adv-future` → `h-strip`) |
 | **Content Registry** | `src/content/content-registry.ts` | Runtime content-pack swapping; `CONTENT_PACKS` + `DECK_STRUCTURES` maps |
@@ -755,14 +756,14 @@ Match counts are exposed in `MergedDeck.matchStats` for UI diagnostics.
 
 ---
 
-#### DEBT-004: README says `App.v14.jsx`; file is `.tsx`
+#### DEBT-004: README says `App.v14.jsx`; file is `.tsx` — RESOLVED
 
 **Severity:** Medium (documentation inaccuracy)
-**Files:** `README.md`, `CLAUDE.md`
+**Files:** `README.md`
 
-**Description:** Both `README.md` and `CLAUDE.md` reference `App.v14.jsx` and `main.jsx`. All entry files are TypeScript (`.tsx`/`.ts`). This causes confusion when searching for files.
+**Description:** Earlier docs referenced `App.v14.jsx` and `main.jsx`. All entry files are TypeScript (`.tsx`/`.ts`).
 
-**Resolution:** Update both files to reference `.tsx` extensions.
+**Resolution:** Current README references `src/App.v14.tsx`; private assistant-context links were removed from the public README.
 
 ---
 
@@ -770,7 +771,7 @@ Match counts are exposed in `MergedDeck.matchStats` for UI diagnostics.
 
 **Status:** ✅ Resolved. Docs and `package.json` now agree on React 19.
 
-**Resolution:** `package.json` declares `react`/`react-dom` `^19.2.5`; `README.md` and `CLAUDE.md` both state "React 19". The "No vitest" claim in both docs was also corrected — Vitest runs unit tests (`npm test`) and is a required CI step.
+**Resolution:** `package.json` declares `react`/`react-dom` `^19.2.5`; current public docs state "React 19". The "No vitest" claim was corrected — Vitest runs unit tests (`npm test`) and is a required CI step.
 
 ---
 
@@ -790,7 +791,7 @@ Match counts are exposed in `MergedDeck.matchStats` for UI diagnostics.
 
 **Severity:** Low
 
-**Description:** Both README and CLAUDE.md cite "60 stories". The actual count needs to be verified against the current story files.
+**Description:** Earlier docs cited "60 stories". Current README avoids hardcoded story counts and CI verifies the Storybook build.
 
 **Resolution:** Run `find src -name "*.stories.*" | wc -l` and update docs.
 
@@ -823,17 +824,13 @@ The Storybook setup (`autodocs: true` in `.storybook/main.ts`, `ThemeContext` + 
 
 ## Section 8 — Items Requiring Human Input
 
-The following cannot be resolved through documentation generation alone and require decisions or code changes:
+The original generated review listed several decisions here. Current public status:
 
-1. **BUG-001 (Particles `type="future"`):** Requires auditing the Particles component's accepted type values and determining the correct variant for each of the 5 affected layouts.
-
-2. **Zod wiring decision:** Choose between Option A (dev-only), B (runtime validation), or C (delete). This is a product/architecture decision.
-
-3. **React version intent:** Confirm whether the project intends to stay on React 18.2 or migrate to React 19. Update `package.json` accordingly.
-
-4. **Transcription `as any` remediation:** High-effort refactor. Needs a team decision on timeline and priority.
-
-5. **Storybook `argTypes`:** Each layout component needs documented prop descriptions — best done by the component authors who know the intended field shapes.
+1. **BUG-001 (Particles `type="future"`):** Resolved.
+2. **Zod wiring decision:** Resolved via soft runtime validation.
+3. **React version intent:** Resolved — React 19 is the declared version.
+4. **Transcription `as any` remediation:** Resolved.
+5. **Storybook `argTypes`:** Still useful future polish; best done by component authors who know the intended field shapes.
 
 6. **Missing layout IDs in `register-all.ts` comment:** The comment block lists "advocacy" and "advocacy-dense" without counting their layout IDs — needs a count audit against the actual registered IDs.
 

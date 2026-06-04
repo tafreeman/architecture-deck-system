@@ -27,8 +27,8 @@ const engineeringDeck = {
   introTitle: "Platform Architecture",
   introSubtitle: "From monolith to modular design system",
   introStats: [
-    { val: "26", lbl: "Layouts", color: "#60A5FA" },
-    { val: "6", lbl: "Families", color: "#34D399" },
+    { val: "39", lbl: "Layouts", color: "#60A5FA" },
+    { val: "8", lbl: "Families", color: "#34D399" },
     { val: "768", lbl: "Lines", color: "#A78BFA" },
     { val: "~1s", lbl: "Build", color: "#F59E0B" },
   ],

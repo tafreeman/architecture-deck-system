@@ -25,7 +25,7 @@ const mockTopic = {
       type: "ai",
       title: "Context Assembly",
       body: "Architecture docs, coding standards, and the target module's existing patterns are bundled into the prompt context before any generation request is issued.",
-      tip: "Include CLAUDE.md and the module's __init__.py for highest-fidelity output.",
+      tip: "Include architecture docs and the module's __init__.py for highest-fidelity output.",
     },
     {
       num: "02",

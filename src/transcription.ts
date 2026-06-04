@@ -1,7 +1,7 @@
 /**
  * transcription.ts — Cross-family layout normalisation.
  *
- * Extracted from App.v14.jsx. Pure extraction — no logic changes.
+ * Extracted from App.v14.tsx. Pure extraction — no logic changes.
  * Public API: transcribeTopic + layout set constants.
  */
 

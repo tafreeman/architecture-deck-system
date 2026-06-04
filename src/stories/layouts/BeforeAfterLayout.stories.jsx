@@ -29,7 +29,7 @@ const mockTopic = {
       title: "Codebase Orientation",
       challenge:
         "The monorepo had grown to over 40,000 lines across five packages with no consistent entry-point documentation, leaving new engineers unsure where to start reading.",
-      fix: "CLAUDE.md and ARCHITECTURE.md now provide a structured tour of every package, key patterns, and where to find canonical examples for each concern.",
+      fix: "Architecture docs and coding standards now provide a structured tour of every package, key pattern, and canonical example.",
     },
     {
       title: "First Ticket Paralysis",

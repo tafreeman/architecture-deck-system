@@ -1,7 +1,7 @@
 /**
  * Current (Advocacy) Deck — Deck Manifest (content-layer integration)
  *
- * This is the original advocacy deck, previously inline in App.v14.jsx.
+ * This is the original advocacy deck, previously inline in App.v14.tsx.
  * Merges structure (layout skeleton) with swappable text content.
  */
 

@@ -72,7 +72,7 @@ const mockTopic = {
     {
       icon: "📚",
       title: "Knowledge Base",
-      body: "CLAUDE.md, ARCHITECTURE.md, and CODING_STANDARDS.md kept current.",
+      body: "Architecture docs, coding standards, and public examples kept current.",
     },
     {
       icon: "🔔",
@@ -92,7 +92,7 @@ const mockTopic = {
       steps: [
         "Run setup script",
         "Complete compliance training",
-        "Read CLAUDE.md",
+        "Read architecture docs",
         "Pick first ticket",
         "Submit first PR",
         "Take first review",

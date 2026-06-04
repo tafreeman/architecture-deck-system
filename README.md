@@ -1,10 +1,10 @@
 # Presentation System
 
-React 19 + Vite 5 presentation platform with 6 registered content decks, 34 registered layouts, 15 themes, and 4 style modes. Includes Storybook for visual testing and an export pipeline for HTML, images, and PDF.
+React 19 + Vite 5 presentation platform with 6 registered content decks, 39 registered layouts, 15 themes, and 4 style modes. Includes Storybook for visual testing and an export pipeline for HTML, images, and PDF.
 
 ## Landing Page
 
-**[tafreeman.github.io/architecture-deck-system](https://tafreeman.github.io/architecture-deck-system/)** — static landing page (ember/console design system), deployed from [`docs/`](docs/) via GitHub Actions ([`.github/workflows/deploy-pages.yml`](.github/workflows/deploy-pages.yml)). The interactive deck viewer is not deployed — run it locally with `npm run dev`.
+**[tafreeman.github.io/architecture-deck-system](https://tafreeman.github.io/architecture-deck-system/)** — static landing page (ember/console design system), deployed from [`docs/`](docs/) via GitHub Actions ([`.github/workflows/deploy-pages.yml`](.github/workflows/deploy-pages.yml)). The workflow also builds the React deck viewer and publishes it at [`/demo/`](https://tafreeman.github.io/architecture-deck-system/demo/).
 
 ## Preview (local deck viewer)
 
@@ -30,7 +30,7 @@ npm run export:all   # Export HTML + images + PDF
 | Layer | File(s) | Responsibility |
 |-------|---------|----------------|
 | **Shell** | `src/App.v14.tsx` | Deck factory, state, context providers, ControlPanel |
-| **Layout Registry** | `src/layouts/registry.ts` | O(1) Map-based plugin system; 34 IDs across 8 families |
+| **Layout Registry** | `src/layouts/registry.ts` | O(1) Map-based plugin system; 39 IDs across 8 families |
 | **Layout Renderer** | `src/layouts/LayoutRenderer.tsx` | Resolves layout string → component; handles `stat-cards-manifest` routing |
 | **Transcription** | `src/transcription.ts` | Cross-family content normalisation (e.g. `adv-future` → `h-strip`) |
 | **Content Registry** | `src/content/content-registry.ts` | Runtime content-pack swapping; `CONTENT_PACKS` + `DECK_STRUCTURES` maps |
@@ -50,6 +50,8 @@ deck.js (legacy) OR structure.js + content.json
   → Layout Component            renders with Theme + StyleMode + viewport tokens
 ```
 
+The legacy `deck.js` path is retained for strangler migration compatibility and local presets such as `onboarding-op`. Runtime content-pack swapping uses the migrated `structure.js` + `content.json` path registered in `src/content/content-registry.ts`.
+
 ### Layout Registry Pattern
 
 Layouts self-register at startup via side-effect imports. `register-all.ts` is imported once in `App.v14.tsx` and cascades to all 8 family registration files. Each `register.ts` calls `layoutRegistry.register(id, Component, features)`.
@@ -68,7 +70,7 @@ Layouts self-register at startup via side-effect imports. `register-all.ts` is i
 | engineering | 4 | `eng-architecture`, `eng-code-flow`, `eng-tech-stack`, `eng-roadmap` |
 | advocacy | 5 | `adv-overview`, `adv-stats`, `adv-hurdles`, `adv-future`, `adv-platform` |
 | advocacy-dense | 5 | `advd-overview`, `advd-stats`, `advd-hurdles`, `advd-future`, `advd-platform` |
-| **Total** | **34** | |
+| **Total** | **39** | |
 
 ## Content Decks
 
@@ -105,10 +107,6 @@ See `docs/DOCUMENTATION-REVIEW.md` for:
 - How to add a new content deck
 - Key interface quick reference
 - Known issues and technical debt
-
-## Copilot Reference
-
-See [CLAUDE.md](CLAUDE.md) for AI assistant context including gotchas and build details.
 
 ## Gotchas
 
