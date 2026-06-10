@@ -1,4 +1,8 @@
-# Presentation System
+# Architecture Deck System
+
+[![CI](https://github.com/tafreeman/architecture-deck-system/actions/workflows/ci.yml/badge.svg)](https://github.com/tafreeman/architecture-deck-system/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Demo](https://img.shields.io/badge/demo-live-blue)](https://tafreeman.github.io/architecture-deck-system/)
 
 React 19 + Vite 5 presentation platform with 6 registered content decks, 39 registered layouts, 15 themes, and 4 style modes. Includes Storybook for visual testing and an export pipeline for HTML, images, and PDF.
 
