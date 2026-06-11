@@ -351,7 +351,14 @@ export default function App() {
     setComet({ active: false, from: null, color: null, targetId: null });
     setTransitioning(false);
   }, []);
-  const handleBack = () => { setSlideViewMode("native"); setTransitioning(true); setTimeout(() => { setActive(null); setTransitioning(false); }, 350); };
+  const backTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => () => { if (backTimeoutRef.current !== null) clearTimeout(backTimeoutRef.current); }, []);
+  const handleBack = () => {
+    setSlideViewMode("native");
+    setTransitioning(true);
+    if (backTimeoutRef.current !== null) clearTimeout(backTimeoutRef.current);
+    backTimeoutRef.current = setTimeout(() => { setActive(null); setTransitioning(false); }, 350);
+  };
   const activeTopic = deckTopics.find((t: DeckContent) => t.id === active);
 
   // Per-slide one-pager toggle: transcribe active topic when in onepager mode
