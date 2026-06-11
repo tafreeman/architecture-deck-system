@@ -4,6 +4,7 @@
  * Extracted from genai_advocacy_hub_13.jsx (OpBriefScreen, layout id: "op-brief").
  */
 
+import type { BaseTopicProps } from '../../layouts/registry.ts';
 import { useState, useEffect } from "react";
 import { useTheme } from "../../components/hooks/useTheme.ts";
 import { useChrome } from "../../components/hooks/useChrome.ts";
@@ -12,28 +13,9 @@ import { UI } from "../../tokens/ui-strings.ts";
 import type { Theme } from "../../tokens/themes.ts";
 import type { StyleMode } from "../../tokens/style-modes.ts";
 
-interface Topic {
-  id: string;
-  title: string;
-  subtitle?: string;
-  color: string;
-  colorLight?: string;
-  colorGlow?: string;
-  icon?: string;
-  num?: string;
-  order?: number;
-  callout?: string;
-  banner?: string;
-  eyebrow?: string;
-  summary?: string;
-  heroPoints?: string[];
-  talkingPoints?: string[];
-  cards?: Record<string, unknown>[];
-  [key: string]: unknown;
-}
 
 interface LayoutProps {
-  topic: Topic;
+  topic: BaseTopicProps;
   onBack: () => void;
 }
 

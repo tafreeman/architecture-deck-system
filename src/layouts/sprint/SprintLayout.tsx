@@ -6,6 +6,7 @@ import Particles from "../../components/animations/Particles.tsx";
 import { Figure8Cycle } from "./Figure8Cycle.tsx";
 import { CircularRingCycle } from "./CircularRingCycle.tsx";
 import type { Theme } from "../../tokens/themes.ts";
+import type { BaseTopicProps } from "../../layouts/registry.ts";
 
 interface SprintNode {
   icon: string;
@@ -13,28 +14,8 @@ interface SprintNode {
   type: string;
 }
 
-interface Topic {
-  id: string;
-  title: string;
-  subtitle?: string;
-  color: string;
-  colorLight?: string;
-  colorGlow?: string;
-  icon?: string;
-  num?: string;
-  order?: number;
-  callout?: string;
-  banner?: string;
-  eyebrow?: string;
-  summary?: string;
-  heroPoints?: string[];
-  talkingPoints?: string[];
-  cards?: Record<string, unknown>[];
-  [key: string]: unknown;
-}
-
 interface SprintLayoutProps {
-  topic: Topic;
+  topic: BaseTopicProps;
   onBack: () => void;
   nodes: SprintNode[];
 }

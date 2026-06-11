@@ -1,21 +1,11 @@
 import React, { useState, useEffect } from "react";
+import type { BaseTopicProps } from '../../layouts/registry.ts';
 import { useTheme } from "../../components/hooks/useTheme.ts";
 import BackBtn from "../../components/navigation/BackBtn.tsx";
 
-interface Topic {
-  id: string;
-  title: string;
-  subtitle?: string;
-  color: string;
-  colorLight?: string;
-  colorGlow?: string;
-  icon?: string;
-  callout?: string;
-  [key: string]: unknown;
-}
 
 interface LayoutProps {
-  topic: Topic;
+  topic: BaseTopicProps;
   onBack: () => void;
 }
 

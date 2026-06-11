@@ -7,6 +7,7 @@
  * and ManifestStatCardsScreen (lines 989-1066).
  */
 
+import type { BaseTopicProps } from '../../layouts/registry.ts';
 import React, { useState, useEffect } from "react";
 
 import { useTheme } from "../../components/hooks/useTheme.ts";
@@ -17,35 +18,9 @@ import Particles from "../../components/animations/Particles.tsx";
 import type { Theme } from "../../tokens/themes.ts";
 import type { StyleMode } from "../../tokens/style-modes.ts";
 
-interface Topic {
-  id: string;
-  title: string;
-  subtitle?: string;
-  color: string;
-  colorLight?: string;
-  colorGlow?: string;
-  icon?: string;
-  num?: string;
-  order?: number;
-  callout?: string;
-  banner?: string;
-  eyebrow?: string;
-  summary?: string;
-  heroPoints?: string[];
-  talkingPoints?: string[];
-  cards?: Record<string, unknown>[];
-  kicker?: string;
-  heroTitle?: string;
-  thesis?: string;
-  leadershipPoints?: string[];
-  results?: Record<string, unknown>[];
-  enablement?: string;
-  enablementTitle?: string;
-  [key: string]: unknown;
-}
 
 interface LayoutProps {
-  topic: Topic;
+  topic: BaseTopicProps;
   onBack: () => void;
 }
 
@@ -107,7 +82,7 @@ function ManifestStatCardsLayout({ topic, onBack }: LayoutProps) {
             <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: 3, color: topic.colorLight, fontFamily: T.fontDisplay, marginBottom: 8 }}>{(topic.kicker as string) || topic.eyebrow || "Governance"}</div>
             <h1 style={{ fontFamily: T.fontDisplay, fontSize: viewport.titleSize, color: T.text, margin: "0 0 10px", lineHeight: 1.06 }}>{(topic.heroTitle as string) || topic.title}</h1>
             <p style={{ fontSize: viewport.subtitleSize, color: topic.colorLight, fontStyle: "italic", margin: "0 0 12px", lineHeight: 1.5 }}>{topic.subtitle}</p>
-            {topic.thesis && <p style={{ fontSize: viewport.bodySize, color: T.textMuted, lineHeight: 1.7, margin: 0 }}>{topic.thesis as string}</p>}
+            {(topic.thesis as string | undefined) && <p style={{ fontSize: viewport.bodySize, color: T.textMuted, lineHeight: 1.7, margin: 0 }}>{topic.thesis as string}</p>}
           </div>
           <div style={{ background: `linear-gradient(180deg, ${T.bgCard}, ${T.bgDeep})`, borderRadius: C.cardRadius, padding: viewport.isPhone ? "16px 16px" : "18px 20px", border: `${C.cardBorderWidth}px solid ${topic.color}24`, opacity: entered ? 1 : 0, transition: "opacity 0.6s 0.1s ease" }}>
             <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: 2.5, color: topic.colorLight, fontFamily: T.fontDisplay, marginBottom: 8 }}>Leadership Points</div>
@@ -154,7 +129,7 @@ function ManifestStatCardsLayout({ topic, onBack }: LayoutProps) {
         )}
 
         <div style={{ background: T.bgCard, borderRadius: C.cardRadius, padding: "18px 20px", borderLeft: `${C.accentBarHeight + 1}px solid ${topic.color}` }}>
-          {topic.enablement && <p style={{ fontSize: 14, color: T.textMuted, lineHeight: 1.65, margin: "0 0 10px" }}>{topic.enablementTitle ? <strong style={{ color: topic.colorLight }}>{topic.enablementTitle as string}: </strong> : null}{topic.enablement as string}</p>}
+          {(topic.enablement as string | undefined) && <p style={{ fontSize: 14, color: T.textMuted, lineHeight: 1.65, margin: "0 0 10px" }}>{topic.enablementTitle ? <strong style={{ color: topic.colorLight }}>{topic.enablementTitle as string}: </strong> : null}{topic.enablement as string}</p>}
           <p style={{ fontFamily: T.fontDisplay, fontSize: 24, color: T.text, margin: 0 }}>{topic.callout}</p>
         </div>
       </div>

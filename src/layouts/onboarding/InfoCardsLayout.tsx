@@ -4,6 +4,7 @@
  * Extracted from genai_advocacy_hub_13.jsx (InfoCardsScreen, layout id: "info-cards").
  */
 
+import type { BaseTopicProps } from '../../layouts/registry.ts';
 import { useState, useEffect } from "react";
 import { useTheme } from "../../components/hooks/useTheme.ts";
 import { useChrome } from "../../components/hooks/useChrome.ts";
@@ -14,25 +15,6 @@ import Particles from "../../components/animations/Particles.tsx";
 import type { Theme } from "../../tokens/themes.ts";
 import type { StyleMode } from "../../tokens/style-modes.ts";
 
-interface Topic {
-  id: string;
-  title: string;
-  subtitle?: string;
-  color: string;
-  colorLight?: string;
-  colorGlow?: string;
-  icon?: string;
-  num?: string;
-  order?: number;
-  callout?: string;
-  banner?: string;
-  eyebrow?: string;
-  summary?: string;
-  heroPoints?: string[];
-  talkingPoints?: string[];
-  cards?: Record<string, unknown>[];
-  [key: string]: unknown;
-}
 
 interface Card {
   stat?: string;
@@ -42,7 +24,7 @@ interface Card {
 }
 
 interface LayoutProps {
-  topic: Topic;
+  topic: BaseTopicProps;
   onBack: () => void;
 }
 
