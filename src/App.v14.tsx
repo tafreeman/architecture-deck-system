@@ -15,7 +15,7 @@ import React, { useState, useEffect, useMemo, useCallback, useRef } from "react"
 
 // ── Content imports ────────────────────────────────────────────────────────
 import * as current from "./content/current/deck.js";
-import { themeId as genaiThemeId, contentSlides as genaiContentSlides, sprintNodes as genaiSprintNodes } from "./content/genai-advocacy/deck.js";
+import { themeId as genaiThemeId, contentSlides as genaiContentSlides, sprintNodes as genaiSprintNodes, deckMeta as genaiDeckMeta } from "./content/genai-advocacy/deck.js";
 import * as vergePop from "./content/verge-pop/deck.js";
 import * as onboarding from "./content/onboarding/deck.js";
 import * as onboardingOp from "./content/onboarding-op/deck.js";
@@ -175,25 +175,7 @@ const CURRENT_DECK = createDeckPreset({
 const GENAI_MANIFEST_DECK = createDeckPreset({
   id: "genai",
   themeId: genaiThemeId,
-  brandLine: "AI-Assisted Delivery",
-  title: "GenAI",
-  titleAccent: "Case Study",
-  tagline: "Governance, execution, and scale — rendered from the shared deck manifest.",
-  introBrandLine: "AI-Assisted Delivery",
-  introTitle: "GenAI Transformation",
-  introSubtitle: "Manifest-driven deck rendering for the full case-study story",
-  introStats: [
-    { val: "6", lbl: "Content Slides", color: "#67E8F9" },
-    { val: "1", lbl: "Optional Path", color: "#38BDF8" },
-    { val: "0", lbl: "Hardcoded Lists", color: "#10B981" },
-    { val: "1", lbl: "Shared Manifest", color: "#A78BFA" },
-  ],
-  stats: [
-    { val: "6", lbl: "Core Slides" },
-    { val: "1", lbl: "Optional Platform" },
-    { val: "1", lbl: "Shared Theme" },
-    { val: "100%", lbl: "Manifest Driven" },
-  ],
+  ...genaiDeckMeta,
   topics: genaiContentSlides,
   sprintNodes: genaiSprintNodes,
 });
@@ -201,25 +183,7 @@ const GENAI_MANIFEST_DECK = createDeckPreset({
 const VERGE_POP_DECK = createDeckPreset({
   id: "verge-pop",
   themeId: vergePop.themeId,
-  brandLine: "Community Trends",
-  title: "Verge",
-  titleAccent: "Pop",
-  tagline: "Bold data stories about digital communities, platforms, and AI.",
-  introBrandLine: "Community Trends",
-  introTitle: "Community & Connection",
-  introSubtitle: "How people find meaning in digital spaces",
-  introStats: [
-    { val: "91%", lbl: "Prefer Small", color: "#00CC99" },
-    { val: "78%", lbl: "Content Led", color: "#3399FF" },
-    { val: "55%", lbl: "AI Creative", color: "#FF3366" },
-    { val: "90%", lbl: "Belonging", color: "#FFD600" },
-  ],
-  stats: [
-    { val: "8", lbl: "Data Stories" },
-    { val: "6", lbl: "New Layouts" },
-    { val: "Pop", lbl: "Art Style" },
-    { val: "4", lbl: "Color Themes" },
-  ],
+  ...vergePop.deckMeta,
   topics: vergePop.contentSlides,
   sprintNodes: vergePop.sprintNodes,
 });
@@ -227,25 +191,7 @@ const VERGE_POP_DECK = createDeckPreset({
 const STUDIO_DECK = createDeckPreset({
   id: "studio",
   themeId: studio.themeId,
-  brandLine: "AI Studio",
-  title: "Studio",
-  titleAccent: "Handbook",
-  tagline: "Six chapters. From who we are to your first day. Select a chapter to begin.",
-  introBrandLine: "AI Studio · Handbook",
-  introTitle: "The Studio Handbook",
-  introSubtitle: "How we work, what we build, what we believe.",
-  introStats: [
-    { val: "5",  lbl: "Practices",  color: "#F4E04D" },
-    { val: "8",  lbl: "Process Steps", color: "#F2A614" },
-    { val: "6+", lbl: "Client Archetypes", color: "#C53B2F" },
-    { val: "1",  lbl: "Manifesto",   color: "#0E0E0B" },
-  ],
-  stats: [
-    { val: "6",  lbl: "Chapters" },
-    { val: "5",  lbl: "Practice Areas" },
-    { val: "8",  lbl: "Process Steps" },
-    { val: "Yellow", lbl: "Accent" },
-  ],
+  ...studio.deckMeta,
   topics: studio.contentSlides,
   sprintNodes: studio.sprintNodes,
 });
@@ -253,25 +199,7 @@ const STUDIO_DECK = createDeckPreset({
 const ONBOARDING_OP_DECK = createDeckPreset({
   id: "onboarding-op",
   themeId: onboardingOp.themeId,
-  brandLine: "GenAI Delivery",
-  title: "Onboarding",
-  titleAccent: "One-Pagers",
-  tagline: "Seven modules as dense one-pager briefs. Select a topic.",
-  introBrandLine: "GenAI Delivery · One-Pagers",
-  introTitle: "AI-Assisted Development",
-  introSubtitle: "One-pager format — all key info on a single screen",
-  introStats: [
-    { val: "7", lbl: "Modules", color: "#F97316" },
-    { val: "Op", lbl: "One-Pager", color: "#FBBF24" },
-    { val: "Dense", lbl: "Format", color: "#A855F7" },
-    { val: "Fast", lbl: "Scan", color: "#22C55E" },
-  ],
-  stats: [
-    { val: "7", lbl: "Modules" },
-    { val: "2", lbl: "Layout Types" },
-    { val: "Dense", lbl: "One-Pager Format" },
-    { val: "Fast", lbl: "At-a-Glance" },
-  ],
+  ...onboardingOp.deckMeta,
   topics: onboardingOp.contentSlides,
   sprintNodes: onboardingOp.sprintNodes,
 });
@@ -279,25 +207,7 @@ const ONBOARDING_OP_DECK = createDeckPreset({
 const ONBOARDING_DECK = createDeckPreset({
   id: "onboarding",
   themeId: onboarding.themeId,
-  brandLine: "GenAI Delivery",
-  title: "Onboarding",
-  titleAccent: "Guidebook",
-  tagline: "Seven modules. From expectations to execution. Select a topic to begin.",
-  introBrandLine: "GenAI Delivery · Onboarding",
-  introTitle: "AI-Assisted Development",
-  introSubtitle: "Team guidebook for AI-assisted delivery workflows",
-  introStats: [
-    { val: "7", lbl: "Modules", color: "#F97316" },
-    { val: "~99%", lbl: "AI-Assisted", color: "#FBBF24" },
-    { val: "0", lbl: "Critical Defects", color: "#22C55E" },
-    { val: "~95%", lbl: "Predictability", color: "#A855F7" },
-  ],
-  stats: [
-    { val: "7", lbl: "Modules" },
-    { val: "~99%", lbl: "AI-Assisted Code" },
-    { val: "0", lbl: "Critical Defects" },
-    { val: "~95%", lbl: "Sprint Predictability" },
-  ],
+  ...onboarding.deckMeta,
   topics: onboarding.contentSlides,
   sprintNodes: onboarding.sprintNodes,
 });
@@ -305,25 +215,7 @@ const ONBOARDING_DECK = createDeckPreset({
 const ENGINEERING_DECK = createDeckPreset({
   id: "engineering",
   themeId: engineering.themeId,
-  brandLine: "Design System",
-  title: "Engineering",
-  titleAccent: "Deep Dive",
-  tagline: "Four modules. Architecture to roadmap. Select a topic to explore.",
-  introBrandLine: "Design System · Engineering",
-  introTitle: "Platform Architecture",
-  introSubtitle: "From monolith to modular design system",
-  introStats: [
-    { val: "39", lbl: "Layouts", color: "#60A5FA" },
-    { val: "8", lbl: "Families", color: "#34D399" },
-    { val: "768", lbl: "Lines", color: "#A78BFA" },
-    { val: "~1s", lbl: "Build", color: "#F59E0B" },
-  ],
-  stats: [
-    { val: "39", lbl: "Registered Layouts" },
-    { val: "8", lbl: "Layout Families" },
-    { val: "4", lbl: "Architecture Layers" },
-    { val: "7", lbl: "Migration Phases" },
-  ],
+  ...engineering.deckMeta,
   topics: engineering.contentSlides,
   sprintNodes: engineering.sprintNodes,
 });
