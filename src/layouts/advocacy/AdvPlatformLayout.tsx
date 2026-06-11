@@ -149,7 +149,7 @@ export function AdvPlatformLayout({ topic, onBack }: LayoutProps) {
                 const isOpen = !!expandedLanes[i];
                 return (
                   <div key={i} style={{ marginBottom: 6 }}>
-                    <button
+                    <button type="button"
                       onClick={() => toggleLane(i)}
                       style={{
                         display: "flex",

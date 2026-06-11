@@ -464,7 +464,7 @@ export default function App() {
       )}
       {/* Per-slide one-pager toggle */}
       {activeTopic && hasOnepagerView && (
-        <button
+        <button type="button"
           onClick={() => setSlideViewMode(v => v === "native" ? "onepager" : "native")}
           style={{
             position: "fixed", top: 16, right: 60, zIndex: 200,
@@ -488,7 +488,7 @@ export default function App() {
           border: `1px solid ${activeSlideLayout !== activeTopic.layout ? T.accent + "50" : "rgba(255,255,255,0.1)"}`,
           borderRadius: 999, padding: "6px 8px",
         }}>
-          <button
+          <button type="button"
             onClick={() => cycleLayout(-1)}
             style={{
               background: "none", border: "none", cursor: "pointer",
@@ -504,7 +504,7 @@ export default function App() {
           }}>
             {activeSlideLayout}
           </span>
-          <button
+          <button type="button"
             onClick={() => cycleLayout(1)}
             style={{
               background: "none", border: "none", cursor: "pointer",
@@ -513,7 +513,7 @@ export default function App() {
             }}
           >▸</button>
           {activeSlideLayout !== activeTopic.layout && (
-            <button
+            <button type="button"
               onClick={resetLayout}
               title="Reset to default layout"
               style={{

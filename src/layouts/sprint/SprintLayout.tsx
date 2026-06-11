@@ -45,7 +45,7 @@ export function SprintLayout({ topic, onBack, nodes }: SprintLayoutProps) {
           {/* Layout toggle */}
           <div style={{ display: "flex", justifyContent: "center", gap: 8, flexWrap: "wrap" }}>
             {([["fig8", "Figure-8 Infinity"], ["ring", "Circular Ring"]] as [string, string][]).map(([k, l]) => (
-              <button key={k} onClick={() => setLayout(k)} style={{
+              <button type="button" key={k} onClick={() => setLayout(k)} style={{
                 padding: "6px 16px", borderRadius: 20, cursor: "pointer", fontFamily: "'Space Grotesk',sans-serif", fontSize: 12, fontWeight: 600,
                 background: layout === k ? "rgba(139,92,246,0.15)" : "rgba(255,255,255,0.05)",
                 border: `1px solid ${layout === k ? "#8B5CF6" : "rgba(255,255,255,0.08)"}`,

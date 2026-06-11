@@ -61,7 +61,7 @@ export function AdvStatsLayout({ topic, onBack }: LayoutProps) {
             {cards.map((c, i) => {
               const isExpanded = !!expandedMap[i];
               return (
-                <button
+                <button type="button"
                   key={i}
                   onClick={() => toggleCard(i)}
                   style={{

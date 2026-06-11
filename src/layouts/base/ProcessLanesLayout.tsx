@@ -67,7 +67,7 @@ function ProcessLanesLayout({ topic, onBack }: LayoutProps) {
           <div style={{ opacity: entered ? 1 : 0, transform: entered ? "translateY(0)" : "translateY(20px)", transition: "all 0.6s 0.12s ease" }}>
             <div style={{ display: "flex", gap: 8, marginBottom: 12, flexWrap: "wrap" }}>
               {focusPanels.map((panel, index) => (
-                <button key={`${panel.label as string}-${index}`} onClick={() => setActivePanel(index)} style={{ border: `1px solid ${index === activePanel ? topic.color : `${topic.color}20`}`, background: index === activePanel ? `${topic.color}18` : T.bgCard, color: index === activePanel ? topic.colorLight : T.textDim, borderRadius: C.pillRadius, padding: "7px 12px", fontSize: 12, cursor: "pointer", fontFamily: T.fontBody }}>{panel.label as string}</button>
+                <button type="button" key={`${panel.label as string}-${index}`} onClick={() => setActivePanel(index)} style={{ border: `1px solid ${index === activePanel ? topic.color : `${topic.color}20`}`, background: index === activePanel ? `${topic.color}18` : T.bgCard, color: index === activePanel ? topic.colorLight : T.textDim, borderRadius: C.pillRadius, padding: "7px 12px", fontSize: 12, cursor: "pointer", fontFamily: T.fontBody }}>{panel.label as string}</button>
               ))}
             </div>
             <div style={{ background: `linear-gradient(180deg, ${T.bgCard}, ${T.bgDeep})`, borderRadius: C.cardRadius, padding: "18px 20px", border: `${C.cardBorderWidth}px solid ${topic.color}24`, marginBottom: 14 }}>

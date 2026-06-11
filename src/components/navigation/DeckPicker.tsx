@@ -30,7 +30,7 @@ export function DeckPicker({ decks, selectedDeckId, onSelectDeck }: DeckPickerPr
   return (
     <div style={{ display: "flex", gap: 4 }}>
       {Object.entries(decks).map(([key, d]) => (
-        <button
+        <button type="button"
           key={key}
           onClick={() => onSelectDeck(key)}
           style={{
