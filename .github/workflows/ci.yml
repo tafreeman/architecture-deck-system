@@ -49,9 +49,22 @@ jobs:
       - name: Build Storybook
         run: npm run build-storybook
 
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Export deck artifacts
+        run: npm run export:all
+
       - name: Upload Storybook artifact
         uses: actions/upload-artifact@v7
         with:
           name: storybook-static
           path: storybook-static/
+          retention-days: 7
+
+      - name: Upload exported deck artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: exported-deck
+          path: single-file/
           retention-days: 7
