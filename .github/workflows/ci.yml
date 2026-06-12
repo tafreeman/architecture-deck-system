@@ -52,6 +52,7 @@ jobs:
 
       - name: Cache Playwright browsers
         id: playwright-cache
+        if: github.event_name != 'pull_request'
         uses: actions/cache@v4
         with:
           path: ~/.cache/ms-playwright
@@ -61,14 +62,15 @@ jobs:
           save-always: true
 
       - name: Install Playwright Chromium system deps
-        timeout-minutes: 15
+        if: github.event_name != 'pull_request'
         run: npx playwright install-deps chromium
 
       - name: Install Playwright Chromium
-        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        if: github.event_name != 'pull_request' && steps.playwright-cache.outputs.cache-hit != 'true'
         run: npx playwright install chromium
 
       - name: Export deck artifacts
+        if: github.event_name != 'pull_request'
         run: npm run export:all
 
       - name: Upload Storybook artifact
@@ -79,6 +81,7 @@ jobs:
           retention-days: 7
 
       - name: Upload exported deck artifacts
+        if: github.event_name != 'pull_request'
         uses: actions/upload-artifact@v7
         with:
           name: exported-deck
