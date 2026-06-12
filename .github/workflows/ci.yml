@@ -14,7 +14,7 @@ jobs:
   ci:
     name: Typecheck · Build · Storybook
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 50
 
     steps:
       - name: Checkout
@@ -51,9 +51,11 @@ jobs:
         run: npm run build-storybook
 
       - name: Install Playwright Chromium system deps
+        timeout-minutes: 15
         run: npx playwright install-deps chromium
 
       - name: Install Playwright Chromium
+        timeout-minutes: 10
         run: npx playwright install chromium
 
       - name: Export deck artifacts
