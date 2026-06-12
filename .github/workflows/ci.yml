@@ -50,12 +50,22 @@ jobs:
       - name: Build Storybook
         run: npm run build-storybook
 
+      - name: Cache Playwright browsers
+        id: playwright-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            playwright-${{ runner.os }}-
+
       - name: Install Playwright Chromium system deps
         timeout-minutes: 15
         run: npx playwright install-deps chromium
 
       - name: Install Playwright Chromium
-        timeout-minutes: 10
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        timeout-minutes: 20
         run: npx playwright install chromium
 
       - name: Export deck artifacts
