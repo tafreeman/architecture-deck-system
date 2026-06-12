@@ -3,6 +3,10 @@ import type { BaseTopicProps } from '../../layouts/registry.ts';
 import { useTheme } from "../../components/hooks/useTheme.ts";
 import BackBtn from "../../components/navigation/BackBtn.tsx";
 
+/** Fields used by HbIndexLayout beyond the shared BaseTopicProps. */
+interface HbIndexTopic extends BaseTopicProps {
+  categories?: Array<{ label: string; body: string }>;
+}
 
 interface LayoutProps {
   topic: BaseTopicProps;
@@ -10,10 +14,12 @@ interface LayoutProps {
 }
 
 export function HbIndexLayout({ topic, onBack }: LayoutProps) {
+  // Cast once at entry; family-specific fields are typed via HbIndexTopic.
+  const t = topic as HbIndexTopic;
   const T = useTheme();
   const [entered, setEntered] = useState(false);
-  useEffect(() => { const t = setTimeout(() => setEntered(true), 60); return () => clearTimeout(t); }, []);
-  const cats = topic.categories as Array<{ label: string; body: string }> || [];
+  useEffect(() => { const timer = setTimeout(() => setEntered(true), 60); return () => clearTimeout(timer); }, []);
+  const cats = t.categories ?? [];
   return (
     <div style={{ minHeight: "100vh", background: T.bg, display: "flex", flexDirection: "column" }}>
       <div style={{ height: 6, background: T.accent }} />
@@ -21,11 +27,11 @@ export function HbIndexLayout({ topic, onBack }: LayoutProps) {
         <BackBtn onClick={onBack} />
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 32, opacity: entered ? 1 : 0, transition: "all 0.6s ease" }}>
           <div>
-            <div style={{ fontSize: 10, fontFamily: T.fontDisplay, fontWeight: 700, letterSpacing: 2.5, textTransform: "uppercase", color: T.textDim, marginBottom: 6 }}>{topic.eyebrow as string || "Index"}</div>
-            <h1 style={{ fontFamily: T.fontDisplay, fontSize: 40, fontWeight: 800, color: T.text, margin: "0 0 6px", letterSpacing: -0.5 }}>{topic.title}</h1>
-            <p style={{ fontFamily: T.fontBody, fontSize: 13, color: T.textMuted, fontStyle: "italic", margin: 0 }}>{topic.subtitle}</p>
+            <div style={{ fontSize: 10, fontFamily: T.fontDisplay, fontWeight: 700, letterSpacing: 2.5, textTransform: "uppercase", color: T.textDim, marginBottom: 6 }}>{t.eyebrow || "Index"}</div>
+            <h1 style={{ fontFamily: T.fontDisplay, fontSize: 40, fontWeight: 800, color: T.text, margin: "0 0 6px", letterSpacing: -0.5 }}>{t.title}</h1>
+            <p style={{ fontFamily: T.fontBody, fontSize: 13, color: T.textMuted, fontStyle: "italic", margin: 0 }}>{t.subtitle}</p>
           </div>
-          <div style={{ fontFamily: T.fontDisplay, fontSize: 84, fontWeight: 800, color: T.text, lineHeight: 1, opacity: 0.07 }}>{topic.num as string}</div>
+          <div style={{ fontFamily: T.fontDisplay, fontSize: 84, fontWeight: 800, color: T.text, lineHeight: 1, opacity: 0.07 }}>{t.num}</div>
         </div>
         {/* Category two-column grid */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 3 }}>
@@ -39,7 +45,7 @@ export function HbIndexLayout({ topic, onBack }: LayoutProps) {
         </div>
       </div>
       <div style={{ background: T.text, padding: "16px 48px", marginTop: 32 }}>
-        <p style={{ fontFamily: T.fontDisplay, fontSize: 14, fontWeight: 700, color: T.accent, margin: 0, fontStyle: "italic" }}>&ldquo;{topic.callout}&rdquo;</p>
+        <p style={{ fontFamily: T.fontDisplay, fontSize: 14, fontWeight: 700, color: T.accent, margin: 0, fontStyle: "italic" }}>&ldquo;{t.callout}&rdquo;</p>
       </div>
     </div>
   );
