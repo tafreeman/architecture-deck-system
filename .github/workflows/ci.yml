@@ -14,7 +14,7 @@ jobs:
   ci:
     name: Typecheck · Build · Storybook
     runs-on: ubuntu-latest
-    timeout-minutes: 50
+    timeout-minutes: 60
 
     steps:
       - name: Checkout
@@ -58,6 +58,7 @@ jobs:
           key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
           restore-keys: |
             playwright-${{ runner.os }}-
+          save-always: true
 
       - name: Install Playwright Chromium system deps
         timeout-minutes: 15
@@ -65,7 +66,6 @@ jobs:
 
       - name: Install Playwright Chromium
         if: steps.playwright-cache.outputs.cache-hit != 'true'
-        timeout-minutes: 20
         run: npx playwright install chromium
 
       - name: Export deck artifacts
