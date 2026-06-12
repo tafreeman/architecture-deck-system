@@ -14,6 +14,7 @@ jobs:
   ci:
     name: Typecheck · Build · Storybook
     runs-on: ubuntu-latest
+    timeout-minutes: 25
 
     steps:
       - name: Checkout
