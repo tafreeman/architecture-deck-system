@@ -51,7 +51,20 @@ jobs:
         run: npm run build-storybook
 
       - name: Install Playwright Chromium
-        run: npx playwright install --with-deps chromium
+        # Normally ~30s; retry with a per-attempt cap so a transient apt/CDN
+        # stall fails fast and retries instead of hanging the whole job.
+        timeout-minutes: 12
+        run: |
+          for attempt in 1 2 3; do
+            echo "Playwright install attempt $attempt"
+            if timeout 300 npx playwright install --with-deps chromium; then
+              exit 0
+            fi
+            echo "Attempt $attempt failed/timed out; retrying after 5s"
+            sleep 5
+          done
+          echo "Playwright install failed after 3 attempts" >&2
+          exit 1
 
       - name: Export deck artifacts
         run: npm run export:all
