@@ -7,6 +7,7 @@
  * and ManifestStatCardsScreen (lines 989-1066).
  */
 
+import type { BaseTopicProps } from '../../layouts/registry.ts';
 import React, { useState, useEffect } from "react";
 
 import { useTheme } from "../../components/hooks/useTheme.ts";
@@ -17,35 +18,19 @@ import Particles from "../../components/animations/Particles.tsx";
 import type { Theme } from "../../tokens/themes.ts";
 import type { StyleMode } from "../../tokens/style-modes.ts";
 
-interface Topic {
-  id: string;
-  title: string;
-  subtitle?: string;
-  color: string;
-  colorLight?: string;
-  colorGlow?: string;
-  icon?: string;
-  num?: string;
-  order?: number;
-  callout?: string;
-  banner?: string;
-  eyebrow?: string;
-  summary?: string;
-  heroPoints?: string[];
-  talkingPoints?: string[];
-  cards?: Record<string, unknown>[];
+/** Fields used exclusively by ManifestStatCardsLayout (governance/leadership variant). */
+interface ManifestTopic extends BaseTopicProps {
   kicker?: string;
   heroTitle?: string;
   thesis?: string;
   leadershipPoints?: string[];
-  results?: Record<string, unknown>[];
+  results?: Array<{ value?: string; label?: string; detail?: string }>;
   enablement?: string;
   enablementTitle?: string;
-  [key: string]: unknown;
 }
 
 interface LayoutProps {
-  topic: Topic;
+  topic: BaseTopicProps;
   onBack: () => void;
 }
 
@@ -87,6 +72,8 @@ function StatCardsLayout({ topic, onBack }: LayoutProps) {
  * ─────────────────────────────────────────────────────────────────────────── */
 
 function ManifestStatCardsLayout({ topic, onBack }: LayoutProps) {
+  // Cast once at component entry; all family-specific fields are typed via ManifestTopic.
+  const t = topic as ManifestTopic;
   const T = useTheme() as Theme;
   const C = useChrome() as StyleMode;
   const viewport = usePresentationViewport();
@@ -99,22 +86,22 @@ function ManifestStatCardsLayout({ topic, onBack }: LayoutProps) {
 
   return (
     <div style={{ position: "relative", minHeight: "100dvh", background: T.bg, overflowX: "hidden", overflowY: viewport.overlayScroll }}>
-      <Particles color={topic.color} type="human" active={entered} />
+      <Particles color={t.color} type="human" active={entered} />
       <div style={{ position: "relative", zIndex: 2, maxWidth: 1260, margin: "0 auto", padding: `${viewport.pagePaddingTop}px ${viewport.pagePaddingX}px ${viewport.pagePaddingBottom}px` }}>
         <BackBtn onClick={onBack} />
         <div style={{ display: "grid", gridTemplateColumns: viewport.isCompact ? "1fr" : "1.15fr 0.85fr", gap: viewport.cardGap, marginBottom: 18 }}>
           <div style={{ opacity: entered ? 1 : 0, transform: entered ? "translateY(0)" : "translateY(22px)", transition: "all 0.6s ease" }}>
-            <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: 3, color: topic.colorLight, fontFamily: T.fontDisplay, marginBottom: 8 }}>{(topic.kicker as string) || topic.eyebrow || "Governance"}</div>
-            <h1 style={{ fontFamily: T.fontDisplay, fontSize: viewport.titleSize, color: T.text, margin: "0 0 10px", lineHeight: 1.06 }}>{(topic.heroTitle as string) || topic.title}</h1>
-            <p style={{ fontSize: viewport.subtitleSize, color: topic.colorLight, fontStyle: "italic", margin: "0 0 12px", lineHeight: 1.5 }}>{topic.subtitle}</p>
-            {topic.thesis && <p style={{ fontSize: viewport.bodySize, color: T.textMuted, lineHeight: 1.7, margin: 0 }}>{topic.thesis as string}</p>}
+            <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: 3, color: t.colorLight, fontFamily: T.fontDisplay, marginBottom: 8 }}>{t.kicker || t.eyebrow || "Governance"}</div>
+            <h1 style={{ fontFamily: T.fontDisplay, fontSize: viewport.titleSize, color: T.text, margin: "0 0 10px", lineHeight: 1.06 }}>{t.heroTitle || t.title}</h1>
+            <p style={{ fontSize: viewport.subtitleSize, color: t.colorLight, fontStyle: "italic", margin: "0 0 12px", lineHeight: 1.5 }}>{t.subtitle}</p>
+            {t.thesis && <p style={{ fontSize: viewport.bodySize, color: T.textMuted, lineHeight: 1.7, margin: 0 }}>{t.thesis}</p>}
           </div>
-          <div style={{ background: `linear-gradient(180deg, ${T.bgCard}, ${T.bgDeep})`, borderRadius: C.cardRadius, padding: viewport.isPhone ? "16px 16px" : "18px 20px", border: `${C.cardBorderWidth}px solid ${topic.color}24`, opacity: entered ? 1 : 0, transition: "opacity 0.6s 0.1s ease" }}>
-            <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: 2.5, color: topic.colorLight, fontFamily: T.fontDisplay, marginBottom: 8 }}>Leadership Points</div>
+          <div style={{ background: `linear-gradient(180deg, ${T.bgCard}, ${T.bgDeep})`, borderRadius: C.cardRadius, padding: viewport.isPhone ? "16px 16px" : "18px 20px", border: `${C.cardBorderWidth}px solid ${t.color}24`, opacity: entered ? 1 : 0, transition: "opacity 0.6s 0.1s ease" }}>
+            <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: 2.5, color: t.colorLight, fontFamily: T.fontDisplay, marginBottom: 8 }}>Leadership Points</div>
             <div style={{ display: "grid", gap: 10 }}>
-              {((topic.leadershipPoints as string[]) || []).map((point: string, index: number) => (
+              {(t.leadershipPoints ?? []).map((point, index) => (
                 <div key={`${point}-${index}`} style={{ display: "grid", gridTemplateColumns: "24px 1fr", gap: 10, alignItems: "start" }}>
-                  <div style={{ width: 22, height: 22, borderRadius: "50%", background: `${topic.color}18`, color: topic.colorLight, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700 }}>{index + 1}</div>
+                  <div style={{ width: 22, height: 22, borderRadius: "50%", background: `${t.color}18`, color: t.colorLight, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700 }}>{index + 1}</div>
                   <p style={{ fontSize: 13, color: T.textMuted, lineHeight: 1.55, margin: 0 }}>{point}</p>
                 </div>
               ))}
@@ -123,17 +110,17 @@ function ManifestStatCardsLayout({ topic, onBack }: LayoutProps) {
         </div>
 
         <div style={{ display: "grid", gridTemplateColumns: viewport.isPhone ? "1fr" : viewport.isCompact ? "1fr 1fr" : "repeat(3, minmax(0, 1fr))", gap: 14, marginBottom: 18 }}>
-          {(topic.cards ?? []).map((card: Record<string, unknown>, index: number) => (
-            <div key={`${(card.title as string) || index}-${index}`} style={{ background: T.bgCard, borderRadius: C.cardRadius, padding: viewport.isPhone ? "16px 16px" : "18px 20px", borderTop: `${C.accentBarHeight}px solid ${topic.color}`, opacity: entered ? 1 : 0, transform: entered ? "translateY(0)" : "translateY(18px)", transition: `all 0.45s ${0.12 + index * 0.08}s ease` }}>
-              <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: 2.2, color: topic.colorLight, fontFamily: T.fontDisplay, marginBottom: 8 }}>{(card.step as string) || (card.marker as string) || `0${index + 1}`}</div>
+          {(t.cards ?? []).map((card, index) => (
+            <div key={`${(card.title as string) || index}-${index}`} style={{ background: T.bgCard, borderRadius: C.cardRadius, padding: viewport.isPhone ? "16px 16px" : "18px 20px", borderTop: `${C.accentBarHeight}px solid ${t.color}`, opacity: entered ? 1 : 0, transform: entered ? "translateY(0)" : "translateY(18px)", transition: `all 0.45s ${0.12 + index * 0.08}s ease` }}>
+              <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: 2.2, color: t.colorLight, fontFamily: T.fontDisplay, marginBottom: 8 }}>{(card.step as string) || (card.marker as string) || `0${index + 1}`}</div>
               <h3 style={{ fontFamily: T.fontDisplay, fontSize: viewport.isPhone ? 18 : 21, color: T.text, margin: "0 0 8px", lineHeight: 1.15 }}>{card.title as string}</h3>
               {((card.eyebrow as string) || (card.statLabel as string)) && <div style={{ fontSize: 11, color: T.textDim, textTransform: "uppercase", letterSpacing: 1.6, marginBottom: 8 }}>{String((card.eyebrow as string) || (card.statLabel as string))}</div>}
               {(card.highlight as string) && <p style={{ fontSize: 14, color: T.text, lineHeight: 1.6, margin: "0 0 10px", fontWeight: 600 }}>{String(card.highlight)}</p>}
               {(card.body as string) && <p style={{ fontSize: 13.5, color: T.textMuted, lineHeight: 1.6, margin: (card.highlight as string) ? "0" : "0 0 10px" }}>{String(card.body)}</p>}
               {Array.isArray(card.details) && (card.details as unknown[]).length > 0 && (
                 <div style={{ display: "grid", gap: 8, marginTop: 10 }}>
-                  {(card.details as string[]).map((detail: string, detailIndex: number) => (
-                    <div key={`${detail}-${detailIndex}`} style={{ paddingTop: 8, borderTop: `1px solid ${topic.color}14`, fontSize: 13, color: T.textMuted, lineHeight: 1.55 }}>{detail}</div>
+                  {(card.details as string[]).map((detail, detailIndex) => (
+                    <div key={`${detail}-${detailIndex}`} style={{ paddingTop: 8, borderTop: `1px solid ${t.color}14`, fontSize: 13, color: T.textMuted, lineHeight: 1.55 }}>{detail}</div>
                   ))}
                 </div>
               )}
@@ -141,21 +128,21 @@ function ManifestStatCardsLayout({ topic, onBack }: LayoutProps) {
           ))}
         </div>
 
-        {((topic.results as unknown[])?.length ?? 0) > 0 && (
-          <div style={{ display: "grid", gridTemplateColumns: viewport.isPhone ? "1fr 1fr" : `repeat(${Math.min((topic.results as unknown[]).length, 4)}, minmax(0, 1fr))`, gap: 12, marginBottom: 18 }}>
-            {(topic.results as Record<string, unknown>[]).map((result: Record<string, unknown>, index: number) => (
-              <div key={`${(result.label as string) || index}-${index}`} style={{ background: `linear-gradient(180deg, ${T.bgCard}, ${T.bgDeep})`, borderRadius: C.innerRadius, padding: viewport.isPhone ? "14px 14px" : "16px 18px", border: `${C.cardBorderWidth}px solid ${topic.color}18` }}>
-                <div style={{ fontFamily: T.fontDisplay, fontSize: 30, color: topic.colorLight, marginBottom: 4 }}>{result.value as string}</div>
-                <div style={{ fontSize: 11, color: T.textDim, textTransform: "uppercase", letterSpacing: 1.5, marginBottom: result.detail ? 8 : 0 }}>{result.label as string}</div>
-                {(result.detail as string) && <p style={{ fontSize: 12.5, color: T.textMuted, lineHeight: 1.5, margin: 0 }}>{String(result.detail)}</p>}
+        {(t.results?.length ?? 0) > 0 && (
+          <div style={{ display: "grid", gridTemplateColumns: viewport.isPhone ? "1fr 1fr" : `repeat(${Math.min(t.results!.length, 4)}, minmax(0, 1fr))`, gap: 12, marginBottom: 18 }}>
+            {t.results!.map((result, index) => (
+              <div key={`${result.label || index}-${index}`} style={{ background: `linear-gradient(180deg, ${T.bgCard}, ${T.bgDeep})`, borderRadius: C.innerRadius, padding: viewport.isPhone ? "14px 14px" : "16px 18px", border: `${C.cardBorderWidth}px solid ${t.color}18` }}>
+                <div style={{ fontFamily: T.fontDisplay, fontSize: 30, color: t.colorLight, marginBottom: 4 }}>{result.value}</div>
+                <div style={{ fontSize: 11, color: T.textDim, textTransform: "uppercase", letterSpacing: 1.5, marginBottom: result.detail ? 8 : 0 }}>{result.label}</div>
+                {result.detail && <p style={{ fontSize: 12.5, color: T.textMuted, lineHeight: 1.5, margin: 0 }}>{result.detail}</p>}
               </div>
             ))}
           </div>
         )}
 
-        <div style={{ background: T.bgCard, borderRadius: C.cardRadius, padding: "18px 20px", borderLeft: `${C.accentBarHeight + 1}px solid ${topic.color}` }}>
-          {topic.enablement && <p style={{ fontSize: 14, color: T.textMuted, lineHeight: 1.65, margin: "0 0 10px" }}>{topic.enablementTitle ? <strong style={{ color: topic.colorLight }}>{topic.enablementTitle as string}: </strong> : null}{topic.enablement as string}</p>}
-          <p style={{ fontFamily: T.fontDisplay, fontSize: 24, color: T.text, margin: 0 }}>{topic.callout}</p>
+        <div style={{ background: T.bgCard, borderRadius: C.cardRadius, padding: "18px 20px", borderLeft: `${C.accentBarHeight + 1}px solid ${t.color}` }}>
+          {t.enablement && <p style={{ fontSize: 14, color: T.textMuted, lineHeight: 1.65, margin: "0 0 10px" }}>{t.enablementTitle ? <strong style={{ color: t.colorLight }}>{t.enablementTitle}: </strong> : null}{t.enablement}</p>}
+          <p style={{ fontFamily: T.fontDisplay, fontSize: 24, color: T.text, margin: 0 }}>{t.callout}</p>
         </div>
       </div>
     </div>

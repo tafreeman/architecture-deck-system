@@ -4,6 +4,7 @@
  * Ported from v10.0 HumanScreen into the v14 registry-based system.
  */
 
+import type { BaseTopicProps } from '../../layouts/registry.ts';
 import { useState, useEffect } from "react";
 import { useTheme } from "../../components/hooks/useTheme.ts";
 import { useChrome } from "../../components/hooks/useChrome.ts";
@@ -11,20 +12,9 @@ import { usePresentationViewport } from "../../components/hooks/usePresentationV
 import BackBtn from "../../components/navigation/BackBtn.tsx";
 import Particles from "../../components/animations/Particles.tsx";
 
-interface Topic {
-  id: string;
-  title: string;
-  subtitle?: string;
-  color: string;
-  colorLight?: string;
-  colorGlow?: string;
-  icon?: string;
-  callout?: string;
-  [key: string]: unknown;
-}
 
 interface LayoutProps {
-  topic: Topic;
+  topic: BaseTopicProps;
   onBack: () => void;
 }
 
@@ -71,7 +61,7 @@ export function AdvStatsLayout({ topic, onBack }: LayoutProps) {
             {cards.map((c, i) => {
               const isExpanded = !!expandedMap[i];
               return (
-                <button
+                <button type="button"
                   key={i}
                   onClick={() => toggleCard(i)}
                   style={{

@@ -1,29 +1,25 @@
 import React, { useState, useEffect } from "react";
+import type { BaseTopicProps } from '../../layouts/registry.ts';
 import { useTheme } from "../../components/hooks/useTheme.ts";
 import BackBtn from "../../components/navigation/BackBtn.tsx";
 
-interface Topic {
-  id: string;
-  title: string;
-  subtitle?: string;
-  color: string;
-  colorLight?: string;
-  colorGlow?: string;
-  icon?: string;
-  callout?: string;
-  [key: string]: unknown;
+/** Fields used by HbProcessLayout beyond the shared BaseTopicProps. */
+interface HbProcessTopic extends BaseTopicProps {
+  steps?: Array<{ num: string; title: string; body: string }>;
 }
 
 interface LayoutProps {
-  topic: Topic;
+  topic: BaseTopicProps;
   onBack: () => void;
 }
 
 export function HbProcessLayout({ topic, onBack }: LayoutProps) {
+  // Cast once at entry; family-specific fields are typed via HbProcessTopic.
+  const t = topic as HbProcessTopic;
   const T = useTheme();
   const [entered, setEntered] = useState(false);
-  useEffect(() => { const t = setTimeout(() => setEntered(true), 60); return () => clearTimeout(t); }, []);
-  const steps = topic.steps as Array<{ num: string; title: string; body: string }> || [];
+  useEffect(() => { const timer = setTimeout(() => setEntered(true), 60); return () => clearTimeout(timer); }, []);
+  const steps = t.steps ?? [];
   const cols = steps.length <= 4 ? steps.length : 4;
   return (
     <div style={{ minHeight: "100vh", background: T.bg, display: "flex", flexDirection: "column" }}>
@@ -31,9 +27,9 @@ export function HbProcessLayout({ topic, onBack }: LayoutProps) {
       <div style={{ flex: 1, padding: "36px 48px 0" }}>
         <BackBtn onClick={onBack} />
         <div style={{ marginBottom: 28, opacity: entered ? 1 : 0, transition: "all 0.6s ease" }}>
-          <div style={{ fontSize: 10, fontFamily: T.fontDisplay, fontWeight: 700, letterSpacing: 2.5, textTransform: "uppercase", color: T.textDim, marginBottom: 6 }}>{topic.eyebrow as string || "Process"}</div>
-          <h1 style={{ fontFamily: T.fontDisplay, fontSize: 40, fontWeight: 800, color: T.text, margin: "0 0 6px", letterSpacing: -0.5 }}>{topic.title}</h1>
-          <p style={{ fontFamily: T.fontBody, fontSize: 13, color: T.textMuted, fontStyle: "italic", margin: 0 }}>{topic.subtitle}</p>
+          <div style={{ fontSize: 10, fontFamily: T.fontDisplay, fontWeight: 700, letterSpacing: 2.5, textTransform: "uppercase", color: T.textDim, marginBottom: 6 }}>{t.eyebrow || "Process"}</div>
+          <h1 style={{ fontFamily: T.fontDisplay, fontSize: 40, fontWeight: 800, color: T.text, margin: "0 0 6px", letterSpacing: -0.5 }}>{t.title}</h1>
+          <p style={{ fontFamily: T.fontBody, fontSize: 13, color: T.textMuted, fontStyle: "italic", margin: 0 }}>{t.subtitle}</p>
         </div>
         {/* Steps grid — 4 per row */}
         <div style={{ display: "grid", gridTemplateColumns: `repeat(${cols}, 1fr)`, gap: 3, marginBottom: 28 }}>
@@ -51,7 +47,7 @@ export function HbProcessLayout({ topic, onBack }: LayoutProps) {
       </div>
       {/* Bold manifesto-style callout */}
       <div style={{ background: T.text, padding: "24px 48px", textAlign: "center", opacity: entered ? 1 : 0, transition: "opacity 0.6s 1s ease" }}>
-        <p style={{ fontFamily: T.fontDisplay, fontSize: 20, fontWeight: 800, color: T.accent, margin: 0, letterSpacing: -0.25 }}>&ldquo;{topic.callout}&rdquo;</p>
+        <p style={{ fontFamily: T.fontDisplay, fontSize: 20, fontWeight: 800, color: T.accent, margin: 0, letterSpacing: -0.25 }}>&ldquo;{t.callout}&rdquo;</p>
       </div>
     </div>
   );

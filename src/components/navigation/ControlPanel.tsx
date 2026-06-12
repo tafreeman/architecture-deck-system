@@ -162,7 +162,7 @@ export function ControlPanel({
       }}
     >
       {/* Toggle tab — always visible */}
-      <button
+      <button type="button"
         onClick={() => setOpen((o) => !o)}
         aria-label={open ? "Close design panel" : "Open design panel"}
         style={{
@@ -219,7 +219,7 @@ export function ControlPanel({
               {Object.entries(decks).map(([key, d]) => {
                 const isActive = key === deckKey;
                 return (
-                  <button
+                  <button type="button"
                     key={key}
                     onClick={() => { onDeckChange(key); setOpen(false); }}
                     style={{
@@ -252,7 +252,7 @@ export function ControlPanel({
                   const isActive = pack.id === contentKey;
                   const isPartial = pack.matchCount < pack.totalSlides;
                   return (
-                    <button
+                    <button type="button"
                       key={pack.id}
                       onClick={() => onContentChange(pack.id)}
                       style={{
@@ -298,7 +298,7 @@ export function ControlPanel({
           <PanelSection
             label="Theme"
             extra={themeManual && (
-              <button
+              <button type="button"
                 onClick={onThemeReset}
                 title="Reset to deck default theme"
                 style={{
@@ -314,7 +314,7 @@ export function ControlPanel({
                 const isActive = theme?.id === t.id;
                 const isDeckDefault = t.id === deckThemeId;
                 return (
-                  <button
+                  <button type="button"
                     key={t.id}
                     onClick={() => onThemeChange(t)}
                     style={{
@@ -360,7 +360,7 @@ export function ControlPanel({
                 const sig = STYLE_SIGNATURES[m.id] ?? STYLE_SIGNATURES["default"];
                 const isActive = m.id === styleModeId;
                 return (
-                  <button
+                  <button type="button"
                     key={m.id}
                     onClick={() => onStyleModeChange(m.id)}
                     style={{
@@ -392,7 +392,7 @@ export function ControlPanel({
                 {RENDER_FAMILIES.map(([fam, label]) => {
                   const isActive = fam === renderFamily;
                   return (
-                    <button
+                    <button type="button"
                       key={fam}
                       onClick={() => onRenderFamilyChange(fam)}
                       style={{
@@ -426,7 +426,7 @@ export function ControlPanel({
               ].map(({ key, label, sub }) => {
                 const on = animOptions[key];
                 return (
-                  <button
+                  <button type="button"
                     key={key}
                     onClick={() => onAnimOptionsChange({ ...animOptions, [key]: !on })}
                     style={{
@@ -456,7 +456,7 @@ export function ControlPanel({
           {/* ── BACKGROUND (conditional on layout feature) ── */}
           {features.background && onHeroImageToggle && (
             <PanelSection label="Background">
-              <button
+              <button type="button"
                 onClick={() => onHeroImageToggle(!heroImageEnabled)}
                 style={{
                   display: "flex", alignItems: "center", gap: 10, width: "100%",

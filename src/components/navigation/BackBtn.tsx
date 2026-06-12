@@ -15,7 +15,7 @@ export function BackBtn({ onClick }: BackBtnProps) {
   const viewport = usePresentationViewport();
 
   return (
-    <button
+    <button type="button"
       onClick={onClick}
       style={{
         background: "none",

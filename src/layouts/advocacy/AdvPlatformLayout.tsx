@@ -4,6 +4,7 @@
  * Ported from v10.0 PlatformScreen into the v14 registry-based system.
  */
 
+import type { BaseTopicProps } from '../../layouts/registry.ts';
 import { useState, useEffect } from "react";
 import { useTheme } from "../../components/hooks/useTheme.ts";
 import { useChrome } from "../../components/hooks/useChrome.ts";
@@ -11,35 +12,32 @@ import { usePresentationViewport } from "../../components/hooks/usePresentationV
 import BackBtn from "../../components/navigation/BackBtn.tsx";
 import Particles from "../../components/animations/Particles.tsx";
 
-interface Topic {
-  id: string;
-  title: string;
-  subtitle?: string;
-  color: string;
-  colorLight?: string;
-  colorGlow?: string;
-  icon?: string;
-  callout?: string;
-  [key: string]: unknown;
+/** Fields used by AdvPlatformLayout beyond the shared BaseTopicProps. */
+interface AdvPlatformTopic extends BaseTopicProps {
+  focusPanels?: Array<{ label?: string; title: string; body?: string }>;
+  capabilities?: Array<{ icon?: string; title: string; body?: string }>;
+  lanes?: Array<{ title: string; persona?: string; steps?: string[] }>;
 }
 
 interface LayoutProps {
-  topic: Topic;
+  topic: BaseTopicProps;
   onBack: () => void;
 }
 
 export function AdvPlatformLayout({ topic, onBack }: LayoutProps) {
+  // Cast once at entry; family-specific fields are typed via AdvPlatformTopic.
+  const t = topic as AdvPlatformTopic;
   const T = useTheme();
   const C = useChrome();
   const viewport = usePresentationViewport();
   const [entered, setEntered] = useState(false);
   const [expandedLanes, setExpandedLanes] = useState<Record<number, boolean>>({});
-  useEffect(() => { const t = setTimeout(() => setEntered(true), 60); return () => clearTimeout(t); }, []);
+  useEffect(() => { const timer = setTimeout(() => setEntered(true), 60); return () => clearTimeout(timer); }, []);
 
-  const heroPoints = topic.heroPoints as string[] || [];
-  const focusPanels = topic.focusPanels as Array<{ label?: string; title: string; body?: string }> || [];
-  const capabilities = topic.capabilities as Array<{ icon?: string; title: string; body?: string }> || [];
-  const lanes = topic.lanes as Array<{ title: string; persona?: string; steps?: string[] }> || [];
+  const heroPoints = t.heroPoints ?? [];
+  const focusPanels = t.focusPanels ?? [];
+  const capabilities = t.capabilities ?? [];
+  const lanes = t.lanes ?? [];
 
   const toggleLane = (idx: number) => {
     setExpandedLanes((prev) => ({ ...prev, [idx]: !prev[idx] }));
@@ -47,8 +45,8 @@ export function AdvPlatformLayout({ topic, onBack }: LayoutProps) {
 
   return (
     <div style={{ position: "relative", minHeight: "100dvh", background: T.bg, overflowX: "hidden", overflowY: viewport.overlayScroll }}>
-      <Particles color={topic.color} active={entered} />
-      <div style={{ position: "absolute", top: 0, right: 0, width: "40%", height: "50%", background: `radial-gradient(ellipse at top right,${topic.color}10,transparent 70%)`, pointerEvents: "none" }} />
+      <Particles color={t.color} active={entered} />
+      <div style={{ position: "absolute", top: 0, right: 0, width: "40%", height: "50%", background: `radial-gradient(ellipse at top right,${t.color}10,transparent 70%)`, pointerEvents: "none" }} />
 
       <div style={{ position: "relative", zIndex: 2, maxWidth: 960, margin: "0 auto", padding: `${viewport.pagePaddingTop}px ${viewport.pagePaddingX}px ${viewport.pagePaddingBottom}px` }}>
         <BackBtn onClick={onBack} />
@@ -56,24 +54,24 @@ export function AdvPlatformLayout({ topic, onBack }: LayoutProps) {
         <div style={{ opacity: entered ? 1 : 0, transform: entered ? "none" : "translateY(28px)", transition: "all 0.8s cubic-bezier(0.22,1,0.36,1)" }}>
 
           {/* Header */}
-          {(topic.eyebrow as string) && (
+          {t.eyebrow && (
             <div style={{ fontSize: 10, textTransform: "uppercase", letterSpacing: 2, color: T.accent, marginBottom: 10 }}>
-              {topic.eyebrow as string}
+              {t.eyebrow}
             </div>
           )}
           <h1 style={{ fontSize: 34, fontFamily: T.fontDisplay, fontWeight: C.headingWeight, color: T.text, margin: "0 0 8px" }}>
-            {topic.title}
+            {t.title}
           </h1>
-          {topic.subtitle && (
+          {t.subtitle && (
             <p style={{ fontSize: 15, color: T.textMuted, lineHeight: 1.65, marginTop: 0, marginBottom: 16 }}>
-              {topic.subtitle}
+              {t.subtitle}
             </p>
           )}
 
           {heroPoints.length > 0 && (
             <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 20 }}>
               {heroPoints.map((pt, i) => (
-                <span key={i} style={{ display: "inline-flex", alignItems: "center", border: `1px solid ${topic.color}40`, borderRadius: 999, padding: "4px 14px", fontSize: 11, color: topic.color }}>
+                <span key={i} style={{ display: "inline-flex", alignItems: "center", border: `1px solid ${t.color}40`, borderRadius: 999, padding: "4px 14px", fontSize: 11, color: t.color }}>
                   {pt}
                 </span>
               ))}
@@ -159,7 +157,7 @@ export function AdvPlatformLayout({ topic, onBack }: LayoutProps) {
                 const isOpen = !!expandedLanes[i];
                 return (
                   <div key={i} style={{ marginBottom: 6 }}>
-                    <button
+                    <button type="button"
                       onClick={() => toggleLane(i)}
                       style={{
                         display: "flex",
@@ -208,7 +206,7 @@ export function AdvPlatformLayout({ topic, onBack }: LayoutProps) {
           )}
 
           {/* Callout */}
-          {topic.callout && (
+          {t.callout && (
             <div style={{
               marginTop: 24,
               borderLeft: `${C.accentBarHeight}px solid ${T.accent}`,
@@ -217,7 +215,7 @@ export function AdvPlatformLayout({ topic, onBack }: LayoutProps) {
               borderRadius: `0 ${C.innerRadius}px ${C.innerRadius}px 0`,
             }}>
               <p style={{ fontSize: 14, color: T.text, lineHeight: 1.65, margin: 0, fontWeight: 600 }}>
-                &ldquo;{topic.callout}&rdquo;
+                &ldquo;{t.callout}&rdquo;
               </p>
             </div>
           )}

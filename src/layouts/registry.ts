@@ -14,12 +14,45 @@
 import type { ComponentType } from 'react';
 
 /**
+ * Base topic shape shared by every layout component and compound component.
+ *
+ * Covers every field that appears in the eliminated local `interface Topic`
+ * declarations across the 38 layout files and 1 compound component.
+ *
+ * Layouts that need family-specific strongly-typed fields should extend this:
+ *   interface MyTopic extends BaseTopicProps { extraField: string; }
+ *
+ * The index signature `[key: string]: unknown` makes it a structural supertype
+ * of any content object without requiring every optional field to be declared.
+ */
+export interface BaseTopicProps {
+  readonly id: string;
+  readonly title: string;
+  readonly subtitle?: string;
+  readonly color: string;
+  readonly colorLight?: string;
+  readonly colorGlow?: string;
+  readonly icon?: string;
+  readonly order?: string | number;
+  readonly num?: string;
+  readonly callout?: string;
+  readonly eyebrow?: string;
+  readonly banner?: string;
+  readonly summary?: string;
+  readonly heroPoints?: string[];
+  readonly talkingPoints?: string[];
+  readonly cards?: Record<string, unknown>[];
+  readonly [key: string]: unknown;
+}
+
+/**
  * Standard props that every layout component receives.
  * Individual layouts may accept additional props via the slide object.
  */
 export interface LayoutProps {
-  slide: Record<string, unknown>;
+  topic: BaseTopicProps;
   themeId: string;
+  onBack: () => void;
   [key: string]: unknown;
 }
 

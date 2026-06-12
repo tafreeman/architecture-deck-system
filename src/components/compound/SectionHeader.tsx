@@ -11,19 +11,10 @@ import { useChrome } from "../hooks/useChrome.js";
 import { usePresentationViewport } from "../hooks/usePresentationViewport.js";
 import type { Theme } from "../../tokens/themes.ts";
 import type { StyleMode } from "../../tokens/style-modes.ts";
-
-interface Topic {
-  icon?: string;
-  order?: string | number;
-  title: string;
-  subtitle?: string;
-  color: string;
-  colorGlow?: string;
-  colorLight?: string;
-}
+import type { BaseTopicProps } from "../../layouts/registry.ts";
 
 interface SectionHeaderProps {
-  topic: Topic;
+  topic: BaseTopicProps;
   entered: boolean;
 }
 
