@@ -13,13 +13,7 @@
     "isolatedModules": true,
     "allowImportingTsExtensions": true,
     "noEmit": true,
-    "baseUrl": ".",
-    "paths": {
-      "@tokens/*": ["src/tokens/*"],
-      "@components/*": ["src/components/*"],
-      "@layouts/*": ["src/layouts/*"],
-      "@patterns/*": ["src/patterns/*"]
-    }
+    "baseUrl": "."
   },
   "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.js", "src/**/*.jsx"],
   "exclude": ["node_modules", "dist", "scripts"]

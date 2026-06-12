@@ -10,7 +10,7 @@ import { useState, useRef, useCallback } from "react";
 import type { Theme } from "../../tokens/themes.ts";
 import type { StyleMode } from "../../tokens/style-modes.ts";
 
-interface TopicShape {
+export interface TopicShape {
   id: string;
   icon?: string;
   title: string;
