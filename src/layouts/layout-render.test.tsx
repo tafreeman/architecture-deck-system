@@ -1,3 +1,4 @@
+/// <reference types="vite/client" />
 /**
  * layout-render.test.tsx — smoke-render test suite for the layout registry.
  *
@@ -133,14 +134,40 @@ describe("Layout registry — registration integrity", () => {
   });
 
   it("registration count equals total IDs registered via register-all", () => {
-    // This count is derived at runtime from the actual registry state,
-    // so it moves with the codebase — no magic number to maintain.
-    const registeredIds = layoutRegistry.list();
-    // Verify all families have at least one representative registered
-    const missingFamilies = Object.entries(FAMILY_REPRESENTATIVES)
-      .filter(([, id]) => !registeredIds.includes(id))
-      .map(([family]) => family);
-    expect(missingFamilies).toEqual([]);
+    // Derive the expected count at runtime by globbing every register.ts file
+    // in the layouts tree and counting how many layout IDs they register.
+    // This way, adding or removing a registration fails the test automatically
+    // without any magic literal to maintain.
+    //
+    // import.meta.glob with { eager: true } is evaluated by Vite/Vitest at
+    // bundle time and returns a map of { path → module }. We count unique keys
+    // from the registry (which was populated as a side-effect of register-all.ts
+    // already imported at the top of this file) and compare against a count
+    // derived by counting registrations in those same register files.
+    //
+    // Strategy: sum up `layoutRegistry.register` + `layoutRegistry.registerBatch`
+    // calls across all register.ts modules by inspecting each module's raw text
+    // via Vite glob eager import of the register files as strings.
+    const registerModules = import.meta.glob(
+      "./{base,verge-pop,sprint,onboarding,handbook,engineering,advocacy,advocacy-dense}/register.ts",
+      { eager: true, query: "?raw", import: "default" },
+    ) as Record<string, string>;
+
+    // Count every `layoutRegistry.register(` call (each registers exactly 1 ID)
+    // plus expand each `registerBatch` call by counting how many "key": entries
+    // follow (the batch object literal). This derives the expected total purely
+    // from the source of truth without a hardcoded literal.
+    let expectedCount = 0;
+    for (const src of Object.values(registerModules)) {
+      // Single-registrations: layoutRegistry.register(
+      const singles = (src.match(/layoutRegistry\.register\(/g) ?? []).length;
+      // Batch-registrations: count the string keys "id": inside each registerBatch call
+      const batchKeys = (src.match(/^\s+"[\w-]+":/gm) ?? []).length;
+      expectedCount += singles + batchKeys;
+    }
+
+    const actualCount = layoutRegistry.list().length;
+    expect(actualCount).toBe(expectedCount);
   });
 });
 
