@@ -258,7 +258,10 @@ export type LayoutId = keyof LayoutContentMap;
 
 /** Text content for all slides in a deck, keyed by slide `id`. */
 export type SlideContentMap = {
-  readonly [slideId: string]: LayoutContentMap[LayoutId];
+  readonly [slideId: string]: LayoutContentMap[LayoutId] & {
+    readonly role?: string;
+    readonly sourceLayout?: string;
+  };
 };
 
 // ── Deck-level text content ─────────────────────────────────────────────

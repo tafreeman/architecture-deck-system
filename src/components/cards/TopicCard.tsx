@@ -50,7 +50,7 @@ function TopicCard({ title, body, icon, color, onClick }: TopicCardProps): React
           ? (e: React.KeyboardEvent<HTMLDivElement>) => {
               if (e.key === "Enter" || e.key === " ") {
                 e.preventDefault();
-                onClick(e as unknown as React.MouseEvent);
+                onClick();
               }
             }
           : undefined

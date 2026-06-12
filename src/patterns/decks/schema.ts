@@ -11,7 +11,6 @@
  */
 
 import { z } from 'zod';
-import type { DeckManifest } from './types';
 
 /* ── Slide schema ──────────────────────────────────────────── */
 
@@ -83,7 +82,7 @@ const SlideSchema = z.object({
  * Call after validateDeckManifest to catch layout typos.
  */
 export function validateLayoutsExist(
-  manifest: DeckManifest,
+  manifest: { slides: readonly { id: string; layout: string }[] },
   registry: { has: (id: string) => boolean; list: () => string[] },
 ): void {
   const missing = manifest.slides.filter((s) => !registry.has(s.layout));

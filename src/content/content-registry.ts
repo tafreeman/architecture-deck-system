@@ -157,9 +157,8 @@ export function buildDeckFromContent(
   // silently rendering the LayoutRenderer error fallback.
   validateLayoutsExist(
     {
-      themeId: structureEntry.id,
       slides: structureEntry.structure.contentSlides,
-    } as unknown as Parameters<typeof validateLayoutsExist>[0],
+    },
     layoutRegistry,
   );
 
