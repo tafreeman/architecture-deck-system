@@ -5,13 +5,13 @@
  *   - Imports ThemeContext + ChromeContext from extracted context modules
  *   - Imports register-all.ts as a side-effect (populates layout registry)
  *   - Replaces 25-case renderActiveTopic() switch with <LayoutRenderer>
- *   - Imports CometTransition, ThematicIntro, LandingTile from extracted components
+ *   - Imports CometTransition, ThematicIntro from extracted components
  *
  * All DECKS, createDeckPreset, and transcription functions are preserved
  * verbatim from the monolith — they are data/logic, not renderers.
  */
 
-import React, { useState, useEffect, useMemo, useCallback, useRef, useContext } from "react";
+import React, { useState, useEffect, useMemo, useCallback, useRef } from "react";
 
 // ── Content imports ────────────────────────────────────────────────────────
 import * as current from "./content/current/deck.js";
@@ -38,8 +38,9 @@ import { usePresentationViewport } from "./components/hooks/index.ts";
 
 // ── Extracted components ──────────────────────────────────────────────────
 import { CometTransition, ThematicIntro } from "./components/animations/index.ts";
-import { LandingTile } from "./components/cards/index.ts";
-import { ControlPanel, OptionalDeckLink, type TopicShape } from "./components/navigation/index.ts";
+import { ControlPanel } from "./components/navigation/index.ts";
+import { DeckLanding, LayoutCyclerBar } from "./components/deck/index.ts";
+export type { DeckLandingProps, LayoutCyclerBarProps } from "./components/deck/index.ts";
 
 // ── Layout registry: side-effect import registers all 39 layouts ───────────
 import "./layouts/register-all.ts";
@@ -240,156 +241,8 @@ const HERO_IMAGE_DEFAULT = "";
 // ═════════════════════════════════════════════════════════════════════
 // EXTRACTED COMPONENTS
 // ═════════════════════════════════════════════════════════════════════
-
-interface DeckLandingProps {
-  deck: DeckContent;
-  deckTopics: DeckContent[];
-  viewport: ReturnType<typeof usePresentationViewport>;
-  hovered: string | null;
-  setHovered: (id: string | null) => void;
-  handleSelect: (id: string, pos: { x: number; y: number }) => void;
-  heroImage: string;
-  heroImageEnabled: boolean;
-  cometActive: boolean;
-}
-
-function DeckLanding({
-  deck,
-  deckTopics,
-  viewport,
-  hovered,
-  setHovered,
-  handleSelect,
-  heroImage,
-  heroImageEnabled,
-  cometActive,
-}: DeckLandingProps) {
-  const T = useContext(ThemeContext);
-  const chrome = useContext(ChromeContext);
-  return (
-    <div style={{ position: "relative", minHeight: "100dvh", display: "flex", flexDirection: "column", justifyContent: "center", padding: `${viewport.pagePaddingTop}px ${viewport.pagePaddingX}px ${viewport.pagePaddingBottom}px`, opacity: cometActive ? 0 : 1, transition: "opacity 0.4s ease" }}>
-      {/* Hero background image layer */}
-      {heroImageEnabled && heroImage && (
-        <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", backgroundImage: `url("${heroImage}")`, backgroundSize: "cover", backgroundPosition: "center", backgroundAttachment: "fixed", opacity: 0.22, borderRadius: "inherit" }} />
-      )}
-      <div style={{ position: "relative", zIndex: 1 }}>
-        <div style={{ marginBottom: viewport.isPhone ? 24 : 32 }}>
-          <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: 3, color: T.textDim, fontFamily: T.fontDisplay, fontWeight: 500, marginBottom: 10 }}>{deck.brandLine}</div>
-          <h1 style={{ fontFamily: T.fontDisplay, fontSize: viewport.heroTitleSize, fontWeight: chrome.headingWeight, color: T.text, margin: "0 0 10px", letterSpacing: -1, lineHeight: 1.05, textTransform: chrome.headingTransform }}>
-            {deck.title}<br /><span style={{ background: `linear-gradient(90deg,${T.gradient[0]},${T.gradient[1]})`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>{deck.titleAccent}</span>
-          </h1>
-          <p style={{ fontSize: viewport.bodySize, color: T.textDim, margin: 0, maxWidth: viewport.isPhone ? "100%" : 600 }}>{deck.tagline}</p>
-        </div>
-        <div style={{ display: "grid", gridTemplateColumns: viewport.isPhone ? "1fr" : viewport.isCompact ? "1fr 1fr" : "repeat(4, minmax(0, 1fr))", gap: viewport.cardGap }}>
-          {deckTopics.map((t: DeckContent) => (
-            <LandingTile
-              key={t.id}
-              title={t.title}
-              subtitle={t.subtitle}
-              icon={t.icon}
-              num={t.num}
-              color={t.color}
-              colorLight={t.colorLight}
-              colorGlow={t.colorGlow}
-              onClick={(pos) => handleSelect(t.id, pos)}
-              hovered={hovered === t.id}
-              onHover={(isHovered) => setHovered(isHovered ? t.id : null)}
-            />
-          ))}
-        </div>
-        {/* Optional one-pager links */}
-        {deckTopics.filter((t: DeckContent) => t.optional).map((t: DeckContent) => (
-          <OptionalDeckLink
-            key={`opt-${t.id}`}
-            topic={t as TopicShape}
-            theme={T}
-            chrome={chrome}
-            onNavigate={(id, pos) => handleSelect(id, pos)}
-          />
-        ))}
-        {/* ── Footer: stats ── */}
-        <div style={{ marginTop: viewport.isPhone ? 24 : 32, paddingTop: 20, borderTop: `1px solid ${T.border || "rgba(255,255,255,0.06)"}` }}>
-          <div style={{ display: "grid", gridTemplateColumns: viewport.isPhone ? "1fr 1fr" : "repeat(3, minmax(0, max-content))", gap: viewport.isPhone ? 12 : 36 }}>
-            {deck.stats.map((s: DeckContent) => (
-              <div key={`${s.lbl}-${s.val}`}><div style={{ fontFamily: T.fontDisplay, fontSize: 22, fontWeight: 700, color: T.accent }}>{s.val}</div><div style={{ fontSize: 10, color: T.textDim, textTransform: "uppercase", letterSpacing: 0.8 }}>{s.lbl}</div></div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-interface LayoutCyclerBarProps {
-  activeTopic: DeckContent;
-  activeSlideLayout: string;
-  allLayoutsLength: number;
-  activeLayoutIndex: number;
-  cycleLayout: (dir: number) => void;
-  resetLayout: () => void;
-}
-
-function LayoutCyclerBar({
-  activeTopic,
-  activeSlideLayout,
-  allLayoutsLength,
-  activeLayoutIndex,
-  cycleLayout,
-  resetLayout,
-}: LayoutCyclerBarProps) {
-  const T = useContext(ThemeContext);
-  return (
-    <div style={{
-      position: "fixed", bottom: 20, left: "50%", transform: "translateX(-50%)",
-      zIndex: 200, display: "flex", alignItems: "center", gap: 8,
-      background: "rgba(8,10,24,0.92)", backdropFilter: "blur(12px)",
-      border: `1px solid ${activeSlideLayout !== activeTopic.layout ? T.accent + "50" : "rgba(255,255,255,0.1)"}`,
-      borderRadius: 999, padding: "6px 8px",
-    }}>
-      <button type="button"
-        onClick={() => cycleLayout(-1)}
-        style={{
-          background: "none", border: "none", cursor: "pointer",
-          color: "rgba(255,255,255,0.5)", fontSize: 14, padding: "2px 6px",
-          fontFamily: "monospace",
-        }}
-      >◂</button>
-      <span style={{
-        fontSize: 10, fontFamily: "'Space Grotesk',sans-serif",
-        color: activeSlideLayout !== activeTopic.layout ? T.accent : "rgba(255,255,255,0.5)",
-        letterSpacing: 0.5, minWidth: 100, textAlign: "center",
-        fontWeight: activeSlideLayout !== activeTopic.layout ? 600 : 400,
-      }}>
-        {activeSlideLayout}
-      </span>
-      <button type="button"
-        onClick={() => cycleLayout(1)}
-        style={{
-          background: "none", border: "none", cursor: "pointer",
-          color: "rgba(255,255,255,0.5)", fontSize: 14, padding: "2px 6px",
-          fontFamily: "monospace",
-        }}
-      >▸</button>
-      {activeSlideLayout !== activeTopic.layout && (
-        <button type="button"
-          onClick={resetLayout}
-          title="Reset to default layout"
-          style={{
-            background: "none", border: "none", cursor: "pointer",
-            fontSize: 10, color: "rgba(255,255,255,0.35)", padding: "2px 6px",
-            fontFamily: "'Space Grotesk',sans-serif",
-          }}
-        >↺</button>
-      )}
-      <span style={{
-        fontSize: 9, color: "rgba(255,255,255,0.2)",
-        fontFamily: "monospace",
-      }}>
-        {activeLayoutIndex + 1}/{allLayoutsLength}
-      </span>
-    </div>
-  );
-}
+// DeckLanding and LayoutCyclerBar are imported from ./components/deck/index.ts
+// (extracted as part of Fix #3 refactor). Their types are re-exported above.
 
 // ═════════════════════════════════════════════════════════════════════
 // APP

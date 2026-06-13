@@ -6,9 +6,15 @@ const config = {
   addons: [
     "@storybook/addon-docs",
     "@storybook/addon-a11y",
-    "@storybook/addon-onboarding",
+    // addon-onboarding removed: it injects an interactive first-run prompt that
+    // hangs CI runners waiting for stdin that never arrives.
   ],
   framework: "@storybook/react-vite",
+  core: {
+    // Disable telemetry to prevent outbound HTTP calls that can hang or
+    // significantly slow down CI builds on restricted/throttled networks.
+    disableTelemetry: true,
+  },
 };
 
 export default config;
