@@ -11,10 +11,13 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # ── Job 1: fast correctness checks ─────────────────────────────────────────
+  # typecheck + lint + tests + vite build.  Tight timeout so regressions fail
+  # fast instead of burning the full runner hour.
   ci:
-    name: Typecheck · Build · Storybook
+    name: Typecheck · Lint · Test · Build
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 15
 
     steps:
       - name: Checkout
@@ -47,12 +50,76 @@ jobs:
       - name: Build (Vite)
         run: npm run build
 
+  # ── Job 2: Storybook build (runs in parallel with job 1) ───────────────────
+  # Isolated so a slow Storybook build never blocks the correctness checks, and
+  # a tight timeout exposes future regressions quickly.
+  #
+  # Root-cause fixes applied here (and in .storybook/main.js + package.json):
+  #   • STORYBOOK_DISABLE_TELEMETRY=1 — prevents outbound HTTP calls to the
+  #     Storybook telemetry service that can hang on restricted CI networks.
+  #   • addon-onboarding removed from main.js — it injects an interactive
+  #     first-run prompt that waits for stdin that never arrives in CI.
+  #   • --disable-telemetry --quiet added to the build-storybook npm script as
+  #     belt-and-suspenders (env var + CLI flag + config.core.disableTelemetry).
+  storybook:
+    name: Build Storybook
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    env:
+      # Belt-and-suspenders: also set at the env level in case any Storybook
+      # pre-build hook reads process.env before the CLI flag is parsed.
+      STORYBOOK_DISABLE_TELEMETRY: 1
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
       - name: Build Storybook
         run: npm run build-storybook
 
+      - name: Upload Storybook artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: storybook-static
+          path: storybook-static/
+          retention-days: 7
+
+  # ── Job 3: deck export (main-push only, needs ci to pass first) ────────────
+  # Playwright-driven HTML/image/PDF export.  Unchanged from original; already
+  # completes well within limits.  Gated to main-push to avoid wasting Playwright
+  # minutes on every PR.
+  export:
+    name: Export Deck Artifacts
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: [ci]
+    if: github.event_name != 'pull_request'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
       - name: Cache Playwright browsers
         id: playwright-cache
-        if: github.event_name != 'pull_request'
         uses: actions/cache@v4
         with:
           path: ~/.cache/ms-playwright
@@ -62,26 +129,16 @@ jobs:
           save-always: true
 
       - name: Install Playwright Chromium system deps
-        if: github.event_name != 'pull_request'
         run: npx playwright install-deps chromium
 
       - name: Install Playwright Chromium
-        if: github.event_name != 'pull_request' && steps.playwright-cache.outputs.cache-hit != 'true'
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
         run: npx playwright install chromium
 
       - name: Export deck artifacts
-        if: github.event_name != 'pull_request'
         run: npm run export:all
 
-      - name: Upload Storybook artifact
-        uses: actions/upload-artifact@v7
-        with:
-          name: storybook-static
-          path: storybook-static/
-          retention-days: 7
-
       - name: Upload exported deck artifacts
-        if: github.event_name != 'pull_request'
         uses: actions/upload-artifact@v7
         with:
           name: exported-deck
