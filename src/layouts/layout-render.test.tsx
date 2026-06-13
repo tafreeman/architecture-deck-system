@@ -26,6 +26,7 @@ import { ControlPanel } from "../components/navigation/ControlPanel.tsx";
 import { ThemeContext, ChromeContext } from "../components/context/index.ts";
 import { THEMES } from "../tokens/themes.ts";
 import { STYLE_MODES_BY_ID } from "../tokens/style-modes.ts";
+import { DeckLanding } from "../components/deck/index.ts";
 
 // ── Test fixtures ───────────────────────────────────────────────────────────
 
@@ -222,5 +223,98 @@ describe("Layout families — one render per family", () => {
 
   it("advocacy-dense family: advd-overview renders without throwing", () => {
     expect(renderFamily("advd-overview")).not.toThrow();
+  });
+});
+
+// ── DeckLanding — stats null-guard ──────────────────────────────────────────
+
+describe("DeckLanding — stats null-guard", () => {
+  const VIEWPORT = {
+    width: 1440, height: 900, isPhone: false, isCompact: false,
+    pagePaddingX: 48, pagePaddingTop: 36, pagePaddingBottom: 48,
+    titleSize: 42, heroTitleSize: 44, sectionTitleSize: 32,
+    bodySize: 15, subtitleSize: 16, cardGap: 20, tileMinHeight: 300,
+    overlayScroll: "hidden" as const,
+  };
+
+  it("renders without crashing when deck.stats is undefined", () => {
+    const deckNoStats = {
+      brandLine: "Test Brand",
+      title: "Test Deck",
+      titleAccent: "Test",
+      tagline: "Tagline",
+      // stats intentionally omitted
+    };
+    expect(() =>
+      render(
+        withContexts(
+          <DeckLanding
+            deck={deckNoStats}
+            deckTopics={[]}
+            viewport={VIEWPORT}
+            hovered={null}
+            setHovered={() => undefined}
+            handleSelect={() => undefined}
+            heroImage=""
+            heroImageEnabled={false}
+            cometActive={false}
+          />,
+        ),
+      ),
+    ).not.toThrow();
+  });
+
+  it("renders without crashing when deck.stats is an empty array", () => {
+    const deckEmptyStats = {
+      brandLine: "Test Brand",
+      title: "Test Deck",
+      titleAccent: "Test",
+      tagline: "Tagline",
+      stats: [],
+    };
+    expect(() =>
+      render(
+        withContexts(
+          <DeckLanding
+            deck={deckEmptyStats}
+            deckTopics={[]}
+            viewport={VIEWPORT}
+            hovered={null}
+            setHovered={() => undefined}
+            handleSelect={() => undefined}
+            heroImage=""
+            heroImageEnabled={false}
+            cometActive={false}
+          />,
+        ),
+      ),
+    ).not.toThrow();
+  });
+
+  it("renders stat values when deck.stats is populated", () => {
+    const deckWithStats = {
+      brandLine: "Test Brand",
+      title: "Test Deck",
+      titleAccent: "Test",
+      tagline: "Tagline",
+      stats: [{ val: "42", lbl: "Slides" }, { val: "3", lbl: "Decks" }],
+    };
+    render(
+      withContexts(
+        <DeckLanding
+          deck={deckWithStats}
+          deckTopics={[]}
+          viewport={VIEWPORT}
+          hovered={null}
+          setHovered={() => undefined}
+          handleSelect={() => undefined}
+          heroImage=""
+          heroImageEnabled={false}
+          cometActive={false}
+        />,
+      ),
+    );
+    expect(screen.getByText("42")).toBeInTheDocument();
+    expect(screen.getByText("Slides")).toBeInTheDocument();
   });
 });

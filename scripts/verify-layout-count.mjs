@@ -5,7 +5,6 @@ import { fileURLToPath } from "node:url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(__dirname, "..");
 const layoutsDir = path.join(projectRoot, "src", "layouts");
-const expectedCount = 39;
 
 function walkRegisterFiles(dir) {
   return fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
@@ -15,6 +14,12 @@ function walkRegisterFiles(dir) {
   });
 }
 
+/**
+ * Collect unique layout IDs registered in a single register.ts source string.
+ * Handles both:
+ *   layoutRegistry.register("id", Component)
+ *   layoutRegistry.registerBatch({ "id": Component, ... }, ...)
+ */
 function collectLayoutIds(source) {
   const ids = new Set();
 
@@ -31,16 +36,37 @@ function collectLayoutIds(source) {
   return ids;
 }
 
+/**
+ * Count registration call-sites in a single register.ts source string —
+ * mirrors the approach in src/layouts/layout-render.test.tsx:151-171 so that
+ * expectedCount is always derived from the source of truth rather than a
+ * hardcoded literal.
+ *
+ * Singles:  one `layoutRegistry.register(` call = 1 ID
+ * Batches:  each string key inside a `registerBatch` block = 1 ID
+ */
+function countRegistrationCalls(source) {
+  const singles = (source.match(/layoutRegistry\.register\(/g) ?? []).length;
+  const batchKeys = (source.match(/^\s+"[\w-]+":/gm) ?? []).length;
+  return singles + batchKeys;
+}
+
 const ids = new Set();
+let expectedCount = 0;
+
 for (const file of walkRegisterFiles(layoutsDir)) {
   const source = fs.readFileSync(file, "utf8");
   for (const id of collectLayoutIds(source)) {
     ids.add(id);
   }
+  expectedCount += countRegistrationCalls(source);
 }
 
 if (ids.size !== expectedCount) {
-  console.error(`Expected ${expectedCount} registered layouts, found ${ids.size}.`);
+  console.error(`Expected ${expectedCount} registered layouts (from source scan), found ${ids.size} unique IDs.`);
+  if (ids.size < expectedCount) {
+    console.error("Possible duplicate layout ID registrations — check register.ts files.");
+  }
   console.error([...ids].sort().join("\n"));
   process.exit(1);
 }

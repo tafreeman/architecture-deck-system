@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App.v14.tsx';
+import App from './App.tsx';
 
 function LoadingScreen() {
   return (
