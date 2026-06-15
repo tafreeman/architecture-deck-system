@@ -1,0 +1,26 @@
+version: 2
+updates:
+  # ── npm dependencies ───────────────────────────────────────────────────────
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    ignore:
+      # Avoid auto-major churn on Playwright — majors often need export-script
+      # and browser-pin updates handled deliberately, not by bot.
+      - dependency-name: "playwright"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@playwright/test"
+        update-types: ["version-update:semver-major"]
+      # Storybook majors are large, breaking migrations — pin to non-major bumps.
+      - dependency-name: "storybook"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@storybook/*"
+        update-types: ["version-update:semver-major"]
+
+  # ── GitHub Actions ─────────────────────────────────────────────────────────
+  # Keeps the SHA-pinned actions in .github/workflows/ up to date automatically.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"

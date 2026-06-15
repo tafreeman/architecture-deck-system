@@ -3,6 +3,7 @@ import type { Theme } from "../../tokens/themes.ts";
 import type { StyleMode } from "../../tokens/style-modes.ts";
 import type { LayoutFeatures } from "../../layouts/registry.ts";
 import { DEFAULT_FEATURES } from "../../layouts/registry.ts";
+import type { DeckMeta } from "./types.ts";
 
 const STYLE_SIGNATURES: Record<string, { borderRadius: string; borderWidth: string; label: string; symbol: string }> = {
   default:   { borderRadius: "10px", borderWidth: "1px", label: "Default",   symbol: "◎" },
@@ -19,11 +20,6 @@ const RENDER_FAMILIES: [string, string][] = [
   ["advocacy", "Advocacy"],
   ["advocacy-dense", "Dense"],
 ];
-
-interface DeckMeta {
-  title: string;
-  titleAccent?: string;
-}
 
 interface AnimOptions {
   intro: boolean;

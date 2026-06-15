@@ -7,11 +7,7 @@
 import React from "react";
 import { useTheme } from "../hooks/useTheme.js";
 import { useChrome } from "../hooks/useChrome.js";
-
-interface DeckMeta {
-  title: string;
-  titleAccent?: string;
-}
+import type { DeckMeta } from "./types.ts";
 
 interface DeckPickerProps {
   decks: Record<string, DeckMeta>;

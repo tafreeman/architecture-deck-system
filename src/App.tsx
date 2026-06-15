@@ -39,6 +39,7 @@ import { usePresentationViewport } from "./components/hooks/index.ts";
 // ── Extracted components ──────────────────────────────────────────────────
 import { CometTransition, ThematicIntro } from "./components/animations/index.ts";
 import { ControlPanel } from "./components/navigation/index.ts";
+import type { DeckMeta } from "./components/navigation/types.ts";
 import { DeckLanding, LayoutCyclerBar } from "./components/deck/index.ts";
 export type { DeckLandingProps, LayoutCyclerBarProps } from "./components/deck/index.ts";
 
@@ -157,9 +158,18 @@ function normalizeDeckTopics(slides: DeckContent[]) {
   }));
 }
 
-function createDeckPreset(config: DeckContent) {
+/**
+ * A built deck preset. Carries the `DeckMeta` summary fields (`title`,
+ * `titleAccent`) statically — every preset spreads a `deckMeta` that defines
+ * them — while remaining schema-light for the rest of its dynamic content.
+ */
+type DeckPreset = DeckMeta & DeckContent;
+
+function createDeckPreset(config: DeckMeta & DeckContent): DeckPreset {
   return {
     ...config,
+    title: config.title,
+    titleAccent: config.titleAccent,
     topics: normalizeDeckTopics(config.topics),
     sprintNodes: normalizeSprintNodes(config.sprintNodes),
   };
@@ -230,6 +240,19 @@ const DECKS = {
   studio: STUDIO_DECK,
   engineering: ENGINEERING_DECK,
 };
+
+/**
+ * Deck summaries for the ControlPanel deck picker — narrows each full deck
+ * preset down to the `DeckMeta` fields the UI consumes. Built from `DECKS`
+ * so it stays in sync, and gives the `decks` prop a real `Record<string, DeckMeta>`
+ * type with no cast at the call site.
+ */
+const DECK_SUMMARIES: Record<string, DeckMeta> = Object.fromEntries(
+  Object.entries(DECKS).map(([key, d]) => [
+    key,
+    { title: d.title, titleAccent: d.titleAccent },
+  ]),
+);
 
 // ═════════════════════════════════════════════════════════════════════
 // TRANSCRIPTION FUNCTIONS  (cross-family layout normalisation)
@@ -470,7 +493,7 @@ export default function App() {
       )}
       {/* Floating design control panel */}
       <ControlPanel
-        decks={DECKS as unknown as Record<string, { title: string; titleAccent?: string }>}
+        decks={DECK_SUMMARIES}
         deckKey={deckKey}
         onDeckChange={switchDeck}
         themes={[...THEMES]}
