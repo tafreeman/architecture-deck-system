@@ -168,8 +168,6 @@ type DeckPreset = DeckMeta & DeckContent;
 function createDeckPreset(config: DeckMeta & DeckContent): DeckPreset {
   return {
     ...config,
-    title: config.title,
-    titleAccent: config.titleAccent,
     topics: normalizeDeckTopics(config.topics),
     sprintNodes: normalizeSprintNodes(config.sprintNodes),
   };
