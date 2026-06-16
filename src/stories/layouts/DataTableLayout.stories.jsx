@@ -1,4 +1,3 @@
-import React from "react";
 import { DataTableLayout } from "../../layouts/verge-pop/DataTableLayout.tsx";
 
 export default {

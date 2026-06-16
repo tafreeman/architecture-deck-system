@@ -1,4 +1,3 @@
-import React from "react";
 import { QuoteBlock } from "../../../components/micro/QuoteBlock.tsx";
 
 export default {

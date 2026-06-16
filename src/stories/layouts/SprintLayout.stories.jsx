@@ -1,4 +1,3 @@
-import React from "react";
 import { SprintLayout } from "../../layouts/sprint/SprintLayout.tsx";
 
 export default {

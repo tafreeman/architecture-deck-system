@@ -1,4 +1,3 @@
-import React from "react";
 import { HbChapterLayout } from "../../layouts/handbook/HbChapterLayout.tsx";
 
 export default {

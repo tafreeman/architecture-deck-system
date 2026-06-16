@@ -12,11 +12,8 @@ import React, { useContext } from "react";
 import { ThemeContext, ChromeContext } from "../context/index.ts";
 import { LandingTile } from "../cards/index.ts";
 import { OptionalDeckLink, type TopicShape } from "../navigation/index.ts";
+import type { DeckData, DeckSlide } from "../navigation/types.ts";
 import type { PresentationViewport } from "../hooks/usePresentationViewport.ts";
-
-/** Dynamic deck-content object (deck JSON is schema-light by design). */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- dynamic deck content
-type DeckContent = Record<string, any>;
 
 /** A single stats entry displayed in the landing footer. */
 interface StatEntry {
@@ -25,8 +22,8 @@ interface StatEntry {
 }
 
 export interface DeckLandingProps {
-  deck: DeckContent;
-  deckTopics: DeckContent[];
+  deck: DeckData;
+  deckTopics: DeckSlide[];
   viewport: PresentationViewport;
   hovered: string | null;
   setHovered: (id: string | null) => void;
@@ -50,7 +47,7 @@ export function DeckLanding({
   const T = useContext(ThemeContext);
   const chrome = useContext(ChromeContext);
 
-  const stats: StatEntry[] = deck.stats ?? [];
+  const stats: readonly StatEntry[] = deck.stats ?? [];
 
   return (
     <div style={{ position: "relative", minHeight: "100dvh", display: "flex", flexDirection: "column", justifyContent: "center", padding: `${viewport.pagePaddingTop}px ${viewport.pagePaddingX}px ${viewport.pagePaddingBottom}px`, opacity: cometActive ? 0 : 1, transition: "opacity 0.4s ease" }}>
@@ -67,16 +64,16 @@ export function DeckLanding({
           <p style={{ fontSize: viewport.bodySize, color: T.textDim, margin: 0, maxWidth: viewport.isPhone ? "100%" : 600 }}>{deck.tagline}</p>
         </div>
         <div style={{ display: "grid", gridTemplateColumns: viewport.isPhone ? "1fr" : viewport.isCompact ? "1fr 1fr" : "repeat(4, minmax(0, 1fr))", gap: viewport.cardGap }}>
-          {deckTopics.map((t: DeckContent) => (
+          {deckTopics.map((t) => (
             <LandingTile
               key={t.id}
               title={t.title}
-              subtitle={t.subtitle}
-              icon={t.icon}
-              num={t.num}
+              subtitle={t.subtitle ?? ""}
+              icon={t.icon ?? "•"}
+              num={t.num ?? ""}
               color={t.color}
-              colorLight={t.colorLight}
-              colorGlow={t.colorGlow}
+              colorLight={t.colorLight ?? t.color}
+              colorGlow={t.colorGlow ?? `${t.color}33`}
               onClick={(pos) => handleSelect(t.id, pos)}
               hovered={hovered === t.id}
               onHover={(isHovered) => setHovered(isHovered ? t.id : null)}
@@ -84,10 +81,10 @@ export function DeckLanding({
           ))}
         </div>
         {/* Optional one-pager links */}
-        {deckTopics.filter((t: DeckContent) => t.optional).map((t: DeckContent) => (
+        {deckTopics.filter((t) => t.optional).map((t) => (
           <OptionalDeckLink
             key={`opt-${t.id}`}
-            topic={t as TopicShape}
+            topic={t as unknown as TopicShape}
             theme={T}
             chrome={chrome}
             onNavigate={(id, pos) => handleSelect(id, pos)}

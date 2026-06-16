@@ -1,4 +1,3 @@
-import React from "react";
 import { ProcessLanesLayout } from "../../layouts/base/ProcessLanesLayout.tsx";
 
 export default {

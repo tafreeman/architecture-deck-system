@@ -1,4 +1,3 @@
-import React from "react";
 import { AdvdOverviewLayout } from "../../layouts/advocacy-dense/AdvdOverviewLayout.tsx";
 
 export default {

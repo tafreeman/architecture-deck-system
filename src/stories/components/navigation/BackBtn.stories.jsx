@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { BackBtn } from "../../../components/navigation/BackBtn.tsx";
 
 export default {

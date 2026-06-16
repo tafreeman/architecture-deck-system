@@ -1,4 +1,3 @@
-import React from "react";
 import { AdvdHurdlesLayout } from "../../layouts/advocacy-dense/AdvdHurdlesLayout.tsx";
 
 export default {

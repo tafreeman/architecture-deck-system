@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { DeckPicker } from "../../../components/navigation/DeckPicker.tsx";
 
 export default {

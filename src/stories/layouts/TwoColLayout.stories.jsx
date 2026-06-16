@@ -1,4 +1,3 @@
-import React from "react";
 import { TwoColLayout } from "../../layouts/base/TwoColLayout.tsx";
 
 export default {

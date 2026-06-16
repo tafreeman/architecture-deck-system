@@ -1,4 +1,3 @@
-import React from "react";
 import { StatCardsLayout } from "../../layouts/base/StatCardsLayout.tsx";
 
 export default {

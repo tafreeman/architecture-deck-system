@@ -1,4 +1,3 @@
-import React from "react";
 import { BadgePill } from "../../../components/micro/BadgePill.tsx";
 
 export default {

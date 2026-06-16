@@ -1,4 +1,3 @@
-import React from "react";
 import StatCard from "../../../components/cards/StatCard.tsx";
 
 export default {

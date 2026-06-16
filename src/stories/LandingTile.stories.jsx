@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import LandingTile from "../components/cards/LandingTile.tsx";
 
 export default {

@@ -1,4 +1,3 @@
-import React from "react";
 import { InfoCardsLayout } from "../../layouts/onboarding/InfoCardsLayout.tsx";
 
 export default {

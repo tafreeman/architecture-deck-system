@@ -11,6 +11,23 @@ const outputFile = path.join(outputDir, "architecture-deck-system.html");
 const FONT_CSS_URL =
   "https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Barlow:wght@400;500;600&family=Chakra+Petch:wght@500;600;700&family=DM+Sans:ital,wght@0,400;0,500;0,700&family=DM+Serif+Display&family=JetBrains+Mono:wght@500;700;800&family=Karla:wght@400;500;600;700&family=Nunito+Sans:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&family=Playfair+Display:wght@600;700;800&family=Source+Sans+3:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap";
 
+// CLI flags. `--offline` skips the Google-Fonts network fetch and emits an
+// `@import` URL instead of base64-embedded font data — useful for sandboxed
+// or air-gapped builds. Default (no flag) keeps full font embedding.
+const OFFLINE = process.argv.includes("--offline");
+
+// Output-integrity thresholds. The bundled single-file HTML carries the whole
+// React app plus (in online mode) embedded fonts, so a healthy build is well
+// over half a megabyte. A much smaller file means the inline/embed steps
+// silently produced an empty or stub document.
+const MIN_OUTPUT_BYTES = 500 * 1024; // 500 KB
+// Offline builds omit the base64-embedded fonts (emitting an @import instead),
+// so a healthy offline bundle is far smaller — use a lower floor that still
+// catches an empty/stub document.
+const OFFLINE_MIN_OUTPUT_BYTES = 50 * 1024; // 50 KB
+const ROOT_MOUNT_MARKER = '<div id="root">'; // React mount point from index.html
+const EMBEDDED_FONTS_MARKER = '<style id="embedded-fonts">'; // injected font block
+
 const REQUEST_HEADERS = {
   "user-agent":
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
@@ -67,6 +84,13 @@ async function fetchBuffer(url) {
 }
 
 async function buildEmbeddedFontCss() {
+  // Offline mode: skip the network entirely and emit an @import that pulls the
+  // fonts at view time. The font block is still wrapped in <style id="embedded-fonts">
+  // by the caller, so the integrity check for that marker still passes.
+  if (OFFLINE) {
+    return `@import url("${FONT_CSS_URL}");`;
+  }
+
   const rawCss = await fetchText(FONT_CSS_URL);
   const latinCss = selectLatinFontFaces(rawCss);
   const fontUrls = [
@@ -140,6 +164,44 @@ async function copyImages() {
   console.log(`Copied ${entries.length} image(s) to ${dstDir}`);
 }
 
+/**
+ * Re-read the written output and assert it is a complete, mountable bundle.
+ * Throws a descriptive error (non-zero exit via main's .catch) on any failure
+ * so a silently-broken export can never be published.
+ */
+async function verifyOutput() {
+  const written = await fs.readFile(outputFile, "utf8");
+  const byteLength = Buffer.byteLength(written, "utf8");
+
+  const failures = [];
+
+  const expectedMinBytes = OFFLINE ? OFFLINE_MIN_OUTPUT_BYTES : MIN_OUTPUT_BYTES;
+  if (byteLength <= expectedMinBytes) {
+    failures.push(
+      `output is only ${byteLength} bytes (expected > ${expectedMinBytes}); ` +
+        `the inline/embed step likely produced an empty or stub document`,
+    );
+  }
+  if (!written.includes(ROOT_MOUNT_MARKER)) {
+    failures.push(`missing React mount point '${ROOT_MOUNT_MARKER}'`);
+  }
+  if (!written.includes(EMBEDDED_FONTS_MARKER)) {
+    failures.push(`missing embedded-font block '${EMBEDDED_FONTS_MARKER}'`);
+  }
+
+  if (failures.length > 0) {
+    throw new Error(
+      `Single-file export verification failed for ${outputFile}:\n` +
+        failures.map((f) => `  - ${f}`).join("\n"),
+    );
+  }
+
+  console.log(
+    `Verified standalone HTML (${byteLength} bytes, mount point + ` +
+      `${OFFLINE ? "@import" : "embedded"} fonts present).`,
+  );
+}
+
 async function main() {
   const htmlPath = path.join(distDir, "index.html");
   let html = await fs.readFile(htmlPath, "utf8");
@@ -157,7 +219,9 @@ async function main() {
   await fs.writeFile(outputFile, html, "utf8");
   await copyImages();
 
-  console.log(`Wrote standalone HTML to ${outputFile}`);
+  console.log(`Wrote standalone HTML to ${outputFile}${OFFLINE ? " (offline mode)" : ""}`);
+
+  await verifyOutput();
 }
 
 main().catch((error) => {
