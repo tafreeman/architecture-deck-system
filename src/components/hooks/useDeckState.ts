@@ -27,6 +27,7 @@ import {
   getDefaultContentId,
   buildDeckFromContent,
 } from "../../content/content-registry.ts";
+import { normalizeDeckTopics, normalizeSprintNodes } from "../../decks.ts";
 
 import type { DeckData, DeckSlide, RawDeckSlide } from "../navigation/types.ts";
 
@@ -130,18 +131,17 @@ export function useDeckState({ decks, currentDeck }: UseDeckStateArgs): UseDeckS
     if (!merged) return baseDeck;
     // Reshape merged result to match createDeckPreset output shape. The merge
     // layer's slide/node arrays are schema-light, so cast to the DeckData shape.
+    // Spread merged.deckMeta (rather than assigning each optional field, which
+    // would set absent keys to `undefined` and clobber baseDeck values), and run
+    // the swapped slides/nodes through the SAME normalizers the static decks use
+    // so they get num/icon/color defaults instead of rendering bare.
     return {
       ...baseDeck,
-      brandLine: merged.deckMeta.brandLine,
-      title: merged.deckMeta.title,
-      titleAccent: merged.deckMeta.titleAccent,
-      tagline: merged.deckMeta.tagline,
-      introTitle: merged.deckMeta.introTitle,
-      introSubtitle: merged.deckMeta.introSubtitle,
-      introStats: merged.deckMeta.introStats,
-      stats: merged.deckMeta.stats,
-      topics: merged.contentSlides,
-      sprintNodes: merged.sprintNodes,
+      ...merged.deckMeta,
+      topics: normalizeDeckTopics(
+        merged.contentSlides as unknown as readonly RawDeckSlide[],
+      ),
+      sprintNodes: normalizeSprintNodes(merged.sprintNodes),
     } as unknown as DeckData;
   }, [deckKey, contentKey, baseDeck]);
 

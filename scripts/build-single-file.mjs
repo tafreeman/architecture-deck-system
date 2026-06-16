@@ -21,6 +21,10 @@ const OFFLINE = process.argv.includes("--offline");
 // over half a megabyte. A much smaller file means the inline/embed steps
 // silently produced an empty or stub document.
 const MIN_OUTPUT_BYTES = 500 * 1024; // 500 KB
+// Offline builds omit the base64-embedded fonts (emitting an @import instead),
+// so a healthy offline bundle is far smaller — use a lower floor that still
+// catches an empty/stub document.
+const OFFLINE_MIN_OUTPUT_BYTES = 50 * 1024; // 50 KB
 const ROOT_MOUNT_MARKER = '<div id="root">'; // React mount point from index.html
 const EMBEDDED_FONTS_MARKER = '<style id="embedded-fonts">'; // injected font block
 
@@ -171,9 +175,10 @@ async function verifyOutput() {
 
   const failures = [];
 
-  if (byteLength <= MIN_OUTPUT_BYTES) {
+  const expectedMinBytes = OFFLINE ? OFFLINE_MIN_OUTPUT_BYTES : MIN_OUTPUT_BYTES;
+  if (byteLength <= expectedMinBytes) {
     failures.push(
-      `output is only ${byteLength} bytes (expected > ${MIN_OUTPUT_BYTES}); ` +
+      `output is only ${byteLength} bytes (expected > ${expectedMinBytes}); ` +
         `the inline/embed step likely produced an empty or stub document`,
     );
   }
@@ -192,7 +197,8 @@ async function verifyOutput() {
   }
 
   console.log(
-    `Verified standalone HTML (${byteLength} bytes, mount point + embedded fonts present).`,
+    `Verified standalone HTML (${byteLength} bytes, mount point + ` +
+      `${OFFLINE ? "@import" : "embedded"} fonts present).`,
   );
 }
 

@@ -39,8 +39,14 @@ function padTopicNumber(index: number): string {
   return String(index + 1).padStart(2, "0");
 }
 
-function normalizeSprintNodes(
-  nodes: readonly { readonly abbr: string; readonly icon?: string }[] | undefined,
+/** Raw sprint node from the content/merge layer, before icon-fallback widening. */
+export interface RawSprintNode {
+  readonly abbr: string;
+  readonly icon?: string;
+}
+
+export function normalizeSprintNodes(
+  nodes: readonly RawSprintNode[] | undefined,
 ): SprintNode[] {
   return (nodes || []).map((node) => ({
     ...node,
@@ -48,7 +54,9 @@ function normalizeSprintNodes(
   }));
 }
 
-function normalizeDeckTopics(slides: readonly RawDeckSlide[] | undefined): RawDeckSlide[] {
+export function normalizeDeckTopics(
+  slides: readonly RawDeckSlide[] | undefined,
+): RawDeckSlide[] {
   return (slides || []).map((slide, index) => ({
     ...slide,
     num: slide.num || padTopicNumber(index),
@@ -77,7 +85,7 @@ type DeckPresetInput = DeckMeta & {
   topics?: readonly RawDeckSlide[];
   // Raw sprint nodes arrive from the merge/content layer with various closed
   // shapes (no index signature); normalizeSprintNodes widens them.
-  sprintNodes?: readonly { readonly abbr: string; readonly icon?: string }[];
+  sprintNodes?: readonly RawSprintNode[];
   [key: string]: unknown;
 };
 
