@@ -1,4 +1,3 @@
-import React from "react";
 import { BeforeAfterLayout } from "../../layouts/base/BeforeAfterLayout.tsx";
 
 export default {

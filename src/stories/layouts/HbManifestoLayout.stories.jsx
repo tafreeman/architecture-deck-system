@@ -1,4 +1,3 @@
-import React from "react";
 import { HbManifestoLayout } from "../../layouts/handbook/HbManifestoLayout.tsx";
 
 export default {

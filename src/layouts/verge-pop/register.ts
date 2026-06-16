@@ -16,9 +16,9 @@ import ColorBlocksLayout from "./ColorBlocksLayout.tsx";
 /** Verge-pop: transcription target — effects only, no render-as or background. */
 const VERGE_FEATURES = { effects: true };
 
-layoutRegistry.register("stat-hero", StatHeroLayout, VERGE_FEATURES);
-layoutRegistry.register("quote-collage", QuoteCollageLayout, VERGE_FEATURES);
-layoutRegistry.register("badge-grid", BadgeGridLayout, VERGE_FEATURES);
-layoutRegistry.register("data-table", DataTableLayout, VERGE_FEATURES);
-layoutRegistry.register("bar-chart", BarChartLayout, VERGE_FEATURES);
-layoutRegistry.register("color-blocks", ColorBlocksLayout, VERGE_FEATURES);
+layoutRegistry.register("stat-hero", StatHeroLayout, { ...VERGE_FEATURES, icon: "📊" });
+layoutRegistry.register("quote-collage", QuoteCollageLayout, { ...VERGE_FEATURES, icon: "💬" });
+layoutRegistry.register("badge-grid", BadgeGridLayout, { ...VERGE_FEATURES, icon: "🏷️" });
+layoutRegistry.register("data-table", DataTableLayout, { ...VERGE_FEATURES, icon: "📋" });
+layoutRegistry.register("bar-chart", BarChartLayout, { ...VERGE_FEATURES, icon: "📈" });
+layoutRegistry.register("color-blocks", ColorBlocksLayout, { ...VERGE_FEATURES, icon: "🎨" });

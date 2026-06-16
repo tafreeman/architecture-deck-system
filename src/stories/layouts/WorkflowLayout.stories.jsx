@@ -1,4 +1,3 @@
-import React from "react";
 import { WorkflowLayout } from "../../layouts/onboarding/WorkflowLayout.tsx";
 
 export default {

@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { ControlPanel } from "../../../components/navigation/ControlPanel.tsx";
 import { THEMES, THEMES_BY_ID } from "../../../tokens/themes.ts";
-import { STYLE_MODES, STYLE_MODES_BY_ID } from "../../../tokens/style-modes.ts";
+import { STYLE_MODES } from "../../../tokens/style-modes.ts";
 
 export default {
   title: "Navigation/ControlPanel",

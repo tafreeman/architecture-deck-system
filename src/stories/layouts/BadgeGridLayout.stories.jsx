@@ -1,4 +1,3 @@
-import React from "react";
 import { BadgeGridLayout } from "../../layouts/verge-pop/BadgeGridLayout.tsx";
 
 export default {

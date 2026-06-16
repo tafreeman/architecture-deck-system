@@ -1,4 +1,3 @@
-import React from "react";
 import RoadmapMilestones from "../../layouts/engineering/RoadmapMilestones.tsx";
 
 export default {

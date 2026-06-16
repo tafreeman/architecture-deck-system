@@ -1,4 +1,3 @@
-import React from "react";
 import { CatalogLayout } from "../../layouts/onboarding/CatalogLayout.tsx";
 
 export default {

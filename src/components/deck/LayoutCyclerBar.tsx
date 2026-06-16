@@ -8,13 +8,10 @@
 import React, { useContext } from "react";
 
 import { ThemeContext } from "../context/index.ts";
-
-/** Dynamic deck-content object (deck JSON is schema-light by design). */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- dynamic deck content
-type DeckContent = Record<string, any>;
+import type { DeckSlide } from "../navigation/types.ts";
 
 export interface LayoutCyclerBarProps {
-  activeTopic: DeckContent;
+  activeTopic: DeckSlide;
   activeSlideLayout: string;
   allLayoutsLength: number;
   activeLayoutIndex: number;

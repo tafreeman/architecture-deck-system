@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import SectionHeader from "../../../components/compound/SectionHeader.tsx";
 
 export default {

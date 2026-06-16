@@ -17,10 +17,10 @@ import OpFlowLayout from "./OpFlowLayout.tsx";
 /** Onboarding: transcription target — effects only. */
 const ONBOARD_FEATURES = { effects: true };
 
-layoutRegistry.register("info-cards", InfoCardsLayout, ONBOARD_FEATURES);
-layoutRegistry.register("checklist", ChecklistLayout, ONBOARD_FEATURES);
-layoutRegistry.register("workflow", WorkflowLayout, ONBOARD_FEATURES);
-layoutRegistry.register("pillars", PillarsLayout, ONBOARD_FEATURES);
-layoutRegistry.register("catalog", CatalogLayout, ONBOARD_FEATURES);
-layoutRegistry.register("op-brief", OpBriefLayout, ONBOARD_FEATURES);
-layoutRegistry.register("op-flow", OpFlowLayout, ONBOARD_FEATURES);
+layoutRegistry.register("info-cards", InfoCardsLayout, { ...ONBOARD_FEATURES, icon: "📋" });
+layoutRegistry.register("checklist", ChecklistLayout, { ...ONBOARD_FEATURES, icon: "🛡️" });
+layoutRegistry.register("workflow", WorkflowLayout, { ...ONBOARD_FEATURES, icon: "⚙️" });
+layoutRegistry.register("pillars", PillarsLayout, { ...ONBOARD_FEATURES, icon: "🔬" });
+layoutRegistry.register("catalog", CatalogLayout, { ...ONBOARD_FEATURES, icon: "🔐" });
+layoutRegistry.register("op-brief", OpBriefLayout, { ...ONBOARD_FEATURES, icon: "📑" });
+layoutRegistry.register("op-flow", OpFlowLayout, { ...ONBOARD_FEATURES, icon: "🔀" });
