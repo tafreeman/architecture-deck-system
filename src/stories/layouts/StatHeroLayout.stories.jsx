@@ -1,4 +1,3 @@
-import React from "react";
 import { StatHeroLayout } from "../../layouts/verge-pop/StatHeroLayout.tsx";
 
 export default {

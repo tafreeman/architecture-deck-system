@@ -1,4 +1,3 @@
-import React from "react";
 import TechStackTimeline from "../../layouts/engineering/TechStackTimeline.tsx";
 
 export default {

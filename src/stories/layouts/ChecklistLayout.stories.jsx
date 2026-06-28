@@ -1,4 +1,3 @@
-import React from "react";
 import { ChecklistLayout } from "../../layouts/onboarding/ChecklistLayout.tsx";
 
 export default {

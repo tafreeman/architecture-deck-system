@@ -30,6 +30,8 @@ export interface BaseTopicProps {
   readonly title: string;
   readonly subtitle?: string;
   readonly color: string;
+  /** Registered layout ID this slide renders with (e.g. "two-col"). */
+  readonly layout?: string;
   readonly colorLight?: string;
   readonly colorGlow?: string;
   readonly icon?: string;
@@ -80,6 +82,11 @@ export interface LayoutFeatures {
   effects: boolean;
   /** Show the "Background" section (hero image toggle + URL). */
   background: boolean;
+  /**
+   * Optional display glyph for the layout (used as the landing-tile / picker
+   * icon). When absent, callers fall back to a neutral bullet ("•").
+   */
+  icon?: string;
 }
 
 /** Sensible defaults — everything off until explicitly opted-in. */

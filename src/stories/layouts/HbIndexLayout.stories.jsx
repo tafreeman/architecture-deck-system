@@ -1,4 +1,3 @@
-import React from "react";
 import { HbIndexLayout } from "../../layouts/handbook/HbIndexLayout.tsx";
 
 export default {

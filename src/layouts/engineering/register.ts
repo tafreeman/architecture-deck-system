@@ -10,7 +10,7 @@ import TechStackTimeline from "./TechStackTimeline.tsx";
 import RoadmapMilestones from "./RoadmapMilestones.tsx";
 
 /** Engineering: technical diagrams — clean rendering, no extra chrome. */
-layoutRegistry.register("eng-architecture", ArchitectureSlide);
-layoutRegistry.register("eng-code-flow", CodeFlowDiagram);
-layoutRegistry.register("eng-tech-stack", TechStackTimeline);
-layoutRegistry.register("eng-roadmap", RoadmapMilestones);
+layoutRegistry.register("eng-architecture", ArchitectureSlide, { icon: "🏗️" });
+layoutRegistry.register("eng-code-flow", CodeFlowDiagram, { icon: "🔗" });
+layoutRegistry.register("eng-tech-stack", TechStackTimeline, { icon: "⚙️" });
+layoutRegistry.register("eng-roadmap", RoadmapMilestones, { icon: "🗺️" });

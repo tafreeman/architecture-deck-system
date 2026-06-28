@@ -14,7 +14,6 @@ export default tseslint.config(
       "**/*.config.js",
       "**/*.config.ts",
       ".storybook",
-      "src/**/*.jsx",
     ],
   },
   js.configs.recommended,
@@ -46,6 +45,36 @@ export default tseslint.config(
       // (intro re-queue in App.v14, comet phase reset in CometTransition) that
       // the rule flags but that are correct as written. Promoting would force
       // event-handler/key refactors of working transition code for marginal gain.
+      "react-hooks/set-state-in-effect": "warn",
+    },
+  },
+  // ── Storybook stories (.jsx) ───────────────────────────────────────────────
+  // Stories stay plain JSX (the rest of src is .tsx). Lint them as ES modules
+  // with JSX + browser globals so they share the same baseline hygiene checks
+  // (unused vars, no-undef) as the rest of the source tree.
+  {
+    files: ["src/**/*.jsx"],
+    languageOptions: {
+      ecmaVersion: 2022,
+      sourceType: "module",
+      parserOptions: {
+        ecmaFeatures: { jsx: true },
+      },
+      globals: { ...globals.browser },
+    },
+    plugins: { "react-hooks": reactHooks },
+    rules: {
+      ...reactHooks.configs.recommended.rules,
+      // typescript-eslint's no-unused-vars also matches .jsx (its config has no
+      // `files` restriction); keep that single source of truth and silence the
+      // core rule so unused vars aren't double-reported.
+      "no-unused-vars": "off",
+      "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
+      // Storybook `render: () => {...}` thunks legitimately call hooks (useState
+      // for interactive controls) even though they aren't capitalised React
+      // components. rules-of-hooks can't recognise the story idiom, so disable it
+      // for stories only — the same hooks are exercised by the real components.
+      "react-hooks/rules-of-hooks": "off",
       "react-hooks/set-state-in-effect": "warn",
     },
   },

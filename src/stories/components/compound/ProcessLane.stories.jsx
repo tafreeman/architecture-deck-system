@@ -1,4 +1,3 @@
-import React from "react";
 import { ProcessLane } from "../../../components/compound/ProcessLane.tsx";
 
 export default {

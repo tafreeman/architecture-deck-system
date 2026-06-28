@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import { useState, useCallback } from "react";
 import CometTransition from "../../../components/animations/CometTransition.tsx";
 const action = (name) => (...args) => console.log(`[action] ${name}`, ...args);
 

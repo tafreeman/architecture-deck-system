@@ -172,13 +172,14 @@ describe("Layout registry — registration integrity", () => {
   });
 });
 
-describe("Layout families — one render per family", () => {
+describe("Layout families — every registered layout renders", () => {
   beforeAll(() => {
     // Ensure register-all side-effects have run (already imported above)
   });
 
-  function renderFamily(layoutId: string, extraSlide?: Record<string, unknown>) {
-    const slide = { ...MINIMAL_SLIDE, ...extraSlide };
+  /** Build a render thunk for one layout ID using the shared minimal fixture. */
+  function renderLayout(layoutId: string, extraSlide?: Record<string, unknown>) {
+    const slide = { ...MINIMAL_SLIDE, layout: layoutId, ...extraSlide };
     return () =>
       render(
         withContexts(
@@ -193,36 +194,18 @@ describe("Layout families — one render per family", () => {
       );
   }
 
-  it("base family: two-col renders without throwing", () => {
-    expect(renderFamily("two-col")).not.toThrow();
+  // Data-driven: render EVERY registered layout ID with the minimal fixture
+  // (and MINIMAL_NODES, supplied to all via renderLayout, for the sprint cycle).
+  // Adding a new layout to the registry automatically gets it covered here;
+  // a layout that crashes on minimal input fails immediately.
+  const allLayoutIds = layoutRegistry.list();
+
+  it("registry exposes at least the documented 39 layout IDs", () => {
+    expect(allLayoutIds.length).toBeGreaterThanOrEqual(39);
   });
 
-  it("verge-pop family: stat-hero renders without throwing", () => {
-    expect(renderFamily("stat-hero")).not.toThrow();
-  });
-
-  it("sprint family: process-cycle renders without throwing", () => {
-    expect(renderFamily("process-cycle")).not.toThrow();
-  });
-
-  it("onboarding family: info-cards renders without throwing", () => {
-    expect(renderFamily("info-cards")).not.toThrow();
-  });
-
-  it("handbook family: hb-chapter renders without throwing", () => {
-    expect(renderFamily("hb-chapter")).not.toThrow();
-  });
-
-  it("engineering family: eng-architecture renders without throwing", () => {
-    expect(renderFamily("eng-architecture")).not.toThrow();
-  });
-
-  it("advocacy family: adv-overview renders without throwing", () => {
-    expect(renderFamily("adv-overview")).not.toThrow();
-  });
-
-  it("advocacy-dense family: advd-overview renders without throwing", () => {
-    expect(renderFamily("advd-overview")).not.toThrow();
+  it.each(allLayoutIds)("layout %s renders without throwing", (layoutId) => {
+    expect(renderLayout(layoutId)).not.toThrow();
   });
 });
 

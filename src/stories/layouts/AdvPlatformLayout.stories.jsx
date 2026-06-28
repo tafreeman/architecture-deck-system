@@ -1,4 +1,3 @@
-import React from "react";
 import { AdvPlatformLayout } from "../../layouts/advocacy/AdvPlatformLayout.tsx";
 
 export default {

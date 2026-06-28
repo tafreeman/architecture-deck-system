@@ -1,4 +1,3 @@
-import React from "react";
 import { CalloutBox } from "../../../components/micro/CalloutBox.tsx";
 
 export default {

@@ -1,4 +1,3 @@
-import React from "react";
 import { OpFlowLayout } from "../../layouts/onboarding/OpFlowLayout.tsx";
 
 export default {

@@ -1,4 +1,3 @@
-import React from "react";
 import { QuoteCollageLayout } from "../../layouts/verge-pop/QuoteCollageLayout.tsx";
 
 export default {
