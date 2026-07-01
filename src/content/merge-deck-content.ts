@@ -15,7 +15,9 @@
  *   1. Exact slide ID match
  *   2. Semantic role match (structure.role === content.role)
  *   3. Layout-type match (structure.layout compatible with content.sourceLayout)
- *   4. Positional fallback (slide at same index)
+ *   4. Positional fallback (first remaining unused content slide, greedily —
+ *      NOT the content slide at the same numeric index; see mergeDeckContent's
+ *      own doc comment for the exact tie-breaking order)
  *   5. Structure-only (label as title)
  */
 
@@ -135,7 +137,13 @@ export interface MergedDeck {
  *   3. Semantic role match — finds a content slide with the same `role`
  *   4. Layout compatibility match — finds a content slide whose
  *      `sourceLayout` belongs to the same layout compat group
- *   5. Positional fallback — uses content slide at the same index
+ *   5. Positional fallback — greedily takes the first content slide not yet
+ *      consumed by an earlier tier, in `Object.entries(content.slides)`
+ *      iteration order. This is NOT an index-aligned match (skeleton at
+ *      index N does not necessarily pair with the content slide at index
+ *      N) — it's "next available", processed in structure.contentSlides
+ *      order, so which content slide lands here depends on how many
+ *      earlier skeletons already claimed one via tiers 1-4.
  *   6. Structure-only — shows label as title (no content matched)
  */
 export function mergeDeckContent(
@@ -194,7 +202,8 @@ export function mergeDeckContent(
         }
       }
 
-      // 4. Positional fallback — use unused content slide at same index
+      // 4. Positional fallback — greedily take the next unused content slide
+      // (first-available, NOT the entry at this skeleton's own index)
       const unusedEntries = contentEntries.filter(([id]) => !usedContentIds.has(id));
       if (unusedEntries.length > 0) {
         // Pick the first unused entry (preserves original content order)
