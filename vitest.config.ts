@@ -5,12 +5,20 @@ import { defineConfig } from "vitest/config";
 // Regression floor set at the MEASURED level (2026-07-01, @vitest/coverage-v8
 // installed and pinned to the vitest version). These ratchet coverage: CI
 // fails if it drops below them. Measured baseline —
-//   lines 43.01 / statements 44.42 / functions 33.33 / branches 19.87.
-// They are intentionally low because the include scope below still counts
-// transcription.ts (the 683-line monolith slated for extraction + tests in
-// DECK-4) and the src/tokens/* design-token data files, alongside the
-// well-covered core (content/merge/schema ~97%, LayoutRenderer ~96%). Raise
-// these as DECK-4 lands transcription coverage.
+//   lines 91.92 / statements 92.29 / functions 94.83 / branches 67.20.
+//
+// DECK-4 (same day) added a full 8-family x 5-target characterization
+// matrix to transcription.test.ts and then split the former 683-line
+// transcription.ts monolith into src/transcription/*.ts (one file per
+// target family, each <200 lines, thin transcription.ts re-export shell
+// preserving the public API). transcription.ts coverage went from ~14% to
+// ~99.6% lines with zero behavior change — every characterization test
+// still passes unmodified against the extracted code. That raised the
+// whole-scope floor from the prior 43.01/44.42/33.33/19.87 baseline to the
+// values above. branches remains the lowest metric — conditional/
+// optional-prop branches (e.g. `c.title || ""` fallbacks) are the hardest
+// to fully exercise and are not the focus of the characterization suite,
+// which pins representative inputs rather than every optional-field path.
 //
 // Context for the estimate: ~40 presentational layout .tsx components,
 // one per family subdirectory under src/layouts/ (advocacy, base, sprint,
@@ -22,14 +30,12 @@ import { defineConfig } from "vitest/config";
 // plumbing living directly under src/layouts/ (registry.ts,
 // LayoutRenderer.tsx, register-all.ts — all covered by registry.test.ts /
 // layout-render.test.tsx) — while excluding the family subdirectories
-// themselves. branches is set lowest because conditional/optional-prop
-// branches are the hardest metric to hit and most likely to still be
-// inflated even with that scoping.
+// themselves.
 const COVERAGE_FLOOR = {
-  lines: 42,
-  statements: 43,
-  functions: 32,
-  branches: 18,
+  lines: 91,
+  statements: 92,
+  functions: 94,
+  branches: 67,
 };
 
 export default defineConfig({
@@ -50,6 +56,7 @@ export default defineConfig({
         "src/tokens/**/*.{ts,tsx}",
         "src/layouts/*.{ts,tsx}",
         "src/transcription.ts",
+        "src/transcription/**/*.ts",
         "src/decks.ts",
       ],
       exclude: [
