@@ -29,6 +29,13 @@ jobs:
           node-version: '24'
           cache: 'npm'
 
+      # ACTION NEEDED before this is green: package.json now lists
+      # "@vitest/coverage-v8" as a devDependency but package-lock.json has
+      # not been regenerated against it (no install was run when this gate
+      # was added — the environment that authored it could not run one).
+      # Run `npm install` locally once and commit the updated
+      # package-lock.json, otherwise this step fails with an
+      # out-of-sync-lockfile error.
       - name: Install dependencies
         run: npm ci
 
@@ -41,8 +48,13 @@ jobs:
       - name: Typecheck
         run: npm run typecheck
 
-      - name: Test (Vitest)
-        run: npm test
+      # Runs the full Vitest suite plus coverage collection; vitest.config.ts
+      # sets lines/statements/functions/branches thresholds and fails the
+      # command (non-zero exit) if any metric falls below its floor — see
+      # that file's COVERAGE_FLOOR comment for how the floor was set and
+      # the caveat that it's an estimate pending a real measured baseline.
+      - name: Test (Vitest) with coverage
+        run: npm run test:coverage
 
       - name: Verify layout registry count
         run: npm run verify:layouts
