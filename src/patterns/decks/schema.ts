@@ -114,7 +114,7 @@ const SlideSchema = z.object({
 
 /**
  * Validate that all slides reference registered layouts.
- * Call after validateDeckManifest to catch layout typos.
+ * Call after schema validation to catch layout typos.
  */
 export function validateLayoutsExist(
   manifest: { slides: readonly { id: string; layout: string }[] },
@@ -133,7 +133,7 @@ export function validateLayoutsExist(
 
 /* ── ContentPack schema (validates content.json files) ────────── */
 //
-// content.json files have a different shape from DeckManifest:
+// content.json files have a different shape from a full deck manifest:
 //   { deck: { brandLine, title, ... }, slides: Record<string, slide> }
 // This schema validates that shape for runtime safety.
 
