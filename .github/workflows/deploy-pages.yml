@@ -7,17 +7,10 @@ name: Deploy to GitHub Pages
 # To activate: repo Settings → Pages → Source = "GitHub Actions".
 
 on:
-  push:
+  workflow_run:
+    workflows: ["CI"]
+    types: [completed]
     branches: [main]
-    paths:
-      - 'docs/**'
-      - 'src/**'
-      - 'scripts/**'
-      - 'index.html'
-      - 'package.json'
-      - 'package-lock.json'
-      - 'vite.config.js'
-      - '.github/workflows/deploy-pages.yml'
   workflow_dispatch:
 
 # Least-privilege token scoped for Pages deployment.
@@ -35,9 +28,12 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: Checkout
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0  # v7.0.0
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
 
       - name: Configure Pages
         uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d  # v6
@@ -69,6 +65,7 @@ jobs:
     name: Deploy
     needs: build
     runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
