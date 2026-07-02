@@ -8,7 +8,7 @@
  * transcription.test.ts.
  */
 
-import { arr, type SlideItem, type Topic } from "./types.ts";
+import { arr, itemText, type SlideItem, type Topic } from "./types.ts";
 
 export function transcribeToBase(topic: Topic): Topic {
   switch (topic.layout) {
@@ -38,15 +38,15 @@ export function transcribeToBase(topic: Topic): Topic {
       kicker: `Module ${topic.order || ""}`,
       thesis: topic.subtitle,
       leadershipPoints: arr(topic.pillars).flatMap((p) => arr<unknown>(p.items).slice(0,2)),
-      cards: arr(topic.pillars).map((p) => ({ title: p.title, step: p.icon||"", body: arr<unknown>(p.items).join(" · ") })),
+      cards: arr(topic.pillars).map((p) => ({ title: p.title, step: p.icon||"", body: arr<SlideItem | string>(p.items).map(itemText).join(" · ") })),
       results: arr(topic.results).map((r) => ({ value: r.val, label: r.label })),
     };
     case "catalog": return {
       ...topic, layout: "two-col",
       summary: topic.subtitle,
       heroPoints: arr(topic.categories).map((c) => c.title),
-      cards: arr(topic.categories).map((c) => ({ title: c.title, body: arr<SlideItem | string>(c.items).map((i)=>(typeof i === "string" ? i : (i.label||i))).join(" · ") })),
-      talkingPoints: arr(topic.categories).flatMap((c) => arr<SlideItem | string>(c.items).map((i) => (typeof i === "string" ? `${i}: ` : `${i.label||i}: ${i.desc||""}`).trim())),
+      cards: arr(topic.categories).map((c) => ({ title: c.title, body: arr<SlideItem | string>(c.items).map(itemText).join(" · ") })),
+      talkingPoints: arr(topic.categories).flatMap((c) => arr<SlideItem | string>(c.items).map((i) => (typeof i === "string" ? `${i}: ` : `${i.label||i.title||""}: ${i.desc||""}`).trim())),
     };
     case "hb-chapter": return {
       ...topic, layout: "two-col",

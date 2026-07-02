@@ -271,6 +271,59 @@ describe("layout set constants", () => {
   });
 });
 
+// ── Regression: object-shaped items must never stringify as "[object Object]" ──
+// `items` arrays are heterogeneous (raw strings or SlideItem objects); every
+// existing fixture above only exercised the string case, so this gap in the
+// object case went uncaught.
+
+describe("transcribeTopic — items arrays with object-shaped SlideItems", () => {
+  const pillarsTopic = topic("pillars", {
+    pillars: [{ title: "P1", icon: "pi", items: [{ label: "Alpha" }, { title: "Beta" }, "Gamma"] }],
+  });
+  const catalogTopic = topic("catalog", {
+    categories: [{ title: "C1", items: [{ label: "Alpha" }, { title: "Beta" }, "Gamma"] }],
+  });
+
+  it("base family (pillars → stat-cards) never renders [object Object]", () => {
+    const result = transcribeTopic(pillarsTopic, "base") as Topic & {
+      cards: { body: string }[];
+    };
+    expect(result.cards[0].body).toBe("Alpha · Beta · Gamma");
+    expect(result.cards[0].body).not.toContain("[object Object]");
+  });
+
+  it("base family (catalog → two-col) never renders [object Object]", () => {
+    const result = transcribeTopic(catalogTopic, "base") as Topic & {
+      cards: { body: string }[];
+    };
+    expect(result.cards[0].body).toBe("Alpha · Beta · Gamma");
+    expect(result.cards[0].body).not.toContain("[object Object]");
+  });
+
+  it("advocacy family (pillars → adv-platform) never renders [object Object] in title", () => {
+    const result = transcribeTopic(pillarsTopic, "advocacy") as Topic & {
+      capabilities: { title: string }[];
+    };
+    expect(result.capabilities.map((c) => c.title)).toEqual(["Alpha", "Beta", "Gamma"]);
+  });
+
+  it("verge family (catalog → color-blocks) never renders [object Object]", () => {
+    const result = transcribeTopic(catalogTopic, "verge") as Topic & {
+      blocks: { body: string }[];
+    };
+    expect(result.blocks[0].body).toBe("Alpha · Beta · Gamma");
+    expect(result.blocks[0].body).not.toContain("[object Object]");
+  });
+
+  it("handbook family (pillars → hb-index) never renders [object Object]", () => {
+    const result = transcribeTopic(pillarsTopic, "handbook") as Topic & {
+      categories: { body: string }[];
+    };
+    expect(result.categories[0].body).toBe("Alpha · Beta · Gamma");
+    expect(result.categories[0].body).not.toContain("[object Object]");
+  });
+});
+
 // ── Characterization matrix: full 8-family × 5-target cross product ──────────
 //
 // DECK-4: these tests PIN the current (pre-refactor) behavior of every
