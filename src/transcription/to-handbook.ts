@@ -8,7 +8,7 @@
  * transcription.test.ts.
  */
 
-import { arr, type SlideItem, type Topic } from "./types.ts";
+import { arr, itemText, type SlideItem, type Topic } from "./types.ts";
 
 export function transcribeToHandbook(topic: Topic): Topic {
   switch (topic.layout) {
@@ -64,11 +64,11 @@ export function transcribeToHandbook(topic: Topic): Topic {
     };
     case "pillars": return {
       ...topic, layout: "hb-index",
-      categories: arr(topic.pillars).map((p) => ({ label: p.title, body: arr<unknown>(p.items).join(" · ") })),
+      categories: arr(topic.pillars).map((p) => ({ label: p.title, body: arr<SlideItem | string>(p.items).map(itemText).join(" · ") })),
     };
     case "catalog": return {
       ...topic, layout: "hb-index",
-      categories: arr(topic.categories).map((c) => ({ label: c.title, body: arr<SlideItem | string>(c.items).map((i) => (typeof i === "string" ? i : (i.label || i))).join(" · ") })),
+      categories: arr(topic.categories).map((c) => ({ label: c.title, body: arr<SlideItem | string>(c.items).map(itemText).join(" · ") })),
     };
     // ── Verge → Handbook ────────────────────────────────────────────────────
     case "stat-hero": return {

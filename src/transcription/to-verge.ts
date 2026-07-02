@@ -8,7 +8,7 @@
  * transcription.test.ts.
  */
 
-import { arr, type SlideItem, type Topic } from "./types.ts";
+import { arr, itemText, type SlideItem, type Topic } from "./types.ts";
 
 export function transcribeToVerge(topic: Topic): Topic {
   switch (topic.layout) {
@@ -30,11 +30,11 @@ export function transcribeToVerge(topic: Topic): Topic {
     };
     case "pillars": return {
       ...topic, layout: "color-blocks",
-      blocks: arr(topic.pillars).map((p) => ({ label: p.title, value: p.icon||"", body: arr<unknown>(p.items).slice(0,2).join(" · ") })),
+      blocks: arr(topic.pillars).map((p) => ({ label: p.title, value: p.icon||"", body: arr<SlideItem | string>(p.items).slice(0,2).map(itemText).join(" · ") })),
     };
     case "catalog": return {
       ...topic, layout: "color-blocks",
-      blocks: arr(topic.categories).map((c) => ({ label: c.title, value: arr<unknown>(c.items).length||0, body: arr<SlideItem | string>(c.items).slice(0,3).map((i)=>(typeof i === "string" ? i : (i.label||i))).join(" · ") })),
+      blocks: arr(topic.categories).map((c) => ({ label: c.title, value: arr<unknown>(c.items).length||0, body: arr<SlideItem | string>(c.items).slice(0,3).map(itemText).join(" · ") })),
     };
     case "hb-chapter": return {
       ...topic, layout: "color-blocks",

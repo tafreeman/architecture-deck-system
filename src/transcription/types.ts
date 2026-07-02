@@ -22,6 +22,14 @@ export interface SlideItem {
 /** Coerce an unknown field to a typed array (non-arrays -> []). */
 export const arr = <T = SlideItem>(v: unknown): T[] => (Array.isArray(v) ? (v as T[]) : []);
 
+/**
+ * Render a possibly-object `SlideItem | string` item as display text.
+ * `items` arrays are frequently heterogeneous (raw strings or SlideItem
+ * objects) — stringifying an object directly renders "[object Object]".
+ */
+export const itemText = (i: SlideItem | string): string =>
+  typeof i === "string" ? i : i.label || i.title || "";
+
 // ── Layout set constants ───────────────────────────────────────────────────
 
 export const BASE_LAYOUTS = new Set(["two-col","stat-cards","before-after","process-cycle","h-strip","process-lanes"]);

@@ -5,7 +5,7 @@
  * changes — pinned by the characterization matrix in transcription.test.ts.
  */
 
-import { arr, type SlideItem, type Topic } from "./types.ts";
+import { arr, itemText, type SlideItem, type Topic } from "./types.ts";
 
 export function transcribeToAdvocacy(topic: Topic): Topic {
   switch (topic.layout) {
@@ -35,7 +35,7 @@ export function transcribeToAdvocacy(topic: Topic): Topic {
     case "pillars": return {
       ...topic, layout: "adv-platform",
       capabilities: arr(topic.pillars).flatMap((p) => arr<SlideItem | string>(p.items).map((i) => ({
-        icon: p.icon || "●", title: i, body: "",
+        icon: p.icon || "●", title: itemText(i), body: "",
       }))),
       focusPanels: arr(topic.results).map((r) => ({ label: r.val, title: r.label, body: "" })),
     };
@@ -43,7 +43,7 @@ export function transcribeToAdvocacy(topic: Topic): Topic {
       ...topic, layout: "adv-future",
       cards: arr(topic.categories).slice(0, 4).map((c) => ({
         title: c.title,
-        body: arr<SlideItem | string>(c.items).slice(0, 3).map((i) => (typeof i === "string" ? i : (i.label || i))).join(" · "),
+        body: arr<SlideItem | string>(c.items).slice(0, 3).map(itemText).join(" · "),
       })),
     };
     // ── Base → Advocacy ─────────────────────────────────────────────────────
