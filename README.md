@@ -4,7 +4,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Demo](https://img.shields.io/badge/demo-live-blue)](https://tafreeman.github.io/architecture-deck-system/)
 
-React 19 + Vite 6 presentation platform with 6 registered content decks, 39 registered layouts, 15 themes, and 4 style modes. Includes Storybook for visual testing and an export pipeline for HTML, images, and PDF.
+React 19 + Vite 6 presentation platform with 6 registered content decks, 39 registered layouts, 16 themes, and 4 style modes. Includes Storybook for visual testing and an export pipeline for HTML, images, and PDF.
 
 ## Landing Page
 
@@ -39,7 +39,7 @@ npm run export:all   # Export HTML + images + PDF
 | **Transcription** | `src/transcription.ts` | Cross-family content normalisation (e.g. `adv-future` → `h-strip`) |
 | **Content Registry** | `src/content/content-registry.ts` | Runtime content-pack swapping; `CONTENT_PACKS` + `DECK_STRUCTURES` maps |
 | **Merge Utility** | `src/content/merge-deck-content.ts` | 5-step cascading match — merges structure skeleton with text content |
-| **Tokens** | `src/tokens/themes.ts`, `style-modes.ts`, `palette.ts` | 15 themes × 4 style modes orthogonal matrix; per-slide color resolution |
+| **Tokens** | `src/tokens/themes.ts`, `style-modes.ts`, `palette.ts` | 16 themes × 4 style modes orthogonal matrix; per-slide color resolution |
 | **Contexts** | `src/components/context/` | `ThemeContext`, `ChromeContext` consumed by all layout components |
 
 ### Data Flow
@@ -91,9 +91,9 @@ Each deck consists of `structure.js` (layout skeleton with colors) + `content.js
 
 ## Themes and Style Modes
 
-15 themes × 4 style modes form an orthogonal matrix — any combination is valid.
+16 themes × 4 style modes form an orthogonal matrix — any combination is valid.
 
-**Themes:** midnight-teal (default), obsidian-ember, arctic-steel, midnight-verdant, neon-noir, paper-ink, atelier-sage, signal-cobalt, verge-orange, verge-blue, verge-pink, verge-yellow, gamma-dark, studio-craft, linear
+**Themes:** midnight-teal (default), obsidian-ember, arctic-steel, midnight-verdant, neon-noir, paper-ink, atelier-sage, signal-cobalt, verge-orange, verge-blue, verge-pink, verge-yellow, gamma-dark, studio-craft, linear, console
 
 **Style Modes:** default (Modern Tech), brutalist (Swiss Systems), editorial (Magazine Pacing), pop (Bold Flat Zine)
 
