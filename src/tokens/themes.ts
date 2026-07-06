@@ -32,7 +32,7 @@ export type ThemeId =
   | "midnight-teal" | "obsidian-ember" | "arctic-steel" | "midnight-verdant"
   | "neon-noir" | "paper-ink" | "atelier-sage" | "signal-cobalt"
   | "verge-orange" | "verge-blue" | "verge-pink" | "verge-yellow"
-  | "gamma-dark" | "studio-craft" | "linear";
+  | "gamma-dark" | "studio-craft" | "linear" | "console";
 
 // Per-theme Google Fonts URLs — used by runtime loaders and export scripts.
 export const THEME_FONT_URLS: Record<ThemeId, string> = {
@@ -51,6 +51,7 @@ export const THEME_FONT_URLS: Record<ThemeId, string> = {
   "gamma-dark":       "https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700&family=Space+Grotesk:wght@500;600;700&display=swap",
   "studio-craft":     "https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap",
   "linear":           "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap",
+  "console":          "https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;450;600&display=swap",
 };
 
 // Combined URL for the theme-switcher preview panel (display fonts only).
@@ -177,6 +178,15 @@ const BASE_THEMES: readonly Omit<Theme, "fontsUrl">[] = [
     text: "#E2E4F0", textMuted: "#8F93A9", textDim: "#545870",
     accent: "#5E6AD2", accentGlow: "rgba(94,106,210,0.22)", gradient: ["#5E6AD2", "#8B7CE8"],
     success: "#4CC38A", danger: "#E5484D", warning: "#FFB224", surfaceElevated: "#080A12",
+  },
+  {
+    id: "console", name: "Console", vibe: "IBM Carbon g100 / Event Horizon",
+    fontDisplay: "'IBM Plex Sans',sans-serif", fontBody: "'IBM Plex Sans',sans-serif",
+    bg: "#161616", bgCard: "#262626", bgDeep: "#000000",
+    text: "#F4F4F4", textMuted: "#C6C6C6", textDim: "#8D8D8D",
+    accent: "#33B1FF", accentGlow: "rgba(51,177,255,0.2)", gradient: ["#3DDBD9", "#33B1FF"],
+    success: "#42BE65", danger: "#FA4D56", warning: "#F1C21B", surfaceElevated: "#393939",
+    border: "#393939",
   },
 ];
 
