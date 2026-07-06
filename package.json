@@ -11,6 +11,7 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "verify:layouts": "node scripts/verify-layout-count.mjs",
+    "check:docs": "node scripts/check-doc-facts.mjs",
     "build": "vite build",
     "build:single": "vite build --mode single-file && node scripts/build-single-file.mjs",
     "export:html": "npm run build:single",

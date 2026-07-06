@@ -128,7 +128,7 @@ templates when authoring new slides.
 > `atelier-sage` and `signal-cobalt` were **unplanned theme samples** (`brandLine:
 > "Reference Study"`, "Sample Slides", "inspired by deck.gallery") that added **zero
 > unique shapes**. **Action taken: both decks removed** — un-registered from
-> `content-registry.ts`, dropped from `App.v14.tsx`'s `DECKS` map, and their content
+> `content-registry.ts`, dropped from the app shell's `DECKS` map (now in `src/decks.ts`), and their content
 > folders + the `reference-decks/` re-export wrapper deleted. Their same-named *themes*
 > in `tokens/themes.ts` were kept (selectable styles, deck-independent). Verified:
 > typecheck clean, 93/93 tests pass, production build succeeds.
@@ -164,7 +164,7 @@ Removing the two sample decks collapsed most of these groups. Remaining state:
 ### Trim actions — decisions
 
 1. ✅ **`atelier-sage` + `signal-cobalt` → REMOVED.** They were unplanned theme samples
-   adding zero unique shapes. Un-wired from `content-registry.ts` + `App.v14.tsx`, content
+   adding zero unique shapes. Un-wired from `content-registry.ts` + the app shell (`src/App.tsx`), content
    folders and `reference-decks/` wrapper deleted, Storybook `LightTheme` story repointed
    to `studio`. Same-named themes in `tokens/themes.ts` kept. Build/tests verified green.
 2. ⏸️ **D6 (onboarding info-cards ×2):** KEEP both — confirmed distinct content

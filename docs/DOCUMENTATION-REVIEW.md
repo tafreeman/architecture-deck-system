@@ -34,7 +34,7 @@
 | Item | README says | Actual |
 |------|-------------|--------|
 | React version | Resolved | `package.json` and README both declare React 19 |
-| Entry file extension | Resolved | README references `src/App.v14.tsx` |
+| Entry file extension | Resolved | README references `src/App.tsx` |
 | Layout ID list in `register-all.ts` | Lists "process-cycle" under Sprint | Correct, but Sprint family also contains `CircularRingCycle` and `Figure8Cycle` sub-components — not independent layouts |
 | `stat-cards-manifest` | Not mentioned | Is a distinct registered layout ID resolved automatically by `LayoutRenderer` |
 | Storybook story count | Resolved | README does not hardcode a story count; CI builds Storybook |
@@ -57,20 +57,20 @@ Paste this into `README.md` replacing the current Architecture section:
 
 | Layer | File(s) | Responsibility |
 |-------|---------|---------------|
-| **Shell** | `src/App.v14.tsx` | Deck factory, state, context providers, side-panel |
+| **Shell** | `src/App.tsx` | Deck factory, state, context providers, side-panel |
 | **Layout Registry** | `src/layouts/registry.ts` | O(1) Map-based plugin system; 39 IDs across 8 families |
 | **Layout Renderer** | `src/layouts/LayoutRenderer.tsx` | Resolves layout string → component; stat-cards multi-variant routing |
 | **Transcription** | `src/transcription.ts` | Cross-family content normalisation (e.g. `adv-future` → `h-strip`) |
 | **Content Registry** | `src/content/content-registry.ts` | Runtime content-pack swapping; `CONTENT_PACKS` + `DECK_STRUCTURES` maps |
 | **Merge Utility** | `src/content/merge-deck-content.ts` | Cascading match algorithm — merges structure skeleton with text content |
-| **Tokens** | `src/tokens/themes.ts`, `style-modes.ts`, `palette.ts` | 15 themes × 4 style modes orthogonal matrix; per-slide color resolution |
+| **Tokens** | `src/tokens/themes.ts`, `style-modes.ts`, `palette.ts` | 16 themes × 4 style modes orthogonal matrix; per-slide color resolution |
 | **Contexts** | `src/components/context/` | `ThemeContext`, `ChromeContext` — consumed by all layout components |
 
 ### System Architecture Diagram
 
 ```mermaid
 graph TD
-    subgraph Shell["Shell Layer — App.v14.tsx"]
+    subgraph Shell["Shell Layer — App.tsx"]
         App["App State\n(deck, theme, styleMode,\ncontentId, slideIndex)"]
         CP["ControlPanel\nDECK / THEME / STYLE /\nRENDER AS / EFFECTS / BG"]
     end
@@ -89,7 +89,7 @@ graph TD
     end
 
     subgraph Tokens["Token Layer"]
-        TH["themes.ts\n15 Theme objects"]
+        TH["themes.ts\n16 Theme objects"]
         SM["style-modes.ts\n4 StyleMode objects"]
         PAL["palette.ts\nresolveTopicColors()"]
     end
@@ -126,7 +126,7 @@ graph TD
 ```mermaid
 sequenceDiagram
     participant U as User selects deck
-    participant A as App.v14.tsx
+    participant A as App.tsx
     participant CR as content-registry
     participant M as mergeDeckContent
     participant PAL as palette.ts
@@ -153,7 +153,7 @@ sequenceDiagram
 
 ### 2.2 Full Architecture Description
 
-**Shell Layer (`App.v14.tsx`)**
+**Shell Layer (`App.tsx`)**
 The application shell owns all state: active deck key, slide index, theme ID, style mode ID, active content pack, and background/effects toggles. It provides `ThemeContext` and `ChromeContext` to the component tree. On startup it imports `register-all.ts` as a side effect — this populates the layout registry before any slide is rendered.
 
 **Registry Layer**
@@ -166,10 +166,10 @@ Each migrated deck consists of two files:
 - `structure.js` — layout skeleton: slide `id`, `order`, `layout`, `role`, `color` triplet, `num`, `icon`
 - `content.json` — text-only: `deck` (brand/title/stats) + `slides` (keyed by slide ID)
 
-`mergeDeckContent()` combines them via a 5-step cascading match (see Section 5). `content-registry.ts` registers all 8 content packs and 8 structure entries, enabling runtime swapping.
+`mergeDeckContent()` combines them via a 5-step cascading match (see Section 5). `content-registry.ts` registers all 6 content packs and 6 structure entries, enabling runtime swapping.
 
 **Token Layer**
-Themes and style modes form an orthogonal matrix: any of 15 themes can be combined with any of 4 style modes. `palette.ts` builds a 6-color rotation from each theme's semantic tokens (`accent`, `gradient[0]`, `gradient[1]`, `success`, `warning`, `danger`) and assigns them to slides by index.
+Themes and style modes form an orthogonal matrix: any of 16 themes can be combined with any of 4 style modes. `palette.ts` builds a 6-color rotation from each theme's semantic tokens (`accent`, `gradient[0]`, `gradient[1]`, `success`, `warning`, `danger`) and assigns them to slides by index.
 
 ---
 
@@ -653,10 +653,10 @@ export const DECK_STRUCTURES: Record<string, DeckStructureEntry> = {
 };
 ```
 
-**Step 5 — Import the deck in App.v14.tsx (if showing as a selectable deck)**
+**Step 5 — Import the deck in App.tsx (if showing as a selectable deck)**
 
 ```ts
-// src/App.v14.tsx — at the top
+// src/App.tsx — at the top
 import * as myDeck from "./content/my-deck/deck.js";  // only if using legacy pattern
 // OR rely entirely on content-registry for migrated decks
 ```
@@ -736,7 +736,7 @@ Match counts are exposed in `MergedDeck.matchStats` for UI diagnostics.
 **File:** `src/patterns/decks/schema.ts`, `src/content/content-registry.ts`
 
 **Resolution (a blend of Options B and C):**
-- **Wired (Option B):** `content-registry.ts` calls `validateContentPack(id, raw)` for every one of the 8 content packs at registration time (soft validation — logs warnings, never throws), and `validateLayoutsExist(manifest, registry)` inside `buildDeckFromContent` to catch unregistered layout IDs at runtime. Zod earns its place in `dependencies`.
+- **Wired (Option B):** `content-registry.ts` calls `validateContentPack(id, raw)` for every one of the 6 content packs at registration time (soft validation — logs warnings, never throws), and `validateLayoutsExist(manifest, registry)` inside `buildDeckFromContent` to catch unregistered layout IDs at runtime. Zod earns its place in `dependencies`.
 - **Removed (Option C):** the genuinely-dead pieces are gone — `validateDeckManifest()`, `DeckManifestSchema`, `SprintNodeSchema`, and the unused barrel (`src/patterns/decks/index.ts`) and `defaults.ts` were deleted. They validated a `DeckManifest` shape the app never constructs (it uses `DeckContent` + `DeckStructure`).
 
 `src/patterns/decks/` now contains only `schema.ts` (live validators + `ContentPackDataSchema`) and `types.ts` (the `DeckManifest` type still consumed by `validateLayoutsExist`).
@@ -763,7 +763,7 @@ Match counts are exposed in `MergedDeck.matchStats` for UI diagnostics.
 
 **Description:** Earlier docs referenced `App.v14.jsx` and `main.jsx`. All entry files are TypeScript (`.tsx`/`.ts`).
 
-**Resolution:** Current README references `src/App.v14.tsx`; private assistant-context links were removed from the public README.
+**Resolution:** Current README references `src/App.tsx` — the shell is authored as "App.v14" internally (strangler-migration moniker) but the file on disk is `src/App.tsx`, and docs must cite the on-disk path (`scripts/check-doc-facts.mjs` now enforces this). Private assistant-context links were removed from the public README.
 
 ---
 
