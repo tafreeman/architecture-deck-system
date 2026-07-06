@@ -33,7 +33,7 @@ npm run export:all   # Export HTML + images + PDF
 
 | Layer | File(s) | Responsibility |
 |-------|---------|----------------|
-| **Shell** | `src/App.v14.tsx` | Deck factory, state, context providers, ControlPanel |
+| **Shell** | `src/App.tsx` | Deck factory, state, context providers, ControlPanel (authored as "App.v14" during the strangler migration) |
 | **Layout Registry** | `src/layouts/registry.ts` | O(1) Map-based plugin system; 39 IDs across 8 families |
 | **Layout Renderer** | `src/layouts/LayoutRenderer.tsx` | Resolves layout string → component; handles `stat-cards-manifest` routing |
 | **Transcription** | `src/transcription.ts` | Cross-family content normalisation (e.g. `adv-future` → `h-strip`) |
@@ -58,7 +58,7 @@ The legacy `deck.js` path is retained for strangler migration compatibility and 
 
 ### Layout Registry Pattern
 
-Layouts self-register at startup via side-effect imports. `register-all.ts` is imported once in `App.v14.tsx` and cascades to all 8 family registration files. Each `register.ts` calls `layoutRegistry.register(id, Component, features)`.
+Layouts self-register at startup via side-effect imports. `register-all.ts` is imported once in `App.tsx` and cascades to all 8 family registration files. Each `register.ts` calls `layoutRegistry.register(id, Component, features)`.
 
 `LayoutRenderer` adds one routing rule: `stat-cards` slides with `results`, `leadershipPoints`, `enablement`, or `thesis` fields are routed to the `stat-cards-manifest` variant.
 
@@ -81,7 +81,7 @@ Layouts self-register at startup via side-effect imports. `register-all.ts` is i
 | Deck Key | Label | Theme |
 |----------|-------|-------|
 | `current` | Current (Advocacy) | midnight-teal |
-| `genai` | GenAI Case Study | (see structure.js) |
+| `genai` | AI Fluency Guidebook | (see structure.js) |
 | `engineering` | Engineering | (see structure.js) |
 | `onboarding` | Onboarding | (see structure.js) |
 | `verge-pop` | Verge Pop | verge-orange |
