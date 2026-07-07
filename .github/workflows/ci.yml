@@ -59,6 +59,13 @@ jobs:
       - name: Verify layout registry count
         run: npm run verify:layouts
 
+      # Doc-fact check: cited paths exist; theme/style-mode/pack/layout counts
+      # and deck labels in README + docs match what the code derives. See
+      # scripts/check-doc-facts.mjs and the portfolio convention
+      # (docs/conventions/doc-fact-check.md at the workspace root).
+      - name: Verify doc facts
+        run: npm run check:docs
+
       - name: Build (Vite)
         run: npm run build
 
