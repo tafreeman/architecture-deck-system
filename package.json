@@ -27,6 +27,11 @@
     "react-dom": "^19.2.7",
     "zod": "^4.4.3"
   },
+  "overrides": {
+    "vitest": {
+      "vite": "$vite"
+    }
+  },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@storybook/addon-a11y": "^10.2.19",
