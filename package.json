@@ -30,6 +30,9 @@
   "overrides": {
     "vitest": {
       "vite": "$vite"
+    },
+    "jsdom": {
+      "undici": "^7.28.0"
     }
   },
   "devDependencies": {
