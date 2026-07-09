@@ -29,13 +29,6 @@ jobs:
           node-version: '24'
           cache: 'npm'
 
-      # ACTION NEEDED before this is green: package.json now lists
-      # "@vitest/coverage-v8" as a devDependency but package-lock.json has
-      # not been regenerated against it (no install was run when this gate
-      # was added — the environment that authored it could not run one).
-      # Run `npm install` locally once and commit the updated
-      # package-lock.json, otherwise this step fails with an
-      # out-of-sync-lockfile error.
       - name: Install dependencies
         run: npm ci
 
@@ -70,8 +63,8 @@ jobs:
         run: npm run build
 
       # Fast single-file export smoke — Vite build + node bundler, NO Playwright.
-      # Runs on PRs (and main) so export breakage is caught at review time without
-      # paying the Playwright/browser cost of the full `export:all` job below.
+      # Gives a same-job signal on export breakage well before the Playwright-driven
+      # image/PDF job (below, gated on this job passing) finishes its browser install.
       - name: Export smoke (single-file HTML)
         run: npm run export:html
 
@@ -119,16 +112,16 @@ jobs:
           path: storybook-static/
           retention-days: 7
 
-  # ── Job 3: deck export (main-push only, needs ci to pass first) ────────────
-  # Playwright-driven HTML/image/PDF export.  Unchanged from original; already
-  # completes well within limits.  Gated to main-push to avoid wasting Playwright
-  # minutes on every PR.
+  # ── Job 3: deck export (PRs and main-push, needs ci to pass first) ─────────
+  # Playwright-driven HTML/image/PDF export. Runs on PRs too (not just main-push)
+  # so export breakage is caught at review time instead of after merge — gated on
+  # `needs: [ci]` so a doomed PR (failing lint/typecheck/tests) doesn't burn
+  # Playwright minutes first.
   export:
     name: Export Deck Artifacts
     runs-on: ubuntu-latest
     timeout-minutes: 20
     needs: [ci]
-    if: github.event_name != 'pull_request'
 
     steps:
       - name: Checkout

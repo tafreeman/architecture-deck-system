@@ -20,11 +20,19 @@ import { fileURLToPath } from "node:url";
  *   4. "<n> content packs|decks"                == makeContentPack() calls in content-registry.ts
  *   5. "<n> registered layouts" / "<n> IDs across" == IDs in src/layouts/<family>/register.ts
  *   6. README "Content Decks" table labels      == labels registered in CONTENT_PACKS
+ *   7. docs/DECK-SHAPE-SPEC.md `<deck id label>` tags == labels registered in CONTENT_PACKS
  */
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(__dirname, "..");
 
+// NOTE: CLAUDE.md deliberately excluded — it's gitignored ("Local AI /
+// assistant config, not part of the published project") and absent from a
+// fresh checkout, so referencing it here would fail check:docs in CI for
+// everyone (it only "works" locally by the accident of the ignored file
+// still sitting on disk). Its cited paths/counts were hand-verified instead
+// (see the doc-drift sweep notes) but cannot be mechanically guarded while
+// the file stays untracked.
 const DOC_SURFACES = [
   "README.md",
   "docs/DOCUMENTATION-REVIEW.md",
@@ -148,6 +156,25 @@ function checkReadmeDeckLabels(packs) {
   }
 }
 
+function checkDeckShapeSpecLabels(packs) {
+  const source = readRepoFile("docs/DECK-SHAPE-SPEC.md");
+  const matches = [...source.matchAll(/<deck\s+id="([a-z-]+)"\s+label="([^"]+)"/g)];
+  if (matches.length === 0) {
+    fail("docs/DECK-SHAPE-SPEC.md: could not locate any '<deck id label>' tags to check");
+    return;
+  }
+  for (const [, deckKey, label] of matches) {
+    if (!packs.has(deckKey)) {
+      fail(`docs/DECK-SHAPE-SPEC.md cites deck "${deckKey}" which is not registered in CONTENT_PACKS`);
+      continue;
+    }
+    const registered = packs.get(deckKey);
+    if (registered !== label) {
+      fail(`docs/DECK-SHAPE-SPEC.md labels "${deckKey}" as "${label}"; content-registry.ts registers "${registered}"`);
+    }
+  }
+}
+
 // ── Run ──────────────────────────────────────────────────────────────────────
 
 const themeCount = countTokenEntries("src/tokens/themes.ts");
@@ -176,6 +203,7 @@ for (const surface of DOC_SURFACES) {
   );
 }
 checkReadmeDeckLabels(packs);
+checkDeckShapeSpecLabels(packs);
 
 if (failures.length > 0) {
   console.error(`Doc-fact check failed (${failures.length} issue${failures.length === 1 ? "" : "s"}):`);

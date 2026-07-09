@@ -19,6 +19,7 @@ import {
   isContentSwappable,
   getDefaultContentId,
   getAvailableContent,
+  CONTENT_PACKS,
 } from "./content-registry.ts";
 
 // ── buildDeckFromContent — real deck+content combos ─────────────────────────
@@ -45,11 +46,47 @@ describe("buildDeckFromContent — registered deck + content combos", () => {
     });
   }
 
-  it("cross-applies one deck's structure with another deck's content pack", () => {
+  it("cross-applies one deck's structure with another deck's content pack, pulling in that pack's own text", () => {
     // Graceful-fallback design: any content pack can be applied to any structure.
-    const merged = buildDeckFromContent("current", "engineering");
-    expect(merged).not.toBeNull();
-    expect(merged?.contentSlides.length).toBeGreaterThan(0);
+    // A trivial "renders and is non-empty" assertion can't distinguish a real
+    // swap from a no-op that silently kept the structure's own content — so
+    // this compares the cross-applied merge against the deck's own-content
+    // merge and requires actual text to differ, then traces every changed
+    // title back to the source pack's own data (never a hardcoded literal).
+    const ownMerge = buildDeckFromContent("current", "current");
+    const crossMerge = buildDeckFromContent("current", "engineering");
+    expect(ownMerge).not.toBeNull();
+    expect(crossMerge).not.toBeNull();
+    expect(crossMerge?.contentSlides.length).toBeGreaterThan(0);
+
+    const ownTitleById = new Map(ownMerge!.contentSlides.map((s) => [s.id, s.title]));
+    const crossTitleById = new Map(crossMerge!.contentSlides.map((s) => [s.id, s.title]));
+    const matchMethodById = new Map(crossMerge!.contentSlides.map((s) => [s.id, s.matchMethod]));
+
+    // At least one slide must resolve to different text once the content pack
+    // is swapped — otherwise "cross-apply" would be indistinguishable from
+    // applying the deck's own content.
+    const changedSlideIds = [...crossTitleById.keys()].filter(
+      (id) => crossTitleById.get(id) !== ownTitleById.get(id),
+    );
+    expect(changedSlideIds.length).toBeGreaterThan(0);
+
+    // Every changed title must be traceable to either the engineering pack's
+    // own text (a real substitution) or the structure's own label (tier-5
+    // "structure-only" fallback, when no engineering slide matched) — never
+    // some other unexplained value.
+    const engineeringTitles = new Set(
+      Object.values(CONTENT_PACKS.engineering.data.slides).map((s) => s.title),
+    );
+    for (const id of changedSlideIds) {
+      const resolvedTitle = crossTitleById.get(id);
+      const isStructureOnlyFallback = matchMethodById.get(id) === "none";
+      expect(
+        engineeringTitles.has(resolvedTitle as string) || isStructureOnlyFallback,
+        `slide "${id}" resolved to "${resolvedTitle}" (matchMethod=${matchMethodById.get(id)}), ` +
+          `which is neither an engineering-pack title nor a structure-only label`,
+      ).toBe(true);
+    }
   });
 });
 

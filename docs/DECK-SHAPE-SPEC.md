@@ -26,7 +26,7 @@
   <slide n="4" id="future"  layout="h-strip"       role="vision">title + subtitle + 4 cards{title + body ~1–2 sent} + callout</slide>
 </deck>
 
-<deck id="genai" label="GenAI Case Study" theme="midnight-teal" slideCount="6">
+<deck id="genai" label="AI Fluency Guidebook" theme="midnight-teal" slideCount="6">
   <slide n="1" id="overview" layout="two-col"       role="overview">title + subtitle + eyebrow + summary + 4 heroPoints + 4 cards{title + body ~1 sent} + 4 talkingPoints + callout</slide>
   <slide n="2" id="human"    layout="stat-cards"     role="evidence">[ENRICHED] title + heroTitle + kicker + subkicker + subtitle + thesis + 3 cards{title + step + marker + eyebrow + highlight + details[2–3]} + 3 leadershipPoints + 4 results{value + label + detail?} + enablementTitle + enablement + callout</slide>
   <slide n="3" id="hurdles"  layout="before-after"   role="challenges">title + subtitle + 4 cards{title + challenge → fix} + callout</slide>
