@@ -2,7 +2,14 @@
  * LayoutRenderer — registry-based slide renderer.
  *
  * Resolves a layout string to its registered component and renders it.
- * Wraps in an error boundary to gracefully handle unknown layouts.
+ * Two independent safety nets, for two different failure modes:
+ * - Unknown layout ID (a lookup miss): handled inline below via an explicit
+ *   `layoutRegistry.has()` check before anything renders.
+ * - A *registered* layout throwing while it renders (e.g. a layout that
+ *   assumes a field a particular slide's content doesn't have): handled by
+ *   wrapping the resolved component in {@link LayoutErrorBoundary}, a real
+ *   React error boundary — see that file for why a lookup guard alone can't
+ *   cover this case.
  *
  * Prop forwarding notes:
  * - `topic` is passed to the layout component (matching the extracted component API)
@@ -12,6 +19,7 @@
 
 import React from 'react';
 import { layoutRegistry } from './registry';
+import { LayoutErrorBoundary } from './LayoutErrorBoundary';
 
 /** Fields that trigger the manifest variant of stat-cards. */
 const MANIFEST_FIELDS = ['results', 'leadershipPoints', 'enablement', 'thesis'];
@@ -65,9 +73,18 @@ export function LayoutRenderer({ layout, slide, themeId, ...rest }: LayoutRender
   }
 
   const Component = layoutRegistry.get(resolvedKey);
-  // Pass `topic` to match the extracted component prop API (monolith pattern).
-  // eslint-disable-next-line react-hooks/static-components -- dynamic dispatch: registry.get returns a stable, module-level component registered once at startup, not a component created during render
-  return <Component topic={slide} themeId={themeId} {...rest} />;
+  // Remount key: changing slide (or cycling to a different layout for the same
+  // slide) must reset any previously-caught render error rather than leaving
+  // the boundary stuck showing the old failure.
+  const slideId = typeof slide.id === 'string' || typeof slide.id === 'number' ? String(slide.id) : 'unknown';
+  const boundaryKey = `${resolvedKey}:${slideId}`;
+  return (
+    <LayoutErrorBoundary layout={resolvedKey} key={boundaryKey}>
+      {/* Pass `topic` to match the extracted component prop API (monolith pattern). */}
+      {/* eslint-disable-next-line react-hooks/static-components -- dynamic dispatch: registry.get returns a stable, module-level component registered once at startup, not a component created during render */}
+      <Component topic={slide} themeId={themeId} {...rest} />
+    </LayoutErrorBoundary>
+  );
 }
 
 export default LayoutRenderer;
