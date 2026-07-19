@@ -30,6 +30,7 @@ const validPack = {
   deck: {
     brandLine: "Test Brand",
     title: "Test Deck",
+    introStats: [{ val: "10x", lbl: "Faster" }],
   },
   slides: {
     overview: {
@@ -99,6 +100,29 @@ describe("validateContentPack", () => {
     expect(warn.mock.calls[0][0]).toContain("bad-pack");
     warn.mockRestore();
   });
+
+  it("rejects a content pack that omits deck.introStats", () => {
+    // introStats is required by both the DeckContent TS contract and the Zod
+    // schema; merge-deck-content.ts maps over it whenever introStatColors are
+    // set. A pack omitting it must fail validation here rather than pass and
+    // crash later at merge. `validPack` minus its introStats field.
+    const noIntroStats = {
+      deck: { brandLine: "Test Brand", title: "Test Deck" },
+      slides: validPack.slides,
+    };
+
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
+    validateContentPack("no-intro-stats", noIntroStats);
+    expect(warn).toHaveBeenCalledOnce();
+    warn.mockRestore();
+
+    // The schema itself flags introStats specifically as the missing field.
+    const result = ContentPackDataSchema.safeParse(noIntroStats);
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.error.flatten().fieldErrors).toHaveProperty("deck");
+    }
+  });
 });
 
 // ── .passthrough() behaviour ────────────────────────────────────────────────
@@ -109,6 +133,7 @@ describe("ContentPackDataSchema — passthrough", () => {
       deck: {
         brandLine: "Brand",
         title: "Title",
+        introStats: [{ val: "1", lbl: "One" }],
         // Extra field not in DeckMetaSchema — must survive via .passthrough().
         customDeckField: "kept",
       },

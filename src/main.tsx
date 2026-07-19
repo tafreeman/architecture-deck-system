@@ -1,6 +1,7 @@
 import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.tsx';
+import { AppErrorBoundary } from './AppErrorBoundary.tsx';
 
 function LoadingScreen() {
   return (
@@ -26,8 +27,10 @@ function ShellHider() {
 root.render(
   <React.StrictMode>
     <ShellHider />
-    <Suspense fallback={<LoadingScreen />}>
-      <App />
-    </Suspense>
+    <AppErrorBoundary>
+      <Suspense fallback={<LoadingScreen />}>
+        <App />
+      </Suspense>
+    </AppErrorBoundary>
   </React.StrictMode>
 );

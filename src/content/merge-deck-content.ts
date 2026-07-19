@@ -130,21 +130,22 @@ export interface MergedDeck {
 /**
  * Merge a deck structure with text content.
  *
- * For each content slide in the structure, resolves text content using
- * a cascading match strategy:
- *   1. Exact slide ID match
- *   2. Fallback content by ID (if provided)
- *   3. Semantic role match — finds a content slide with the same `role`
- *   4. Layout compatibility match — finds a content slide whose
+ * For each content slide in the structure, resolves text content using a
+ * five-tier cascading match strategy, tried in order:
+ *   1. Exact slide ID match — the content slide keyed by the skeleton's own
+ *      id, or (when a `fallback` deck is supplied) the fallback slide of that
+ *      id. Both resolve in a single lookup and count as an "id" match.
+ *   2. Semantic role match — finds an unused content slide with the same `role`
+ *   3. Layout compatibility match — finds an unused content slide whose
  *      `sourceLayout` belongs to the same layout compat group
- *   5. Positional fallback — greedily takes the first content slide not yet
+ *   4. Positional fallback — greedily takes the first content slide not yet
  *      consumed by an earlier tier, in `Object.entries(content.slides)`
  *      iteration order. This is NOT an index-aligned match (skeleton at
  *      index N does not necessarily pair with the content slide at index
  *      N) — it's "next available", processed in structure.contentSlides
  *      order, so which content slide lands here depends on how many
- *      earlier skeletons already claimed one via tiers 1-4.
- *   6. Structure-only — shows label as title (no content matched)
+ *      earlier skeletons already claimed one via tiers 1-3.
+ *   5. Structure-only — shows label as title (no content matched)
  */
 export function mergeDeckContent(
   structure: DeckStructure,
@@ -231,7 +232,7 @@ export function mergeDeckContent(
   const deckMeta = structure.introStatColors
     ? {
         ...content.deck,
-        introStats: content.deck.introStats.map((stat, i) => ({
+        introStats: (content.deck.introStats ?? []).map((stat, i) => ({
           ...stat,
           color: structure.introStatColors![i] ?? undefined,
         })),
