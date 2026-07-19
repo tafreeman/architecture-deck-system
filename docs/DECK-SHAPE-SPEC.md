@@ -131,7 +131,7 @@ templates when authoring new slides.
 > `content-registry.ts`, dropped from the app shell's `DECKS` map (now in `src/decks.ts`), and their content
 > folders + the `reference-decks/` re-export wrapper deleted. Their same-named *themes*
 > in `tokens/themes.ts` were kept (selectable styles, deck-independent). Verified:
-> typecheck clean, 93/93 tests pass, production build succeeds.
+> typecheck clean, the full test suite passes, production build succeeds.
 > `eng-architecture`/`eng-code-flow` merge: deferred.
 
 ### Cross-deck exact-shape duplicates (post-removal)

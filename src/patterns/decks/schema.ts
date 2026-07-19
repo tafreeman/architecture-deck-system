@@ -150,7 +150,7 @@ const DeckMetaSchema = z.object({
   introBrandLine: z.string().optional(),
   introTitle: z.string().optional(),
   introSubtitle: z.string().optional(),
-  introStats: z.array(IntroStatSchema).optional(),
+  introStats: z.array(IntroStatSchema),
   stats: z.array(IntroStatSchema).optional(),
 }).passthrough();
 

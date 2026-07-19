@@ -817,7 +817,7 @@ The Storybook setup (`autodocs: true` in `.storybook/main.ts`, `ThemeContext` + 
 
 1. **No `argTypes` on most stories** — Component props are not described, so the autodocs "Controls" panel shows raw fields rather than documented props.
 2. **No `parameters.docs.description.component`** on layout stories — The component-level description in autodocs is empty for most layout families.
-3. **No dedicated page documenting the 15×4 theme/style matrix** — A storybook page showing all themes × all style modes would serve as a living visual regression baseline.
+3. **No dedicated page documenting the 16×4 theme/style matrix** — A storybook page showing all themes × all style modes would serve as a living visual regression baseline.
 4. **No story testing layout → layout transcription** — The transcription layer has no visual test coverage.
 
 ---
