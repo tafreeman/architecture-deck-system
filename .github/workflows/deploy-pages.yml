@@ -35,8 +35,20 @@ jobs:
         with:
           ref: ${{ github.event.workflow_run.head_sha || github.sha }}
 
+      # `enablement: true` asks the API to create the Pages site (build_type
+      # "workflow") if it doesn't exist yet. NOTE: per actions/configure-pages'
+      # own action.yml, this requires a token other than the default
+      # GITHUB_TOKEN (a PAT with `repo` scope, or a GitHub App token with
+      # `administration:write` + `pages:write`) — the auto-generated
+      # GITHUB_TOKEN cannot create a Pages site regardless of the
+      # `permissions:` block above. If Pages has never been enabled for this
+      # repo, a one-time manual step is still required: Settings → Pages →
+      # Build and deployment → Source: "GitHub Actions". This flag is kept on
+      # so the workflow self-heals if a PAT is ever wired in via `with: token:`.
       - name: Configure Pages
         uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d  # v6
+        with:
+          enablement: true
 
       - name: Setup Node.js
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020  # v6

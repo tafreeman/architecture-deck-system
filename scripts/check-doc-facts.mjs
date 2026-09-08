@@ -35,6 +35,7 @@ const projectRoot = path.resolve(__dirname, "..");
 // the file stays untracked.
 const DOC_SURFACES = [
   "README.md",
+  "docs/ARCHITECTURE.md",
   "docs/DOCUMENTATION-REVIEW.md",
   "docs/DECK-SHAPE-SPEC.md",
 ];
