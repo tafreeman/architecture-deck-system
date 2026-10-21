@@ -13,11 +13,9 @@ on:
     branches: [main]
   workflow_dispatch:
 
-# Least-privilege token scoped for Pages deployment.
+# Least-privilege token; each job adds only the Pages scopes it needs.
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 # One deployment at a time; let an in-progress run finish.
 concurrency:
@@ -28,7 +26,15 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    # configure-pages reads the Pages site config; nothing in this job deploys.
+    permissions:
+      contents: read
+      pages: read
+    # Only deploy commits that CI ran for a push to this repository. The
+    # `branches: [main]` filter above matches the triggering run's head branch,
+    # which a fork PR controls (a fork's own `main` matches), so without this a
+    # fork PR's code would be checked out at `head_sha`, built, and deployed.
+    if: ${{ github.event_name == 'workflow_dispatch' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push' && github.event.workflow_run.head_repository.full_name == github.repository) }}
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
@@ -76,8 +82,13 @@ jobs:
   deploy:
     name: Deploy
     needs: build
+    # Pages write and the OIDC token are granted only to the job that runs no
+    # repository code.
+    permissions:
+      pages: write
+      id-token: write
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.event_name == 'workflow_dispatch' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push' && github.event.workflow_run.head_repository.full_name == github.repository) }}
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
