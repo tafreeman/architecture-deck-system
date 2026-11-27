@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/tafreeman/architecture-deck-system/actions/workflows/ci.yml/badge.svg)](https://github.com/tafreeman/architecture-deck-system/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Demo](https://img.shields.io/badge/demo-pending-yellow)](https://github.com/tafreeman/architecture-deck-system/actions/workflows/deploy-pages.yml)
+[![Demo](https://img.shields.io/badge/demo-live-brightgreen)](https://tafreeman.github.io/architecture-deck-system/demo/)
 
 React 19 + Vite 6 presentation platform with 6 registered content decks, 39 registered layouts, 16 themes, and 4 style modes. Includes Storybook for visual testing and an export pipeline for HTML, images, and PDF.
 
@@ -14,22 +14,25 @@ React 19 + Vite 6 presentation platform with 6 registered content decks, 39 regi
 
 ## Live Demo
 
-**Status: pending.** GitHub Pages was never enabled for this repository, so [`tafreeman.github.io/architecture-deck-system`](https://tafreeman.github.io/architecture-deck-system/) currently returns a 404. The [deploy workflow](.github/workflows/deploy-pages.yml) itself builds cleanly — only the one-time Pages activation is outstanding. Once live, it serves a static landing page (ember/console design system) from [`docs/`](docs/), plus the React deck viewer built from this repo at [`/demo/`](https://tafreeman.github.io/architecture-deck-system/demo/).
-
-Until then, see it working right now:
-- The **[Preview](#preview)** screenshot above is a real export from this codebase, not a mockup.
-- `npm run dev` — full local deck viewer with the live DESIGN panel (deck/theme/style-mode switching).
-- `npm run export:all` — generate your own local HTML/image/PDF export.
+[Open the interactive deck viewer](https://tafreeman.github.io/architecture-deck-system/demo/) or visit the [project overview](https://tafreeman.github.io/architecture-deck-system/). Use the DESIGN panel in the viewer to switch decks, themes and style modes.
 
 ## Quick Start
 
-```bash
-npm install
+Use Node.js 24 (the version tested in CI).
 
+```bash
+npm ci
 npm run dev          # Dev server on :5173
-npm run build        # Production build (TypeScript check + Vite)
-npm run storybook    # Storybook on :6006 (autodocs enabled)
-npm run export:all   # Export HTML + images + PDF
+npm run typecheck    # TypeScript check
+npm run build        # Vite production build
+npm run storybook    # Storybook on :6006
+```
+
+For image/PDF export, install Playwright’s Chromium browser first:
+
+```bash
+npx playwright install chromium
+npm run export:all
 ```
 
 ## Content Decks
